@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="jp"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
+
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
+
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
+
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
+
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
+
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><p>私は文章です。<sup id="loc-1" role="doc-noteref"><a href="#loc-2">1</a></sup></p><p>凄い数式:<math><mi>𝑓</mi><mrow><mo>(</mo><mi>𝑥</mi><mo>)</mo></mrow><mo>=</mo><mfrac><mn>1</mn><msup><mi>𝑥</mi><mn>2</mn></msup></mfrac><mo form="prefix" lspace="0.16666666666666666em" rspace="0em">sin</mo><mrow><mo>(</mo><mfrac><mn>1</mn><mi>𝑥</mi></mfrac><mo>)</mo></mrow></math></p><figure><table><thead><tr><th>桁</th><th>数</th></tr></thead><tbody><tr><td>1</td><td>3</td></tr><tr><td>2</td><td>1</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><figcaption>Table 1: I am a table</figcaption></figure><figure><svg style="overflow: visible; width: 5.93790783em; height: 5.943092341em; display: block" viewBox="0 0 65.316986127 65.374015748" width="65.316986127pt" height="65.374015748pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:h5="http://www.w3.org/1999/xhtml"><g><path fill="none" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" transform="translate(0 11.692913386)" d="M 0 0m 7.14668204 1.062992126c -4.724409449 9.448818898 -11.811023622 38.976377953 -2.834645669 46.771653543c 8.976377953 7.795275591 47.716535433 7.795275591 56.692913386 0c 8.976377953 -7.795275591 1.88976378 -37.322834646 -2.834645669 -46.771653543c -4.724409449 -9.448818898 -17.007874016 -9.921259843 -25.511811024 -9.921259843c -8.503937008 0 -20.787401575 0.472440945 -25.511811024 9.921259843Z "/><path fill="#0074d9" fill-rule="nonzero" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" transform="translate(4.312036371 -38.090551181)" d="M 0 0m 2.834645669 48.011811024c -1.564112126 0 -2.834645669 1.270533543 -2.834645669 2.834645669c 0 1.564112126 1.270533543 2.834645669 2.834645669 2.834645669c 1.564112126 0 2.834645669 -1.270533543 2.834645669 -2.834645669c 0 -1.564112126 -1.270533543 -2.834645669 -2.834645669 -2.834645669Z "/><path fill="#0074d9" fill-rule="nonzero" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" transform="translate(1.477390701 8.681102362)" d="M 0 0m 2.834645669 48.011811024c -1.564112126 0 -2.834645669 1.270533543 -2.834645669 2.834645669c 0 1.564112126 1.270533543 2.834645669 2.834645669 2.834645669c 1.564112126 0 2.834645669 -1.270533543 2.834645669 -2.834645669c 0 -1.564112126 -1.270533543 -2.834645669 -2.834645669 -2.834645669Z "/><path fill="#0074d9" fill-rule="nonzero" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" transform="translate(58.170304087 8.681102362)" d="M 0 0m 2.834645669 48.011811024c -1.564112126 0 -2.834645669 1.270533543 -2.834645669 2.834645669c 0 1.564112126 1.270533543 2.834645669 2.834645669 2.834645669c 1.564112126 0 2.834645669 -1.270533543 2.834645669 -2.834645669c 0 -1.564112126 -1.270533543 -2.834645669 -2.834645669 -2.834645669Z "/><path fill="#0074d9" fill-rule="nonzero" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" transform="translate(55.335658418 -38.090551181)" d="M 0 0m 2.834645669 48.011811024c -1.564112126 0 -2.834645669 1.270533543 -2.834645669 2.834645669c 0 1.564112126 1.270533543 2.834645669 2.834645669 2.834645669c 1.564112126 0 2.834645669 -1.270533543 2.834645669 -2.834645669c 0 -1.564112126 -1.270533543 -2.834645669 -2.834645669 -2.834645669Z "/><path fill="#0074d9" fill-rule="nonzero" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" transform="translate(29.823847394 -48.011811024)" d="M 0 0m 2.834645669 48.011811024c -1.564112126 0 -2.834645669 1.270533543 -2.834645669 2.834645669c 0 1.564112126 1.270533543 2.834645669 2.834645669 2.834645669c 1.564112126 0 2.834645669 -1.270533543 2.834645669 -2.834645669c 0 -1.564112126 -1.270533543 -2.834645669 -2.834645669 -2.834645669Z "/><path fill="#0074d9" fill-rule="nonzero" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" transform="translate(4.312036371 -38.090551181)" d="M 0 0m 2.834645669 48.011811024c -1.564112126 0 -2.834645669 1.270533543 -2.834645669 2.834645669c 0 1.564112126 1.270533543 2.834645669 2.834645669 2.834645669c 1.564112126 0 2.834645669 -1.270533543 2.834645669 -2.834645669c 0 -1.564112126 -1.270533543 -2.834645669 -2.834645669 -2.834645669Z "/><path fill="#0074d9" fill-rule="nonzero" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" transform="translate(57.832303195 8.96001143)" d="M 0 0m 2.834645669 48.011811024c -1.564112126 0 -2.834645669 1.270533543 -2.834645669 2.834645669c 0 1.564112126 1.270533543 2.834645669 2.834645669 2.834645669c 1.564112126 0 2.834645669 -1.270533543 2.834645669 -2.834645669c 0 -1.564112126 -1.270533543 -2.834645669 -2.834645669 -2.834645669Z "/><path fill="#0074d9" fill-rule="nonzero" stroke="#000000" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" transform="translate(4.312036371 -38.090551181)" d="M 0 0m 2.834645669 48.011811024c -1.564112126 0 -2.834645669 1.270533543 -2.834645669 2.834645669c 0 1.564112126 1.270533543 2.834645669 2.834645669 2.834645669c 1.564112126 0 2.834645669 -1.270533543 2.834645669 -2.834645669c 0 -1.564112126 -1.270533543 -2.834645669 -2.834645669 -2.834645669Z "/></g></svg><figcaption>Figure 1: 吾輩は図である</figcaption></figure><section role="doc-endnotes"><ol style="list-style-type: none"><li id="loc-2"><sup role="doc-backlink"><a href="#loc-1">1</a></sup>我は脚注なり</li></ol></section></body></html>

@@ -1,0 +1,126 @@
+planar-graphs:
+    
+    type: Web
+    title: Planar Graph
+
+    date: 2026-06-27
+    url: https://mathworld.wolfram.com/PlanarGraph.html
+
+planar-embeddings:
+    type: Web
+    title: Planar Embeddings
+
+    date: 2026-06-28
+    url: https://mathworld.wolfram.com/PlanarEmbedding.html
+
+kuratowski-graph:
+    type: Web
+    title: Kuratowski Graph
+
+    date: 2026-06-28
+    url: https://mathworld.wolfram.com/KuratowskiGraph.html
+
+How-do-I-set-up-the-Wolfram-Engine:
+    
+    type: Web
+    title: How do I set up the Wolfram Engine?
+    date: 2026-06-27
+    url: https://support.wolfram.com/45743
+
+wolfram-CompleteGraph:
+    
+    type: Web
+    title: CompleteGraph
+    date: 2026-06-27
+    url: https://reference.wolfram.com/language/ref/CompleteGraph.html
+
+
+# proof-of-not-planar-graph:
+    
+#     type: Web
+#     title: introduction to graph theory
+
+#     date: 2026-06-23
+#     url: https://cis.temple.edu/~latecki/Courses/CIS2166-Fall25/RosenDiscreteMath8Ed.pdf
+
+kuratowskis-theorem-blog-1:
+    
+    type: Web
+    title: クラトフスキーの定理の証明（1）グラフ理論用語と定理の紹介
+
+    date: 2026-06-23
+    url: https://nayami0425.com/kuratowski_1/
+kuratowskis-theorem-blog-2:
+    
+    type: Web
+    title: クラトフスキーの定理の証明（2）点連結度から1-連結の証明まで
+
+    date: 2026-06-23
+    url: https://nayami0425.com/kuratowski_2/
+kuratowskis-theorem-blog-3:
+    
+    type: Web
+    title: クラトフスキーの定理の証明（3）誘導部分グラフから2-連結の証明
+
+    date: 2026-06-23
+    url: https://nayami0425.com/kuratowski_3/
+kuratowskis-theorem-blog-4:
+    
+    type: Web
+    title: クラトフスキーの定理の証明（4）3-連結の証明と縮約・拡逆
+
+    date: 2026-06-23
+    url: https://nayami0425.com/kuratowski_4/
+kuratowskis-theorem-blog-5:
+    
+    type: Web
+    title: クラトフスキーの定理の証明（5）3-連結は平面的を証明する準備
+
+    date: 2026-06-23
+    url: https://nayami0425.com/kuratowski_5/
+kuratowskis-theorem-blog-6:
+    
+    type: Web
+    title: クラトフスキーの定理の証明（6）3-連結は凸埋め込みを持つ証明
+
+    date: 2026-06-23
+    url: https://nayami0425.com/kuratowski_6/
+kuratowskis-theorem-blog-7:
+    
+    type: Web
+    title: クラトフスキーの定理の証明（7）そして完結へ
+
+    date: 2026-06-23
+    url: https://nayami0425.com/kuratowski_7/
+
+kuratowskis-theorem:
+    
+    type: Web
+    title: Kuratowski's theorem
+
+    date: 2026-06-23
+    url: https://kostochk.web.illinois.edu/math582/kuratowski.pdf
+
+kuratowski-claim:
+    
+    type: Web
+    title: Kuratowski's theorem
+
+    date: 2026-06-25
+    url: https://mathworld.wolfram.com/KuratowskisTheorem.html
+
+homeomorphic-graphs:
+    
+    type: Web
+    title: Homeomorphic Graphs
+
+    date: 2026-06-25
+    url: https://mathworld.wolfram.com/HomeomorphicGraphs.html
+
+topological-minor:
+    
+    type: Web
+    title: Topological Minor
+
+    date: 2026-06-25
+    url: https://mathworld.wolfram.com/TopologicalMinor.html
