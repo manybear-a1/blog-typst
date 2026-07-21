@@ -2,7 +2,7 @@
 #show: show_blog_with_typst
 = Wolfram Languageを使って、グラフの平面埋め込みを求めてみよう
 
-@planar-graphs によると、Wolfram Languageというものを使って、グラフの平面埋め込みを求めることができる。したがって、今回はWolfram Languageを用いてグラフの平面埋め込みができるか判定し、できるのであれば、その埋め込みの一例を求めてみる。
+@planar-graphs によると、Wolfram Languageというものを使って、グラフの平面埋め込みを求めることができる。Wolfram Languageは数学、機械学習といった科学的用途に特化したプログラミング言語で、普通の言語にはデフォルトで備わっていないような高度な機能が使用できる。この言語は、最初はMathematica内で使用するために開発されたが、その後さらに様々な機能が付け加えられ、独立して今の形になった。したがって、今回はWolfram Languageを用いてグラフの平面埋め込みができるか判定し、できるのであれば、その埋め込みの一例を求めてみる。
 == 環境の準備
 まず、Wolfram Languageの実行環境を用意する。これには、公式サイトのPlayground(#link("https://www.wolfram.com/language/#playground"))にアクセスする,Wolfram CloudのNotebook(#link("https://www.wolframcloud.com/"))を使う、もしくはWolfram Engine(#link("https://www.wolfram.com/engine/"))をダウンロードする必要がある。
 === Playground(必要最小限)
