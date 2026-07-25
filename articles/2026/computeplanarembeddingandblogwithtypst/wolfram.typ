@@ -66,7 +66,9 @@ g = CompleteGraph[5]
 PlanarGraph[EdgeList[g]]
 ```
 実行結果:
+
 #image("asset/K_5.png")
+
 PlanarGraph::nplanar: Graph[{1  2, 1  3, 1  4, 1  5, 2  3, 2  4, 2  5, 3  4, 3  5, 4  5}] is not a planar graph.
 
 ちょっと文字化けしているけれども、しっかりとエラーが出て平面埋め込みできなかった。
@@ -85,4 +87,4 @@ PlanarGraph::nplanar: Graph[{1  2, 1  3, 1  4, 1  5, 2  3, 2  
 
 #bibliography("bibliography.yaml")
 
-#include "typst-html.typ"
+
