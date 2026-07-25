@@ -87,4 +87,5 @@ PlanarGraph::nplanar: Graph[{1  2, 1  3, 1  4, 1  5, 2  3, 2  
 
 #bibliography("bibliography.yaml")
 
+#include "typst-html.typ"
 
