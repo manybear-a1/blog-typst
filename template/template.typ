@@ -23,7 +23,7 @@
   if target() == "html" {
     html.elem(
       "h1",
-    )[警告:このTypstで書き出したHTMLはdiv\#takehereの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があります。]
+    )[警告:このTypstで書き出したHTMLはdiv\#takehereの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があります。脚注がある場合は、`<section role="doc-endnotes">`内の内容も取り出して、ブログに貼り付ける必要があります。]
     html.elem("div", attrs: (id: "takehere", style: "background: red"))[
 
       #body
