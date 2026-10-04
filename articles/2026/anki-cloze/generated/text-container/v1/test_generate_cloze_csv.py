@@ -1,0 +1,55 @@
+import csv
+from pathlib import Path
+import tempfile
+import unittest
+
+from _generate_cloze_csv import (
+    anki_headers,
+    build_rows,
+    default_output_path,
+    write_csv,
+)
+
+
+SOURCE_PATH = Path(__file__).with_name("index.md")
+
+
+class GenerateClozeCsvTests(unittest.TestCase):
+    def test_default_output_path_uses_source_stem(self):
+        source = Path("mathml/text_container/index.md")
+        self.assertEqual(
+            default_output_path(source),
+            Path("mathml/text_container/index_cloze.csv"),
+        )
+
+    def test_write_csv_adds_anki_headers_and_relative_tag(self):
+        source = Path("mathml/text_container/example.md")
+        rows = [("<p>{{c1::question}}</p>", "<p>extra</p>")]
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            output = Path(temporary_directory) / "output.csv"
+            write_csv(output, rows, source)
+            content = output.read_text(encoding="utf-8")
+            header_text, data_text = content.split("\n", 5)[:5], content.split("\n", 5)[5]
+            written_rows = list(csv.reader(data_text.splitlines()))
+
+        self.assertEqual(header_text, anki_headers(source))
+        self.assertEqual(written_rows, [list(row) for row in rows])
+
+    def test_source_generates_independent_html_notes(self):
+        rows = build_rows(SOURCE_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(len(rows), 12)
+        self.assertTrue(all(len(row) == 2 for row in rows))
+        self.assertTrue(all(row[0].startswith("<p>") for row in rows))
+        self.assertTrue(all("{{c1::" in row[0] for row in rows))
+        self.assertGreaterEqual(sum("{{c2::" in row[0] for row in rows), 7)
+        self.assertGreaterEqual(sum("{{c3::" in row[0] for row in rows), 4)
+        self.assertNotIn("EmbedLiveSample", "\n".join(field for row in rows for field in row))
+        self.assertNotIn("PreviousMenuNext", "\n".join(field for row in rows for field in row))
+        self.assertGreaterEqual(
+            sum("mdn-code-example" in field for row in rows for field in row),
+            3,
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,25 @@
+#notetype:Cloze
+#html:true
+#tags:mathml getting-started
+MathML は HTML と同じ構文を用いて、{{c1::要素と属性のツリー}}を表す。<br>数式全体は {{c2::&lt;math&gt;}} 要素で表す。
+HTML ページ内に MathML 数式を挿入するには、{{c1::&lt;math&gt;}} 要素を配置する。
+{{c1::&lt;mfrac&gt;}} 要素は、最初の子を {{c2::分子}}、2 つ目の子を {{c3::分母}} とする分数を指定する。
+分数 1/3 の MathML は、{{c1::&lt;mfrac&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mn&gt;3&lt;/mn&gt;&lt;/mfrac&gt;}} と表せる。
+インライン数式は段落のテキストと {{c1::同じ行}} に表示される。
+数式を独立した行で中央揃えにするには、{{c1::&lt;math display="block"&gt;}} のように {{c2::display="block"}} 属性を指定する。
+&lt;math display="block"&gt; を使うと、数式の {{c1::読みやすさ}} が優先され、テキストと縦の空間が少し大きくなる。
+LaTeX のインライン数式は {{c1::ドル記号 $...$}} で、ディスプレイ数式は {{c2::\\[...\\]}} で区切る。
+&lt;math display="block"&gt; の場合、math-style プロパティの初期値は {{c1::normal}} である。
+&lt;math&gt; に display="block" がない場合、math-style の初期値は {{c1::compact}} である。
+&lt;math&gt; 要素は任意の数の子要素を格納し、基本的にそれらを {{c1::一列に並べて}} 表示する。
+単純な式 1 + 2 + 3 は、数値を {{c1::&lt;mn&gt;}}、演算子を {{c2::&lt;mo&gt;}} で表して順に並べる。
+{{c1::&lt;mrow&gt;}} 要素は、MathML のサブツリーをグループ化する汎用コンテナーである。
+&lt;mrow&gt; 要素は MathML サブツリーの {{c1::どこにでも}} 配置できる。
+「1 + 2」を分数の分子としてまとめるには、分子を {{c1::&lt;mrow&gt;}} で囲み、その中に {{c2::&lt;mn&gt;1&lt;/mn&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;}} を置く。
+分数のように、ある MathML 要素が複数の子要素に特定の役割を与える場合、子要素の {{c1::順番}} が意味を持つ。
+「1/2 + 2/3」は、&lt;math&gt; の子として {{c1::2 つの &lt;mfrac&gt;}} と {{c2::&lt;mo&gt;+&lt;/mo&gt;}} を順に置いて表す。
+「1 + 2 + 3」が「4 + 5」の上にある式では、分子と分母をそれぞれ {{c1::&lt;mrow&gt;}} でグループ化する。
+「1/4」が「2 + 3」の上にある式は、{{c1::&lt;mfrac&gt; の中に別の &lt;mfrac&gt; を入れる}} ことで表現できる。
+この入門記事で扱う主な MathML 要素は、数式全体の {{c1::&lt;math&gt;}}、分数の {{c2::&lt;mfrac&gt;}}、グループ化の {{c3::&lt;mrow&gt;}} である。
+ブラウザーで分数が「1 3」と表示される場合、{{c1::ブラウザーが MathML に対応していない}} 可能性がある。
+MathML の数式を HTML に埋め込むとき、数式の開始要素は {{c1::&lt;math&gt;}}、分数は {{c2::&lt;mfrac&gt;}}、数値は {{c3::&lt;mn&gt;}}、演算子は {{c4::&lt;mo&gt;}} で表す。

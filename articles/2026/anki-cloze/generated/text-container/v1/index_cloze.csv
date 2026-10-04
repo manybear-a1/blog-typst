@@ -1,0 +1,563 @@
+#separator:Comma
+#html:true
+#notetype:穴埋め左寄せ
+#columns:テキスト,裏面追記
+#tags:mathml/text_container/index.md
+<p>MathML のトークン要素を意味に応じて対応付けると、識別子は {{c1::&lt;mi&gt;}}、数値リテラルは {{c2::&lt;mn&gt;}}、演算子は {{c3::&lt;mo&gt;}}、任意の短いテキストは {{c4::&lt;mtext&gt;}} です。</p>,"<h2>ちょっとした意味づけ</h2>
+<p><a href=""/ja/docs/Web/MathML/Tutorials/For_beginners/Getting_started"">MathML を始めよう</a>の記事で、 MathML の数式中のテキストは <code>&lt;mn&gt;</code> や <code>&lt;mo&gt;</code> のような固有のコンテナー要素に包まれていることに注目しました。より一般的には、 MathML 数式のすべてのテキストはトークン要素と呼ばれるコンテナーの中に記載しなければなりません。さらに、 MathML ではテキストコンテンツの様々な意味を判別するために、複数のトークン要素を指定しています。</p>
+<ul>
+<li><code>&lt;mi&gt;</code> 要素は「識別子」を表します。この「識別子」は記号でも任意のテキストでもかまいません。例えば、<code>&lt;mi&gt;x&lt;/mi&gt;</code> （変数）、<code>&lt;mi&gt;cos&lt;/mi&gt;</code> （関数名）、<code>&lt;mi&gt;π&lt;/mi&gt;</code>（記号定数）などです。</li>
+<li><code>&lt;mn&gt;</code> 要素は「数値リテラル」、または数値リテラルとして表示されるべき他のデータを表します。例えば、<code>&lt;mn&gt;2&lt;/mn&gt;</code> （整数）、 <code>&lt;mn&gt;0.123&lt;/mn&gt;</code> （10 進数）、 <code>&lt;mn&gt;0xFFEF&lt;/mn&gt;</code> （16 進数値）などです。</li>
+<li><code>&lt;mo&gt;</code> 要素は演算子、または演算子として表示されるべき何らかのものを表します。例えば、 <code>&lt;mo&gt;+&lt;/mo&gt;</code> （二項演算子）、 <code>&lt;mo&gt;≤&lt;/mo&gt;</code> （二項関係演算子）、 <code>&lt;mo&gt;∑&lt;/mo&gt;</code> （和記号）、 <code>&lt;mo&gt;[&lt;/mo&gt;</code> （フェンス）などです。</li>
+<li><code>&lt;mtext&gt;</code> 要素は任意のテキストを表すために使用します。例えば <code>&lt;mtext&gt;if&lt;mtext&gt;</code> や <code>&lt;mtext&gt;maps to&lt;/mtext&gt;</code> のような数式中の短い単語です。</li>
+</ul>"
+<p>MathML 数式中のテキストは、一般に {{c1::トークン要素と呼ばれるコンテナー}}の中に記載します。これは数式内のテキストの意味を表すためです。</p>,"<h2>ちょっとした意味づけ</h2>
+<p><a href=""/ja/docs/Web/MathML/Tutorials/For_beginners/Getting_started"">MathML を始めよう</a>の記事で、 MathML の数式中のテキストは <code>&lt;mn&gt;</code> や <code>&lt;mo&gt;</code> のような固有のコンテナー要素に包まれていることに注目しました。より一般的には、 MathML 数式のすべてのテキストはトークン要素と呼ばれるコンテナーの中に記載しなければなりません。さらに、 MathML ではテキストコンテンツの様々な意味を判別するために、複数のトークン要素を指定しています。</p>
+<ul>
+<li><code>&lt;mi&gt;</code> 要素は「識別子」を表します。この「識別子」は記号でも任意のテキストでもかまいません。例えば、<code>&lt;mi&gt;x&lt;/mi&gt;</code> （変数）、<code>&lt;mi&gt;cos&lt;/mi&gt;</code> （関数名）、<code>&lt;mi&gt;π&lt;/mi&gt;</code>（記号定数）などです。</li>
+<li><code>&lt;mn&gt;</code> 要素は「数値リテラル」、または数値リテラルとして表示されるべき他のデータを表します。例えば、<code>&lt;mn&gt;2&lt;/mn&gt;</code> （整数）、 <code>&lt;mn&gt;0.123&lt;/mn&gt;</code> （10 進数）、 <code>&lt;mn&gt;0xFFEF&lt;/mn&gt;</code> （16 進数値）などです。</li>
+<li><code>&lt;mo&gt;</code> 要素は演算子、または演算子として表示されるべき何らかのものを表します。例えば、 <code>&lt;mo&gt;+&lt;/mo&gt;</code> （二項演算子）、 <code>&lt;mo&gt;≤&lt;/mo&gt;</code> （二項関係演算子）、 <code>&lt;mo&gt;∑&lt;/mo&gt;</code> （和記号）、 <code>&lt;mo&gt;[&lt;/mo&gt;</code> （フェンス）などです。</li>
+<li><code>&lt;mtext&gt;</code> 要素は任意のテキストを表すために使用します。例えば <code>&lt;mtext&gt;if&lt;mtext&gt;</code> や <code>&lt;mtext&gt;maps to&lt;/mtext&gt;</code> のような数式中の短い単語です。</li>
+</ul>"
+<p>絶対値の式 <code>|x| = x iff x ≥ 0</code> では、絶対値の各 <code>|</code> は {{c1::&lt;mo&gt;}}、変数 <code>x</code> は {{c2::&lt;mi&gt;}}、関係 <code>=</code> と <code>≥</code> も {{c3::&lt;mo&gt;}}、数値 <code>0</code> は {{c4::&lt;mn&gt;}} です。絶対値部分は {{c5::&lt;mrow&gt;}} でグループ化されています。</p>,"<h3>演習: トークン要素を認識する</h3>
+<p>下記の例はもっと複雑で、実数の絶対値が負でない場合に限り、その実数に等しいと言うものです。さまざまなトークンの要素や、それらがどのような用途で使用されているか、ぜひ探してみてください。対応するテキストをクリックするたびに、そのテキストは強調表示され、確認メッセージが表示されます。</p>
+<div class=""mdn-code-example""><pre><code class=""language-html"">&lt;!doctype html&gt;
+&lt;html lang=""ja""&gt;
+  &lt;head&gt;
+    &lt;meta charset=""utf-8"" /&gt;
+    &lt;title&gt;数学記号の入ったマイページ&lt;/title&gt;
+    &lt;link
+      rel=""stylesheet""
+      href=""https://fred-wang.github.io/MathFonts/LatinModern/mathfonts.css"" /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;math display=""block""&gt;
+      &lt;mrow&gt;
+        &lt;mrow&gt;
+          &lt;mo&gt;|&lt;/mo&gt;
+          &lt;mi&gt;x&lt;/mi&gt;
+          &lt;mo&gt;|&lt;/mo&gt;
+        &lt;/mrow&gt;
+        &lt;mo&gt;=&lt;/mo&gt;
+        &lt;mi&gt;x&lt;/mi&gt;
+      &lt;/mrow&gt;
+      &lt;mtext&gt;&amp;nbsp;iff&amp;nbsp;&lt;/mtext&gt;
+      &lt;mrow&gt;
+        &lt;mi&gt;x&lt;/mi&gt;
+        &lt;mo&gt;≥&lt;/mo&gt;
+        &lt;mn&gt;0&lt;/mn&gt;
+      &lt;/mrow&gt;
+    &lt;/math&gt;
+    &lt;input type=""button"" id=""clearOutput"" value=""リセット"" /&gt;
+    &lt;div id=""output""&gt;&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre><hr><div class=""mdn-rendered-result""><!doctype html>
+<html lang=""ja"">
+  <head>
+    <meta charset=""utf-8"" />
+    <title>数学記号の入ったマイページ</title>
+    <link
+      rel=""stylesheet""
+      href=""https://fred-wang.github.io/MathFonts/LatinModern/mathfonts.css"" />
+  </head>
+  <body>
+    <math display=""block"">
+      <mrow>
+        <mrow>
+          <mo>|</mo>
+          <mi>x</mi>
+          <mo>|</mo>
+        </mrow>
+        <mo>=</mo>
+        <mi>x</mi>
+      </mrow>
+      <mtext>&nbsp;iff&nbsp;</mtext>
+      <mrow>
+        <mi>x</mi>
+        <mo>≥</mo>
+        <mn>0</mn>
+      </mrow>
+    </math>
+    <input type=""button"" id=""clearOutput"" value=""リセット"" />
+    <div id=""output""></div>
+  </body>
+</html></div><hr></div>
+<div class=""mdn-code-example""><pre><code class=""language-css"">.highlight {
+  color: red;
+}
+math {
+  font-size: 200%;
+}</code></pre><hr><div class=""mdn-rendered-result"">.highlight {
+  color: red;
+}
+math {
+  font-size: 200%;
+}</div><hr></div>
+<div class=""mdn-code-example""><pre><code class=""language-js"">const tokenElements = Array.from(
+  document.querySelectorAll(""mi, mo, mn, mtext""),
+);
+const outputDiv = document.getElementById(""output"");
+function clearHighlight() {
+  tokenElements.forEach((token) =&gt; {
+    token.classList.remove(""highlight"");
+  });
+}
+tokenElements.forEach((token) =&gt; {
+  token.addEventListener(""click"", () =&gt; {
+    clearHighlight();
+    token.classList.add(""highlight"");
+    outputDiv.insertAdjacentHTML(
+      ""beforeend"",
+      `&lt;p&gt;&lt;strong&gt;&lt;code&gt;&amp;lt;${token.tagName}&amp;gt;&lt;/code&gt; 要素をクリックしました。&lt;/strong&gt;&lt;/p&gt;`,
+    );
+  });
+});
+document.getElementById(""clearOutput"").addEventListener(""click"", () =&gt; {
+  clearHighlight();
+  outputDiv.textContent = """";
+});</code></pre><hr><div class=""mdn-rendered-result"">const tokenElements = Array.from(
+  document.querySelectorAll(""mi, mo, mn, mtext""),
+);
+const outputDiv = document.getElementById(""output"");
+function clearHighlight() {
+  tokenElements.forEach((token) => {
+    token.classList.remove(""highlight"");
+  });
+}
+tokenElements.forEach((token) => {
+  token.addEventListener(""click"", () => {
+    clearHighlight();
+    token.classList.add(""highlight"");
+    outputDiv.insertAdjacentHTML(
+      ""beforeend"",
+      `<p><strong><code>&lt;${token.tagName}&gt;</code> 要素をクリックしました。</strong></p>`,
+    );
+  });
+});
+document.getElementById(""clearOutput"").addEventListener(""click"", () => {
+  clearHighlight();
+  outputDiv.textContent = """";
+});</div><hr></div>
+
+<p>最後に、 MathML のソースを読んで、それがあなたの予想と一致しているかどうかを確認してください。</p>
+<pre><code class=""language-xml"">&lt;math display=&quot;block&quot;&gt;
+  &lt;mrow&gt;
+    &lt;mrow&gt;
+      &lt;mo&gt;|&lt;/mo&gt;
+      &lt;mi&gt;x&lt;/mi&gt;
+      &lt;mo&gt;|&lt;/mo&gt;
+    &lt;/mrow&gt;
+    &lt;mo&gt;=&lt;/mo&gt;
+    &lt;mi&gt;x&lt;/mi&gt;
+  &lt;/mrow&gt;
+  &lt;mtext&gt;&amp;nbsp;iff&amp;nbsp;&lt;/mtext&gt;
+  &lt;mrow&gt;
+    &lt;mi&gt;x&lt;/mi&gt;
+    &lt;mo&gt;≥&lt;/mo&gt;
+    &lt;mn&gt;0&lt;/mn&gt;
+  &lt;/mrow&gt;
+&lt;/math&gt;
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+指定されたテキストコンテンツにどのトークン要素を使用するかを決めるのは難しい場合があります。実際には、間違った要素を選んでも大きな問題が発生することはありません。なぜなら、すべてのトークン要素はブラウザー実装によって一般的に同じようにレンダリングされるからです（視覚的な表示と支援技術のために）。しかし、<code>&lt;mi&gt;</code> 要素と <code>&lt;mo&gt;</code> 要素には特別な判別する機能があるので注意が必要です。それらは以下の節で説明します。</p>
+</blockquote>"
+<p><code>&lt;mi&gt;</code> の自動イタリック化は、{{c1::ラテン文字またはギリシャ文字の単一文字}}に適用されます。そのため <code>&lt;mi&gt;x&lt;/mi&gt;</code> はイタリックになり、複数文字の <code>&lt;mi&gt;sin&lt;/mi&gt;</code> は同じ規則ではイタリックになりません。</p>,"<h2>&lt;mi&gt; の自動的なイタリック化</h2>
+<p>数学における組版上の慣例として、変数にはイタリック体を使用する慣例があります。そのために、単一の文字を持つ <code>&lt;mi&gt;</code> 要素は自動的にイタリック体として表示されます。これはラテン文字とギリシャ文字のすべてについて当てはまります。以下の式の 2 つの <code>&lt;mi&gt;</code> 要素のレンダリングを見比べてください。</p>
+<div class=""mdn-code-example""><pre><code class=""language-html"">&lt;math&gt;
+  &lt;mi&gt;sin&lt;/mi&gt;
+  &lt;mi&gt;x&lt;/mi&gt;
+&lt;/math&gt;</code></pre><hr><div class=""mdn-rendered-result""><math>
+  <mi>sin</mi>
+  <mi>x</mi>
+</math></div><hr></div>
+
+<blockquote>
+<p>[!NOTE]
+<a href=""https://w3c.github.io/mathml-core/#italic-mappings"">MathML Core のこの表</a>は、斜体化の指定された文字の完全なリストと、それに対応する斜体文字を提供しています。</p>
+</blockquote>"
+"<p><code>&lt;mi&gt;Γ&lt;/mi&gt;</code> を直立体で表示したいときは、<code>&lt;mi&gt;</code> に {{c1::mathvariant=""normal""}} 属性を付けます。</p>","<h2>&lt;mi&gt; の自動的なイタリック化の取り消し</h2>
+<p>この既定のイタリックへの変換は、 <code>&lt;mi&gt;</code> 要素に <code>mathvariant=""normal""</code> 属性を付けることで取り消すことができます。
+以下の式でガンマ文字の大文字の描画を比較してみてください。</p>
+<div class=""mdn-code-example""><pre><code class=""language-html"">&lt;math&gt;
+  &lt;mi&gt;Γ&lt;/mi&gt;
+  &lt;mi mathvariant=""normal""&gt;Γ&lt;/mi&gt;
+&lt;/math&gt;</code></pre><hr><div class=""mdn-rendered-result""><math>
+  <mi>Γ</mi>
+  <mi mathvariant=""normal"">Γ</mi>
+</math></div><hr></div>
+
+<blockquote>
+<p>[!NOTE]
+この変換を適用することができますが、通常は専用の<a href=""https://ja.wikipedia.org/wiki/数学用英数字記号"">数学用英数字記号</a>を使用します。</p>
+</blockquote>"
+<p><code>&lt;mo&gt;</code> の既定プロパティは、演算子辞書に基づき、コンテナー内での位置である {{c1::前置き・中間・後置き}} とコンテンツに応じて決まります。したがって同じ <code>+</code> でも前置と中間で空間が異なります。</p>,"<h2>&lt;mo&gt; の演算子プロパティ</h2>
+<p>MathML には<a href=""https://w3c.github.io/mathml-core/#operator-dictionary-human"">演算子辞書</a>があり、 <code>&lt;mo&gt;</code> 要素のコンテンツとコンテナー内での位置（前置き、中間、後置き）に応じて既定のプロパティを定義しています。具体例を考えてみましょう。</p>
+<div class=""mdn-code-example""><pre><code class=""language-html"">&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;前置プラス&lt;/td&gt;
+      &lt;td&gt;
+        &lt;math&gt;
+          &lt;mo&gt;+&lt;/mo&gt;
+          &lt;mi&gt;i&lt;/mi&gt;
+        &lt;/math&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;中間プラス&lt;/td&gt;
+      &lt;td&gt;
+        &lt;math&gt;
+          &lt;mi&gt;j&lt;/mi&gt;
+          &lt;mo&gt;+&lt;/mo&gt;
+          &lt;mi&gt;i&lt;/mi&gt;
+        &lt;/math&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;前置合計&lt;/td&gt;
+      &lt;td&gt;
+        &lt;math&gt;
+          &lt;mo&gt;∑&lt;/mo&gt;
+          &lt;mi&gt;i&lt;/mi&gt;
+        &lt;/math&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre><hr><div class=""mdn-rendered-result""><table>
+  <tbody>
+    <tr>
+      <td>前置プラス</td>
+      <td>
+        <math>
+          <mo>+</mo>
+          <mi>i</mi>
+        </math>
+      </td>
+    </tr>
+    <tr>
+      <td>中間プラス</td>
+      <td>
+        <math>
+          <mi>j</mi>
+          <mo>+</mo>
+          <mi>i</mi>
+        </math>
+      </td>
+    </tr>
+    <tr>
+      <td>前置合計</td>
+      <td>
+        <math>
+          <mo>∑</mo>
+          <mi>i</mi>
+        </math>
+      </td>
+    </tr>
+  </tbody>
+</table></div><hr></div>
+<p>この例は下記のスクリーンショットのように表示されるはずです。 <code>&lt;mi&gt;i&lt;/mi&gt;</code> 要素とそれに先行する <code>&lt;mo&gt;</code> の間の空間をよく見てください。前置プラスには空間がなく、中間プラスにはいくらか空間があり、前置き和記号には小さめの空間があります。</p>
+<p><img alt=""演算子の空間が異なる MathML 数式のスクリーンショット"" src=""operator-spacing.png"" /></p>
+<p>演算子は他にも多くのプロパティを所持しており、後で詳しく説明します。これで、演算子辞書にある文字には <code>&lt;mo&gt;</code> コンテナーを使用し、 <code>&lt;mrow&gt;</code> 要素で部分式を適切にグループ化することで、 MathML レンダラーの助けになります。</p>"
+<p>数学記号を含む HTML 文書では、文字コードとして {{c1::UTF-8}} を指定し、数式記号の表示には {{c2::Latin Modern Math}} のような数学フォントを指定します。</p>,"<h2>数式のための Unicode 文字</h2>
+<p>数式には多くの特殊文字が含まれます。例えば、ギリシャ文字（例: Δ）、フラクター文字（例: 𝔄）、二重打文字（例: ℂ）、二項演算子（例: ≠）、矢印（例: ⇒）、積分記号（例: ∮）、和記号 (例: ∑), 論理記号 (例: ↪Ps∀), 柵 (例: ↪Ps_230A) など。ウィキペディアの記事 <a href=""https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode"">Unicode における数学演算子と記号</a><sup>(英語)</sup>は、使用する文字の概要を提供しています。</p>
+<p>これらの文字のほとんどは基本ラテン語 Unicode ブロックに属しませんので、<a href=""/ja/docs/Learn_web_development/Core/Structuring_content/Webpage_metadata#html_文書の文字コードを指定する"">文書の文字エンコーディング</a>を指定し、適切なウェブフォントで提供することをお勧めします。以下は UTF-8 エンコーディング方式と <a href=""/ja/docs/Web/MathML/Guides/Fonts#math_表を含むフォント"">Latin Modern Math</a> フォントを使用する基本的なテンプレートです。</p>
+<div class=""mdn-code-example""><pre><code class=""language-html"">&lt;!doctype html&gt;
+&lt;html lang=""ja""&gt;
+  &lt;head&gt;
+    &lt;meta charset=""utf-8"" /&gt;
+    &lt;title&gt;数学記号の入ったマイページ&lt;/title&gt;
+    &lt;link
+      rel=""stylesheet""
+      href=""https://fred-wang.github.io/MathFonts/LatinModern/mathfonts.css"" /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;p&gt;∀A∊𝔰𝔩(n,𝔽),TrA=0&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre><hr><div class=""mdn-rendered-result""><!doctype html>
+<html lang=""ja"">
+  <head>
+    <meta charset=""utf-8"" />
+    <title>数学記号の入ったマイページ</title>
+    <link
+      rel=""stylesheet""
+      href=""https://fred-wang.github.io/MathFonts/LatinModern/mathfonts.css"" />
+  </head>
+  <body>
+    <p>∀A∊𝔰𝔩(n,𝔽),TrA=0</p>
+  </body>
+</html></div><hr></div>
+
+<pre><code class=""language-css"">p {
+  font-family: &quot;Latin Modern Math&quot;, math;
+}
+</code></pre>"
+"<p>テキストだけの <code>∀A∊𝔰𝔩(n,𝔽),TrA=0</code> を MathML に書き換えると、量化記号や関係記号は {{c1::&lt;mo&gt;}}、単一の変数 <code>A</code> や <code>n</code> は {{c2::&lt;mi&gt;}}、数値 <code>0</code> は {{c3::&lt;mn&gt;}} になります。複数文字の <code>𝔰𝔩</code> と <code>Tr</code> はそれぞれ1つの <code>&lt;mi&gt;</code> に入ります。</p>","<h3>違いを見つける</h3>
+<p>これで <code>&lt;mi&gt;</code> と <code>&lt;mo&gt;</code> の特別な機能に少し慣れたと思いますので、<a href=""#数式のための_unicode_文字"">ページ先頭の例</a> の <code>&lt;p&gt;</code> 要素を実際の MathML で書き換えてみましょう。ブラウザーに視覚的に表示されたものを比較し、テキストのみのバージョンとの違いを説明してください。</p>
+<div class=""mdn-code-example""><pre><code class=""language-html"">&lt;!doctype html&gt;
+&lt;html lang=""ja""&gt;
+  &lt;head&gt;
+    &lt;meta charset=""utf-8"" /&gt;
+    &lt;title&gt;数学記号の入ったマイページ&lt;/title&gt;
+    &lt;link
+      rel=""stylesheet""
+      href=""https://fred-wang.github.io/MathFonts/LatinModern/mathfonts.css"" /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;p class=""text""&gt;∀A∊𝔰𝔩(n,𝔽),TrA=0&lt;/p&gt;
+    &lt;p&gt;
+      &lt;math&gt;
+        &lt;mo&gt;∀&lt;/mo&gt;
+        &lt;mrow&gt;
+          &lt;mi&gt;A&lt;/mi&gt;
+          &lt;mo&gt;∊&lt;/mo&gt;
+          &lt;mrow&gt;
+            &lt;mi&gt;𝔰𝔩&lt;/mi&gt;
+            &lt;mrow&gt;
+              &lt;mo&gt;(&lt;/mo&gt;
+              &lt;mi&gt;n&lt;/mi&gt;
+              &lt;mo&gt;,&lt;/mo&gt;
+              &lt;mi&gt;𝔽&lt;/mi&gt;
+              &lt;mo&gt;)&lt;/mo&gt;
+            &lt;/mrow&gt;
+          &lt;/mrow&gt;
+        &lt;/mrow&gt;
+        &lt;mo&gt;,&lt;/mo&gt;
+        &lt;mrow&gt;
+          &lt;mrow&gt;
+            &lt;mi&gt;Tr&lt;/mi&gt;
+            &lt;mi&gt;A&lt;/mi&gt;
+          &lt;/mrow&gt;
+          &lt;mo&gt;=&lt;/mo&gt;
+          &lt;mn&gt;0&lt;/mn&gt;
+        &lt;/mrow&gt;
+      &lt;/math&gt;
+    &lt;/p&gt;
+    &lt;input id=""showSolution"" type=""button"" value=""答えを表示"" /&gt;
+    &lt;div id=""solution""&gt;&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre><hr><div class=""mdn-rendered-result""><!doctype html>
+<html lang=""ja"">
+  <head>
+    <meta charset=""utf-8"" />
+    <title>数学記号の入ったマイページ</title>
+    <link
+      rel=""stylesheet""
+      href=""https://fred-wang.github.io/MathFonts/LatinModern/mathfonts.css"" />
+  </head>
+  <body>
+    <p class=""text"">∀A∊𝔰𝔩(n,𝔽),TrA=0</p>
+    <p>
+      <math>
+        <mo>∀</mo>
+        <mrow>
+          <mi>A</mi>
+          <mo>∊</mo>
+          <mrow>
+            <mi>𝔰𝔩</mi>
+            <mrow>
+              <mo>(</mo>
+              <mi>n</mi>
+              <mo>,</mo>
+              <mi>𝔽</mi>
+              <mo>)</mo>
+            </mrow>
+          </mrow>
+        </mrow>
+        <mo>,</mo>
+        <mrow>
+          <mrow>
+            <mi>Tr</mi>
+            <mi>A</mi>
+          </mrow>
+          <mo>=</mo>
+          <mn>0</mn>
+        </mrow>
+      </math>
+    </p>
+    <input id=""showSolution"" type=""button"" value=""答えを表示"" />
+    <div id=""solution""></div>
+  </body>
+</html></div><hr></div>
+
+<pre><code class=""language-css"">div {
+  padding: 0.5em;
+}
+
+.text {
+  font-family: &quot;Latin Modern Math&quot;, math;
+}
+</code></pre>
+<pre><code class=""language-js"">document.getElementById(&quot;showSolution&quot;).addEventListener(
+  &quot;click&quot;,
+  () =&gt; {
+    document.getElementById(&quot;solution&quot;).insertAdjacentHTML(
+      &quot;beforeEnd&quot;,
+      `&lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;&lt;code&gt;&amp;lt;mi&amp;gt;&lt;/code&gt; 要素に &quot;A&quot; および &quot;n&quot; 変数を格納すると、イタリック体でレンダリングされます&lt;/strong&gt;。ただし、 &lt;code&gt;&amp;lt;mi&amp;gt;&lt;/code&gt; 要素に複数の文字 &quot;𝔰𝔩&quot; や、そのような文字 &quot;𝔽&quot; を入れたりすると、直立のままレンダリングされます。&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;&lt;code&gt;&amp;lt;mo&amp;gt;&lt;/code&gt; 要素のテキストが　&quot;∀&quot;, &quot;∊&quot;, &quot;=&quot;, またはカンマの場合、自動的に空間が追加されます&lt;/strong&gt;。しかし、そのうちのいくつかは、括弧の周りに空間がないまま、前に空間が追加されません。&lt;/li&gt;
+    &lt;/ul&gt;`,
+    );
+  },
+  { once: true },
+);
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+明らかな違いは、 MathML ではソースコードがより冗長になることです。このチュートリアルはこの言語を学ぶためのものですが、実際には MathML のコンテンツは一般的に手動では書かれません。詳しい情報は <a href=""/ja/docs/Web/MathML/Guides/Authoring"">MathML を書く</a>のページを参照してください。</p>
+</blockquote>"
+<p><code>|1/x| = 1/|x| = 1/x</code> の例で縦方向に伸縮するのは、最初の2つの {{c1::&lt;mo&gt;|&lt;/mo&gt;}} です。これらは子孫の {{c2::&lt;mfrac&gt;}} の高さに合わせて伸縮します。</p>,"<h3>伸縮演算子を確認</h3>
+<p>演算子辞書では、いくつかの演算子に対応する伸縮軸と同様に、既定の伸縮プロパティを定義しています。例えば、演算子は既定では縦方向に伸縮し、 <code>&lt;mrow&gt;</code> コンテナー内の伸縮しない兄弟の最大の高さに応じた伸縮を行います。<a href=""#演習_トークン要素を認識する"">前の練習</a>を少し調整することで、演算子を垂直に伸縮させることができます。見つけられますか？</p>
+<pre><code class=""language-html"">&lt;!doctype html&gt;
+&lt;html lang=&quot;ja&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot; /&gt;
+    &lt;title&gt;伸縮演算子のあるマイページ&lt;/title&gt;
+    &lt;link
+      rel=&quot;stylesheet&quot;
+      href=&quot;https://fred-wang.github.io/MathFonts/LatinModern/mathfonts.css&quot; /&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;math display=&quot;block&quot;&gt;
+      &lt;mrow&gt;
+        &lt;mrow&gt;
+          &lt;mo&gt;|&lt;/mo&gt;
+          &lt;mfrac&gt;
+            &lt;mn&gt;1&lt;/mn&gt;
+            &lt;mi&gt;x&lt;/mi&gt;
+          &lt;/mfrac&gt;
+          &lt;mo&gt;|&lt;/mo&gt;
+        &lt;/mrow&gt;
+        &lt;mo&gt;=&lt;/mo&gt;
+        &lt;mfrac&gt;
+          &lt;mn&gt;1&lt;/mn&gt;
+          &lt;mrow&gt;
+            &lt;mo&gt;|&lt;/mo&gt;
+            &lt;mi&gt;x&lt;/mi&gt;
+            &lt;mo&gt;|&lt;/mo&gt;
+          &lt;/mrow&gt;
+        &lt;/mfrac&gt;
+        &lt;mo&gt;=&lt;/mo&gt;
+        &lt;mfrac&gt;
+          &lt;mn&gt;1&lt;/mn&gt;
+          &lt;mi&gt;x&lt;/mi&gt;
+        &lt;/mfrac&gt;
+      &lt;/mrow&gt;
+      &lt;mtext&gt;&amp;nbsp;iff&amp;nbsp;&lt;/mtext&gt;
+      &lt;mrow&gt;
+        &lt;mi&gt;x&lt;/mi&gt;
+        &lt;mo&gt;≥&lt;/mo&gt;
+        &lt;mn&gt;0&lt;/mn&gt;
+      &lt;/mrow&gt;
+    &lt;/math&gt;
+    &lt;input type=&quot;button&quot; id=&quot;clearOutput&quot; value=&quot;リセット&quot; /&gt;
+    &lt;div id=&quot;output&quot;&gt;&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<pre><code class=""language-css"">.highlight {
+  color: red;
+}
+math {
+  font-size: 200%;
+}
+</code></pre>
+<pre><code class=""language-js-nolint"">const tokenElements = Array.from(
+  document.querySelectorAll(&quot;mi, mo, mn, mtext&quot;),
+);
+const stretchyMoElements = Array.from(
+  document.getElementsByTagName(&quot;mo&quot;),
+).slice(0, 2);
+const outputDiv = document.getElementById(&quot;output&quot;);
+function clearHighlight() {
+  tokenElements.forEach((token) =&gt; {
+    token.classList.remove(&quot;highlight&quot;);
+  });
+}
+tokenElements.forEach((token) =&gt; {
+  token.addEventListener(&quot;click&quot;, () =&gt; {
+    clearHighlight();
+    token.classList.add(&quot;highlight&quot;);
+    let message = &quot;&quot;;
+    let tagName = `&lt;code&gt;&amp;lt;${token.tagName}&amp;gt;&lt;/code&gt;`;
+    if (token.tagName !== &quot;mo&quot;) message = `いいえ、これは ${tagName} 要素です。`;
+    else if (!stretchyMoElements.includes(token))
+      message = `いいえ、これは ${tagName} 要素ですが、垂直方向に伸縮されていません。`;
+    else
+      message = `正解です。この ${tagName} 要素は子孫の &lt;code&gt;&amp;lt;mfrac&amp;gt;&lt;/code&gt; の高さまで必要に応じて伸縮されます。`;
+    outputDiv.insertAdjacentHTML(
+      &quot;beforeend&quot;,
+      `&lt;p&gt;&lt;strong&gt;${message}&lt;/strong&gt;&lt;/p&gt;`,
+    );
+  });
+});
+document.getElementById(&quot;clearOutput&quot;).addEventListener(&quot;click&quot;, () =&gt; {
+  clearHighlight();
+  outputDiv.textContent = &quot;&quot;;
+});
+</code></pre>
+<p>いつものように、完了したらソースコードを読んでください。</p>
+<pre><code class=""language-xml"">&lt;math display=&quot;block&quot;&gt;
+  &lt;mrow&gt;
+    &lt;mrow&gt;
+      &lt;mo&gt;|&lt;/mo&gt;
+      &lt;mfrac&gt;
+        &lt;mn&gt;1&lt;/mn&gt;
+        &lt;mi&gt;x&lt;/mi&gt;
+      &lt;/mfrac&gt;
+      &lt;mo&gt;|&lt;/mo&gt;
+    &lt;/mrow&gt;
+    &lt;mo&gt;=&lt;/mo&gt;
+    &lt;mfrac&gt;
+      &lt;mn&gt;1&lt;/mn&gt;
+      &lt;mrow&gt;
+        &lt;mo&gt;|&lt;/mo&gt;
+        &lt;mi&gt;x&lt;/mi&gt;
+        &lt;mo&gt;|&lt;/mo&gt;
+      &lt;/mrow&gt;
+    &lt;/mfrac&gt;
+    &lt;mo&gt;=&lt;/mo&gt;
+    &lt;mfrac&gt;
+      &lt;mn&gt;1&lt;/mn&gt;
+      &lt;mi&gt;x&lt;/mi&gt;
+    &lt;/mfrac&gt;
+  &lt;/mrow&gt;
+  &lt;mtext&gt;&amp;nbsp;iff&amp;nbsp;&lt;/mtext&gt;
+  &lt;mrow&gt;
+    &lt;mi&gt;x&lt;/mi&gt;
+    &lt;mo&gt;≥&lt;/mo&gt;
+    &lt;mn&gt;0&lt;/mn&gt;
+  &lt;/mrow&gt;
+&lt;/math&gt;
+</code></pre>
+<blockquote>
+<p>[!WARNING]
+伸縮できるようにするには、一般に特別な<a href=""/ja/docs/Web/MathML/Guides/Fonts"">数学フォント</a>が必要です。上記の例は<a href=""/ja/docs/Learn_web_development/Core/Text_styling/Web_fonts"">ウェブフォント</a>に頼っています。</p>
+</blockquote>"
+<p>次の MathML で <code>|x| = x iff x ≥ 0</code> を表すとき、絶対値の内側の <code>x</code> は {{c1::&lt;mi&gt;x&lt;/mi&gt;}}、等号は {{c2::&lt;mo&gt;=&lt;/mo&gt;}}、条件の <code>0</code> は {{c3::&lt;mn&gt;0&lt;/mn&gt;}} として記述します。</p>,"<p>最後に、 MathML のソースを読んで、それがあなたの予想と一致しているかどうかを確認してください。</p>
+<pre><code class=""language-xml"">&lt;math display=&quot;block&quot;&gt;
+  &lt;mrow&gt;
+    &lt;mrow&gt;
+      &lt;mo&gt;|&lt;/mo&gt;
+      &lt;mi&gt;x&lt;/mi&gt;
+      &lt;mo&gt;|&lt;/mo&gt;
+    &lt;/mrow&gt;
+    &lt;mo&gt;=&lt;/mo&gt;
+    &lt;mi&gt;x&lt;/mi&gt;
+  &lt;/mrow&gt;
+  &lt;mtext&gt;&amp;nbsp;iff&amp;nbsp;&lt;/mtext&gt;
+  &lt;mrow&gt;
+    &lt;mi&gt;x&lt;/mi&gt;
+    &lt;mo&gt;≥&lt;/mo&gt;
+    &lt;mn&gt;0&lt;/mn&gt;
+  &lt;/mrow&gt;
+&lt;/math&gt;
+</code></pre>"
+<p>テキストコンテナーの選択に迷っても、一般にはすべてのトークン要素が同じようにレンダリングされます。ただし {{c1::&lt;mi&gt;}} と {{c2::&lt;mo&gt;}} には自動イタリック化や演算子プロパティという特別な機能があります。</p>,"<blockquote>
+<p>[!NOTE]
+指定されたテキストコンテンツにどのトークン要素を使用するかを決めるのは難しい場合があります。実際には、間違った要素を選んでも大きな問題が発生することはありません。なぜなら、すべてのトークン要素はブラウザー実装によって一般的に同じようにレンダリングされるからです（視覚的な表示と支援技術のために）。しかし、<code>&lt;mi&gt;</code> 要素と <code>&lt;mo&gt;</code> 要素には特別な判別する機能があるので注意が必要です。それらは以下の節で説明します。</p>
+</blockquote>"
+<p>伸縮演算子を正しく表示するには、一般に {{c1::特別な数学フォント}} が必要です。ブラウザーの既定フォントだけに依存すると、縦方向の伸縮用グリフがない場合があります。</p>,"<blockquote>
+<p>[!WARNING]
+伸縮できるようにするには、一般に特別な<a href=""/ja/docs/Web/MathML/Guides/Fonts"">数学フォント</a>が必要です。上記の例は<a href=""/ja/docs/Learn_web_development/Core/Text_styling/Web_fonts"">ウェブフォント</a>に頼っています。</p>
+</blockquote>"
