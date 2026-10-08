@@ -1,0 +1,171 @@
+"下付き文字を表す MathML 要素は {{c1::<msub>::下付き文字要素}} です。この要素はちょうど {{c2::2 つ::子要素の数}} の子要素を持ち、2 つ目の子が 1 つ目の子の下付き文字として添付されます。
+
+```html
+<math>
+  {{c1::<msub>
+    <mi>x</mi>
+    <mn>1</mn>
+  </msub>::x_1 の MathML 表現}}
+</math>
+```"
+"上付き文字を表す MathML 要素は {{c1::<msup>::上付き文字要素}} です。この要素はちょうど {{c2::2 つ::子要素の数}} の子要素を持ち、2 つ目の子が 1 つ目の子の上付き文字として添付されます。
+
+```html
+<math>
+  {{c1::<msup>
+    <mi>x</mi>
+    <mn>2</mn>
+  </msup>::x^2 の MathML 表現}}
+</math>
+```"
+"下付き文字と上付き文字の両方を同時に表す MathML 要素は {{c1::<msubsup>::下付き・上付き文字要素}} です。この要素はちょうど {{c2::3 つ::子要素の数}} の子要素を持ち、2 つ目が下付き、3 つ目が上付き文字となります。
+
+```html
+<math>
+  {{c1::<msubsup>
+    <mi>x</mi>
+    <mn>1</mn>
+    <mn>2</mn>
+  </msubsup>::x_1^2 の MathML 表現}}
+</math>
+```"
+"MathML の `<msub>` と `<msup>` 要素は、HTML の `<sub>` と `<sup>` 要素とは異なり、テキストに限らず {{c1::任意の MathML サブツリー::添字として提供できるもの}} を添字として提供できます。"
+"真上付き文字（ベースラインの真上）を表す MathML 要素は {{c1::<mover>::真上付き文字要素}} です。この要素はちょうど 2 つの子要素を持ちます。
+
+```html
+<math>
+  {{c1::<mover>
+    <mi>x</mi>
+    <mo>→</mo>
+  </mover>::x に右向き矢印を真上に付ける表現}}
+</math>
+```"
+"真下付き文字（ベースラインの真下）を表す MathML 要素は {{c1::<munder>::真下付き文字要素}} です。この要素はちょうど 2 つの子要素を持ちます。
+
+```html
+<math>
+  {{c1::<munder>
+    <mi>x</mi>
+    <mo>⎵</mo>
+  </munder>::x に下カッコを真下に付ける表現}}
+</math>
+```"
+"真下付き文字と真上付き文字の両方を同時に表す MathML 要素は {{c1::<munderover>::真下・真上付き文字要素}} です。この要素はちょうど {{c2::3 つ::子要素の数}} の子要素を持ちます。
+
+```html
+<math>
+  {{c1::<munderover>
+    <mo>∑</mo>
+    <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+    <mi>n</mi>
+  </munderover>::Σ_{i=1}^n の MathML 表現}}
+</math>
+```"
+"以下の MathML コードで、β に下カッコを真下に付け、3 乗根を取る式を表している部分は {{c1::<mroot> の子要素として <munder> を配置する::入れ子の構造}} です。
+
+```html
+<math display=""block"">
+  {{c1::<mroot>
+    <mrow>
+      <munder>
+        <mi>β</mi>
+        <mo>⎵</mo>
+      </munder>
+    </mrow>
+    <mn>3</mn>
+  </mroot>::3乗根全体の表現}}
+</math>
+```"
+"以下の MathML コードで、α に右向き矢印を真上に付け、絶対値を取り、s^3 で割る式を表している部分は {{c1::<mfrac> の分子に <mover> を配置する::分数の分子での真上付き文字}} です。
+
+```html
+<math display=""block"">
+  <mfrac>
+    <mrow>
+      <mo>|</mo>
+      {{c1::<mover>
+        <mi>α</mi>
+        <mo>→</mo>
+      </mover>::α に矢印を真上に付ける}}
+      <mo>|</mo>
+    </mrow>
+    <msup><mi>s</mi><mn>3</mn></msup>
+  </mfrac>
+</math>
+```"
+"以下の MathML コードで、Σ の下に i=1、上に n を付け、√(a_i - K_0^i) を掛ける式を表している部分は {{c1::<munderover> で Σ に上下の添字を付ける::和記号への添字付け}} です。
+
+```html
+<math display=""block"">
+  <mrow>
+    {{c1::<munderover>
+      <mo>∑</mo>
+      <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+      <mi>n</mi>
+    </munderover>::Σ_{i=1}^n の表現}}
+    <msqrt>
+      <mrow>
+        <msub><mi>a</mi><mi>i</mi></msub>
+        <mo>−</mo>
+        <msubsup><mi>K</mi><mn>0</mn><mi>i</mi></msubsup>
+      </mrow>
+    </msqrt>
+  </mrow>
+</math>
+```"
+"水平方向に伸縮する演算子（下カッコ ⎵ や右向き矢印 → など）は、`<munder>`、`<mover>`、`<munderover>` 要素内で、伸縮しない {{c1::兄弟要素の幅::伸縮の基準}} に応じて伸縮します。これは縦方向の伸縮が `<mrow>` 内の兄弟の高さに応じて行われるのと同様です。
+
+```html
+<munder>
+  <mrow>
+    <msub><mi>z</mi><mn>1</mn></msub>
+    <mo>+</mo>
+    <msub><mi>z</mi><mn>2</mn></msub>
+  </mrow>
+  {{c1::<mo>⎵</mo>::水平に伸びる下カッコ}}
+</munder>
+```"
+"`<math>` 要素に `display=""block""` 属性がある場合、大きな演算子（∑ など）は {{c1::より大きな字形::大型字形}} で描画されます。また、真下付き・真上付き文字はそれぞれ {{c2::下付き・上付き文字の位置::制限の位置}} に表示されます（移動制限特性）。
+
+```html
+{{c1::<math display=""block"">::ブロック表示では大きな演算子と制限が適用される}}
+  <munderover>
+    <mo>∑</mo>
+    <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+    <mi>n</mi>
+  </munderover>
+</math>
+```"
+"`<math>` 要素に `display=""block""` 属性がない場合（インライン表示）、大きな演算子は {{c1::小さな字形::小型字形}} で描画され、真下付き・真上付き文字はそれぞれ {{c2::下付き・上付き文字の位置::制限の位置}} に移動して表示されます。
+
+```html
+{{c1::<math>::インライン表示では小さな演算子と制限が移動する}}
+  <munderover>
+    <mo>∑</mo>
+    <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+    <mi>n</mi>
+  </munderover>
+</math>
+```"
+"「大きな演算子」特性を持つ演算子は一般的に {{c1::添字が付く::添字の有無}} ものですが、この特性自体は添字とは無関係です。一方、「移動制限」特性は `<munder>` と `<mover>` 要素にも適用されます。
+
+```html
+<!-- 移動制限は munder/mover にも適用される -->
+<munder>
+  <mo>∑</mo>
+  <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow>
+</munder>
+```"
+"この記事で紹介された 6 つの添字要素は、{{c1::<msub>、<msup>、<msubsup>、<munder>、<mover>、<munderover>::6つの添字要素}} です。これらを用いて基本的なレイアウトの確認が完了しました。"
+"以下の MathML コードで、a_i と K_0^i の差の平方根を表している部分は {{c1::<msqrt> 内に <msub> と <msubsup> を配置する::平方根の中の添字式}} です。
+
+```html
+<msqrt>
+  <mrow>
+    {{c1::<msub><mi>a</mi><mi>i</mi></msub>::a_i}}
+    <mo>−</mo>
+    {{c1::<msubsup><mi>K</mi><mn>0</mn><mi>i</mi></msubsup>::K_0^i}}
+  </mrow>
+</msqrt>
+```"
+"伸縮演算子の水平方向の伸縮は、`<munder>`、`<mover>`、`<munderover>` 要素の {{c1::どの子要素に対しても::対象の子要素}} 行うことができます。真下付き文字や真上付き文字に限定されません。"
