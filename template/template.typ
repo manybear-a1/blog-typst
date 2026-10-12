@@ -1,5 +1,6 @@
 #let show_blog_with_typst(body) = context {
   set text(lang: "jp")
+  show link: set text(fill: blue)
   // ここにcontextを二重につけてはいけない。
   show image: it => {
     if target() == "html" {
