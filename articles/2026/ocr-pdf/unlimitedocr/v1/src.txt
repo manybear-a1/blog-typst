@@ -1,0 +1,3 @@
+pdf:https://www.cambridge.org/core/services/aop-cambridge-core/content/view/18A13702FF264BBA3894B55E01832976/S0956796897002840a.pdf/a-functional-description-of-texs-formula-layout.pdf
+ipynb:https://github.com/baidu/Unlimited-OCR 
+ocr:https://github.com/baidu/Unlimited-OCR
