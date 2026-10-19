@@ -1,10 +1,5 @@
-#import "@preview/codly:1.3.0": *
-#import "@preview/codly-languages:0.1.1": *
 #import "/template/template.typ": *
-#show: show_blog_with_typst
-#show: codly-init.with()
 #show link: set text(fill: blue)
-#codly(languages: codly-languages)
 
 #let prompt_box(prompt) = {
   block(breakable: true, stroke: black, inset: 1em)[
@@ -21,28 +16,55 @@
   ]
 }
 
-= 穴埋め問題を作らせる
+= （私の）理想のAnkiの穴埋め問題を作らせる
+私は普段の学習でAnkiを使っている。Ankiはフラッシュカード#footnote("実際にはHTMLなので、その気になれば色々なことができる")を使った学習ツールで、ただ単に暗記するだけでなく、自由記述や計算問題も作れる。また、Ankiにはいくつかのノートタイプ（問題の種類）があるが、私は主に「Cloze」というノートタイプを使っている。Clozeは文章の一部を隠して穴埋め問題にすることができるノートタイプで、私は読んだ文章をそのままコピーして、その文章を穴埋め問題にしてAnkiに取り込むことが多い。文章をそのままコピーするので自分で文章を書く時間を節約でき、また自分が間違ったまとめ方をしてしまうこともない。#footnote("なんなら何度も解くうちに原文の間違いに気づくこともある。")
+== 使ったもの
 - 使用したAI:GPT-5.6-Luna(Github Copilot Chat)
 
 == まずはテスト
 とりあえず、穴埋め問題を作らせるテストをしてみる。
-作らせる題材にするのは、#link("https://github.com/mdn/translated-content/blob/4d60048518bfbe8ee8ffa0c89a2f141983f88c1a/files/ja/web/mathml/tutorials/for_beginners/getting_started/index.md")[MDN-MathML を始めよう] としてみる。（ちょうど自分が勉強していた。）
+作らせる題材にするのは、#link("https://github.com/mdn/translated-content/blob/4d60048518bfbe8ee8ffa0c89a2f141983f88c1a/files/ja/web/mathml/tutorials/for_beginners/getting_started/index.md")[MDN-MathML を始めよう] としてみる。（ちょうど自分が勉強していた。）まずは簡単に指示してみてどうなるかを見てみる。
 
 #prompt_box("getting_started.mdをankiの穴埋め問題にして")
 
 で、できたのがこれ。
-#codly-range(1, end: 15)
 #answer_box()[
-  #raw(read("generated/v1/getting_started_cloze.md"), lang: "markdown", block: true)
-]
-どうやって取り込めと？　あと、せっかく資料を渡したのに一から書き直さないでくれ。それだったら資料を渡さずに直接「mathmlの穴埋め問題を作れ」と言うよ！
+  ````
+  # MathML を始めよう: Anki Cloze カード
 
-まぁ、なにはともあれ、穴埋めのフォーマットは知っていることは確認できたが、どうもあまり知識がなさそうなので、公式ドキュメントの#link("https://github.com/ankitects/anki-manual/blob/00c7a9b31c0cf967ec44be74b6a56e188db5c311/src/importing/text-files.md")[importのページ]を読ませて再挑戦。（プロンプトは同じ）
-#answer_box()[
-  #codly-range(1, end: 5)
-  #raw(read("generated/v1/getting_started_cloze.txt"), lang: "txt", block: true)
+  Anki の「Cloze」ノートタイプで使用してください。各コードブロック内の 1 行が 1 ノートです。
+
+  ## 基本
+
+  ```text
+  MathML の数式を HTML 文書に挿入する要素は {{c1::<math>}} である。
+  ```
+
+  ```text
+  MathML は HTML と同じく、{{c1::要素と属性のツリー}}で構文を表す。
+  ```
+
+  ```text
+  分数を表す MathML 要素は {{c1::<mfrac>}} である。
+  ```
+  ......
+  ````
 ]
-今度はtxtファイルで正しい形式で出力してくれたので、Ankiに取り込める。が、やはり文章を一から書き直してしまっている。あと、txtファイルではなくcsvファイルで出力してくれた方がAnkiに取り込みやすいし、後から編集もしやすい。（なぜか公式ドキュメントではtxtになっているが）というわけで、プロンプトを変えて再度挑戦。
+どうやって取り込めと？　あと、せっかく資料を渡したのに一から書き直さないでくれ。それだったら資料を渡さずに直接「mathmlの穴埋め問題を作れ」と言うよ！　後簡単すぎない？
+
+まぁ、なにはともあれ、穴埋め問題のフォーマットは知っていることは確認できたが、どうもあまりAnkiの穴埋め問題の作り方の知識と穴埋め問題作成自体のセンスがなさそう。なので、公式ドキュメントの#link("https://github.com/ankitects/anki-manual/blob/00c7a9b31c0cf967ec44be74b6a56e188db5c311/src/importing/text-files.md")[importのページ]を読ませてまずは知識を補充して再挑戦。（プロンプトは同じ）
+#answer_box()[
+  ````
+  #notetype:Cloze
+  #html:true
+  #tags:mathml getting-started
+  MathML は HTML と同じ構文を用いて、{{c1::要素と属性のツリー}}を表す。<br>数式全体は {{c2::&lt;math&gt;}} 要素で表す。
+  HTML ページ内に MathML 数式を挿入するには、{{c1::&lt;math&gt;}} 要素を配置する。
+  {{c1::&lt;mfrac&gt;}} 要素は、最初の子を {{c2::分子}}、2 つ目の子を {{c3::分母}} とする分数を指定する。
+  ......
+  ````
+]
+今度はtxtファイルで正しい形式で出力してくれたので、Ankiに取り込める。が、やはり文章を一から書き直してしまっていて、資料を与えた意味があまりない。あと、txtファイルではなくcsvファイルで出力してくれた方がAnkiに取り込みやすいし、後から編集もしやすい。（なぜか公式ドキュメントではtxtになっているが）というわけで、プロンプトを変えて再度挑戦。
 
 #prompt_box(
   "getting_started.mdをankiの穴埋め問題にして。
@@ -52,7 +74,6 @@
 )
 #answer_box()[
   （筆者による抜粋）変換単位は、原文全体を 1 件の Cloze ノートにする形にします。本文の説明文・コード例・見出しは残し、MathML の主要要素名と display / CSS プロパティ名を原文の該当箇所だけ Cloze 化します。次に Python の re と csv.writer で CSV を生成し、読み戻して列数・Cloze 数・改行保持を検査します。
-  #codly-range(1, end: 12)
   ```shell
     @'
   from pathlib import Path
@@ -66,48 +87,91 @@
       "<math>", "</math>", "<mfrac>", "</mfrac>", "<mrow>", "</mrow>",
       "<mn>", "</mn>", "<mo>", "</mo>", 'display="block"', "math-style", "math-depth",
   ]
-  token_pattern = re.compile("|".join(re.escape(token) for token in tokens))
-  cloze_number = 0
-
-  def replace_token(match):
-      global cloze_number
-      cloze_number += 1
-      return "{{{{c{}::{}}}}}".format(cloze_number, match.group(0))
-
-  converted_text = token_pattern.sub(replace_token, text)
-  with output_path.open("w", encoding="utf-8", newline="") as output_file:
-      writer = csv.writer(output_file, lineterminator="\n", quoting=csv.QUOTE_MINIMAL)
-      writer.writerow(["Text", "Extra"])
-      writer.writerow([converted_text, "原文全体を保持し、MathML 要素名と関連プロパティを穴埋め化"])
-
-  with output_path.open("r", encoding="utf-8", newline="") as input_file:
-      rows = list(csv.reader(input_file))
-
-  print("rows:", len(rows))
-  print("field_counts:", [len(row) for row in rows])
-  print("source_characters:", len(text))
-  print("cloze_markers:", len(re.findall(r"\{\{c\d+::", converted_text)))
-  print("embedded_newlines:", "\n" in rows[1][0])
-  print("first_cloze:", re.search(r"\{\{c\d+::.*?\}\}", converted_text).group(0))
-  print("output:", output_path)
-  '@ | python -
   ```
   （省略）
 
   122 個の Cloze マーカーが生成され、CSV は 2 行・各 2 列として読み戻せています。
 
-  #codly-range(1, end: 12)
-  #raw(read("generated/v1/getting_started_cloze.csv"), lang: "csv", block: true)
+  ````
+    Text,Extra
+  "---
+  title: MathML を始めよう
+  short-title: 始めよう
+  slug: Web/MathML/Tutorials/For_beginners/Getting_started
+  l10n:
+    sourceCommit: 6b01bafc68dffb3a50f70882d2ba24cd6f9d886f
+  ---
+
+  {{NextMenu(""Web/MathML/Tutorials/For_beginners/Text_containers"", ""Web/MathML/Tutorials/For_beginners"")}}
+
+  この記事では、単純な HTML 文書を使い、そこに MathML 数式を追加する方法を、いくつかの要素を紹介しながら見ていきます。
+  ````
   （中略）
-  #codly-range(99, end: 150)
-  #raw(read("generated/v1/getting_started_cloze.csv"), lang: "csv", block: true)
+  ````
+    <ol>
+    <li>
+      「2 分の 1」足す「3 分の 2」:
+      <!-- math 要素の子要素を mrow 要素でグループ化するのは正しいですが、不必要です。 -->
+      {{c55::<math>}}
+        {{c56::<mfrac>}}
+          {{c57::<mn>}}1{{c58::</mn>}}
+          {{c59::<mn>}}2{{c60::</mn>}}
+        {{c61::</mfrac>}}
+        {{c62::<mo>}}+{{c63::</mo>}}
+        {{c64::<mfrac>}}
+          {{c65::<mn>}}2{{c66::</mn>}}
+          {{c67::<mn>}}3{{c68::</mn>}}
+        {{c69::</mfrac>}}
+      {{c70::</math>}}
+    </li>
+    <li>
+      「1 足す 2 足す 3」が「4 足す 5」の上にある:
+      {{c71::<math>}}
+        {{c72::<mfrac>}}
+          {{c73::<mrow>}}
+            {{c74::<mn>}}1{{c75::</mn>}}
+            {{c76::<mo>}}+{{c77::</mo>}}
+            {{c78::<mn>}}2{{c79::</mn>}}
+            {{c80::<mo>}}+{{c81::</mo>}}
+            {{c82::<mn>}}3{{c83::</mn>}}
+          {{c84::</mrow>}}
+          {{c85::<mrow>}}
+            {{c86::<mn>}}4{{c87::</mn>}}
+            {{c88::<mo>}}+{{c89::</mo>}}
+            {{c90::<mn>}}5{{c91::</mn>}}
+          {{c92::</mrow>}}
+        {{c93::</mfrac>}}
+      {{c94::</math>}}
+    </li>
+    <li>
+      「4 分の 1」が「2 足す 3」の上にある:
+      {{c95::<math>}}
+        {{c96::<mfrac>}}
+          {{c97::<mfrac>}}
+            {{c98::<mn>}}1{{c99::</mn>}}
+            {{c100::<mn>}}4{{c101::</mn>}}
+          {{c102::</mfrac>}}
+          {{c103::<mrow>}}
+            {{c104::<mn>}}2{{c105::</mn>}}
+            {{c106::<mo>}}+{{c107::</mo>}}
+            {{c108::<mn>}}3{{c109::</mn>}}
+          {{c110::</mrow>}}
+        {{c111::</mfrac>}}
+      {{c112::</math>}}
+    </li>
+  </ol>
+  ````
   （中略）
-  #codly-range(165, end: 169)
-  #raw(read("generated/v1/getting_started_cloze.csv"), lang: "csv", block: true)
+  ````
+    - {{cssxref(""{{c121::math-style}}"")}} プロパティ
+  - {{cssxref(""{{c122::math-depth}}"")}} プロパティ
+
+  {{NextMenu(""Web/MathML/Tutorials/For_beginners/Text_containers"", ""Web/MathML/Tutorials/For_beginners"")}}",?????????MathML ????????????????
+  ````
 ]
 
 
-どうしてそうなった？　原文をそのままってそういう意味じゃねぇよ！！！　あと、同じ単語全部穴埋めにしたうえで、穴埋めの個数が120個もあることになんで疑問を持たないの！？　あとpythonコードはファイルに書いてよ。後でまだ使うでしょ。そもそも、末尾の`?????????MathML ????????????????`は何！？
+どうしてそうなった！？　原文をそのままってそういう意味じゃねぇよ！！！　あと、同じ単語全部穴埋めにしたうえで、穴埋めの個数が120個もあることになんで疑問を持たないの！？　あとpythonコードはファイルに書いてよ。後でまだ使うでしょ。そもそも、末尾の`?????????MathML ????????????????`は何！？
 
 どうもLunaちゃんは穴埋め問題の作り方をあまり心得ていないようなので、少しカードの作り方を学習する必要がある。今回はankiのカードづくりのプロであるCherryさんが、#link("https://ko-fi.com/s/7ff7f4205c")[Cherry's 3 Rules of Card Creation (and How to Learn Anything) ]を公開してくれているので、それを参考にする。（驚くべきことに、Cherryさんはすごいクオリティのカードを無償で提供している。もちろんこのガイドも）このガイドによれば、今回の場合ではどうやら、Extraにいろいろ書いて、穴埋め部分は簡潔にするのがよいらしい。思い出してみると、原文をそのまま穴埋めにするのは、自分でカードを作るときには文章を新たに書くのが大変だから、という理由でやっていたことだった。今回はAIにカードを作らせるので、文章を新たに書くのもAIに任せればよい。
 
@@ -120,21 +184,60 @@
 ]
 
 #answer_box()[
-  #codly-range(1, end: 3)
-  #raw(read("generated/v2/getting_started_cloze.csv"), lang: "csv", block: true)
+  ````csv
+  MathML は HTML と同じ {{c1::構文}} を用いて要素と属性のツリーを表します。,MathML は HTML と同じ構文を用いて要素と属性のツリーを表します。
+  具体的な数式は {{c1::<math>}} 要素で表されます。,具体的な数式は `<math>` という要素で表され、 HTML ページの中に配置することができます。
+  <mfrac> は {{c1::分子（最初の子）}} と {{c1::分母（2 つ目の子）}} を持つ分数を指定します。,`<mfrac>` 要素は分子（最初の子）と分母（2 つ目の子）を持つ分数を指定します。
+  ````
 ]
 
-本当に該当部分だけを取り出してしまった。そうじゃない。それじゃあつける意味がないだろう。それに、途中で作成したpythonコードを使わないからと最後に削除してしまった。今後も利用して色々つけ足すことになるのだから、削除しないで残しておくべきだろう。
+本当に該当部分だけを取り出してしまった。そうじゃない。それじゃあ資料をわざわざつける意味がないだろう。（出典確認に使うにしても、この部分だけじゃどこから出てきたか探すのが大変）それに、途中で作成したpythonコードを使わないからと最後に削除してしまった。どのみち今後も利用して色々つけ足すことになるのだから、削除しないで残しておくべきだろう。
 
-今度は文脈をリセットせずに、続けてプロンプトを追加してみる。
+ここまではあまりに出来がひどかったので、毎回セッションをリセットして最初からやり直していたが、今度は文脈をリセットせずに、同じセッションに続けてプロンプトを追加してみる。
 
 #prompt_box()[
   該当部分をつけるのは、後でこの穴埋めカードを見た時に復習できるようにつけているから、本当に該当部分を抜き出すのじゃなくて、そこに関連する部分をまとめて抜き出して欲しい。あと、この穴埋め問題作成はルーチンワークになるから、今後も使いそうなファイルやコードはそのまま残しておいて。
 ]
 
 #answer_box()[
-  #codly-range(1, end: 30)
-  #raw(read("generated/v3/getting_started_cloze.csv"), lang: "csv", block: true)
+  ````
+   MathML は HTML と同じ {{c1::構文}} を用いて要素と属性のツリーを表します。,"この記事では、単純な HTML 文書を使い、そこに MathML 数式を追加する方法を、いくつかの要素を紹介しながら見ていきます。
+
+  ## HTML に \<math> 要素で数式を挿入する
+
+  MathML は HTML と同じ構文を用いて要素と属性のツリーを表します。具体的な数式は `<math>` という要素で表され、 HTML ページの中に配置することができます。以下の文書では、段落の中にあります。
+
+  ```html live-sample___inserting_formulas_in_html
+  <p>
+    分数
+    <math>
+      <mfrac>
+        <mn>1</mn>
+        <mn>3</mn>
+      </mfrac>
+    </math>
+    は十進数では表せません。
+  </p>
+  ```
+
+  `<mfrac>` 要素は分子（最初の子）と分母（2 つ目の子）を持つ分数を指定します。ブラウザーではこのように表示されます。"
+  具体的な数式は {{c1::<math>}} 要素で表されます。,"MathML は HTML と同じ構文を用いて要素と属性のツリーを表します。具体的な数式は `<math>` という要素で表され、 HTML ページの中に配置することができます。以下の文書では、段落の中にあります。
+
+  ```html live-sample___inserting_formulas_in_html
+  <p>
+    分数
+    <math>
+      <mfrac>
+        <mn>1</mn>
+        <mn>3</mn>
+      </mfrac>
+    </math>
+    は十進数では表せません。
+  </p>
+  ```
+
+  `<mfrac>` 要素は分子（最初の子）と分母（2 つ目の子）を持つ分数を指定します。ブラウザーではこのように表示されます。"
+  ````
 ]
 
 ぎりぎり実用に耐えるかもしれないくらいの穴埋め問題ができた。ただ、フォーマットがHTMLではなくmarkdownになっているので、Ankiに取り込むときにHTMLに変換する必要がある。また、穴埋めの文章が単体で完結しておらず、前後の穴埋め問題の文章とつながってしまっている。
@@ -146,8 +249,36 @@
 ]
 
 #answer_box()[
-  #codly-range(1, end: 20)
-  #raw(read("generated/v4/getting_started_cloze.csv"), lang: "csv", block: true)
+  ````
+  <p>MathML は HTML と同じ {{c1::構文}} を用いて要素と属性のツリーを表します。</p>,"<p>この記事では、単純な HTML 文書を使い、そこに MathML 数式を追加する方法を、いくつかの要素を紹介しながら見ていきます。</p>
+  <h2>HTML に \<math> 要素で数式を挿入する</h2>
+  <p>MathML は HTML と同じ構文を用いて要素と属性のツリーを表します。具体的な数式は <code>&lt;math&gt;</code> という要素で表され、 HTML ページの中に配置することができます。以下の文書では、段落の中にあります。</p>
+  <pre><code class=""language-html"">&lt;p&gt;
+    分数
+    &lt;math&gt;
+      &lt;mfrac&gt;
+        &lt;mn&gt;1&lt;/mn&gt;
+        &lt;mn&gt;3&lt;/mn&gt;
+      &lt;/mfrac&gt;
+    &lt;/math&gt;
+    は十進数では表せません。
+  &lt;/p&gt;
+  </code></pre>
+  <p><code>&lt;mfrac&gt;</code> 要素は分子（最初の子）と分母（2 つ目の子）を持つ分数を指定します。ブラウザーではこのように表示されます。</p>"
+  <p>HTMLページに具体的な数式を配置するための要素は {{c1::&lt;math&gt;}} です。</p>,"<p>MathML は HTML と同じ構文を用いて要素と属性のツリーを表します。具体的な数式は <code>&lt;math&gt;</code> という要素で表され、 HTML ページの中に配置することができます。以下の文書では、段落の中にあります。</p>
+  <pre><code class=""language-html"">&lt;p&gt;
+    分数
+    &lt;math&gt;
+      &lt;mfrac&gt;
+        &lt;mn&gt;1&lt;/mn&gt;
+        &lt;mn&gt;3&lt;/mn&gt;
+      &lt;/mfrac&gt;
+    &lt;/math&gt;
+    は十進数では表せません。
+  &lt;/p&gt;
+  </code></pre>
+  <p><code>&lt;mfrac&gt;</code> 要素は分子（最初の子）と分母（2 つ目の子）を持つ分数を指定します。ブラウザーではこのように表示されます。</p>"
+  ````
 ]
 
 かなり良くなったが、そもそも穴埋めの仕方が下手ということに気づいた。
@@ -337,12 +468,63 @@
 
   スキル本文からも参照できるよう更新済みです。テストは実際の `getting_started.md` を使って3件すべて成功しています。
 ]
-#raw(read("generated/anki-cloze-author/v1/SKILL.md"), lang: "markdown", block: true)
+````
+---
+name: anki-cloze-author
+description: 'Create difficult, self-contained Anki cloze notes from Markdown or MDN-style documents. Use when converting technical documentation into HTML-enabled cloze CSV files, designing multi-cloze structure questions, handling Markdown/MDN syntax, preserving code examples, or adding regression tests.'
+argument-hint: 'Source Markdown file and desired learning scope'
+user-invocable: true
+---
+
+# Anki Cloze Author
+
+Create Anki cloze notes from technical documents while keeping each note independently reviewable and suitable for Anki's HTML fields.
+
+## When To Use
+
+Use this skill when the user asks to:
+
+- turn a Markdown, MDN, or technical document into Anki cloze cards;
+- produce a CSV for Anki import with HTML fields;
+- make cards harder by testing structure, reconstruction, comparison, or diagnosis;
+- preserve code examples and rendered HTML/MathML in the extra field;
+- create a repeatable generator and tests for future source documents.
+
+## Workflow
+
+The reusable implementation from the first MathML conversion is bundled in:
+
+- [generator](./scripts/generate_cloze_csv.py)
+- [MDN preprocessor](./scripts/mdn_preprocessor.py)
+- [regression test template](./scripts/test_generate_cloze_csv.py)
+
+Copy or adapt these files for a new source. Replace the source-specific `CARDS`
+definitions and markers; keep the HTML conversion, CSV headers, MathJax guard,
+and validation code unless the target note type requires a deliberate change.
+
+### 1. Inspect The Source
+
+1. Read the source and identify its conceptual sections, code examples, exercises, and summaries.
+2. Check whether the document has source-specific syntax such as MDN macros, escaped angle brackets, special code-fence labels, or live-sample directives.
+3. Inspect existing project conventions, dependencies, generators, and tests before editing.
+4. State a local hypothesis about the source structure and choose a cheap validation check before making the first edit.
+### 2. Separate Source-Specific Preprocessing
+
+Keep document-specific normalization separate from the generic card generator.
+
+For MDN-style input, use a separate preprocessor module to:
+
+- convert `\\<tag>` and `\\>` notation into HTML-safe text;
+- remove navigation and embedding macros such as `NextMenu` and `EmbedLiveSample`;
+- normalize `live-sample` code fences;
+- preserve the code and add a rendered-result block for HTML/MathML examples;
+- convert ordinary HTML code fences to the same code-plus-rendered-result representation when rendering is useful.
+
+Do not put MDN rules into the generic Markdown-to-HTML function. Add a new preprocessor for another document dialect.
+...
+````
 う～ん、悪くはないが、MDNやMathMLに特化しすぎている。
-#codly-range(41, end: 53)
-#raw(read("generated/anki-cloze-author/v1/SKILL.md"), lang: "markdown", block: true)
-#codly-range(67, end: 73)
-#raw(read("generated/anki-cloze-author/v1/SKILL.md"), lang: "markdown", block: true)
+
 
 とりあえず、MDNのMathMLのページから作るぶんには使えそうなので、使ってみてから考えることにする。
 
