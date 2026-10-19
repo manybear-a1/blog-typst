@@ -1,0 +1,106 @@
+<section id="simple-patterns">
+<h2 class="untranslated">Simple patterns<a class="headerlink" href="#simple-patterns" title="Link to this heading">¶</a></h2>
+<p class="translated">まずはできるだけ簡単な正規表現を学ぶことから始めてみましょう。正規表現は文字列の操作に使われるので、ますは最も一般的な作業である文字のマッチングをしてみます。</p>
+<p class="translated">正規表現の基礎を成す計算機科学 (決定、非決定有限オートマトン) の詳細な説明については, コンパイラ作成に関するテキストブックをどれでもいいので参照して下さい。</p>
+<section id="matching-characters">
+<h3 class="untranslated">Matching characters<a class="headerlink" href="#matching-characters" title="Link to this heading">¶</a></h3>
+<p class="translated">多くの活字や文字は単純にそれ自身とマッチします。例えば、 <code class="docutils literal notranslate"><span class="pre">test</span></code> という正規表現は文字列 <code class="docutils literal notranslate"><span class="pre">test</span></code> に厳密にマッチします。(大文字小文字を区別しないモードでその正規表現が <code class="docutils literal notranslate"><span class="pre">Test</span></code> や <code class="docutils literal notranslate"><span class="pre">TEST</span></code> にも同様にマッチすることもできます; 詳しくは後述します。)</p>
+<p class="translated">この規則には例外が存在します; いくつかの文字は特別な <em class="dfn">特殊文字 (metacharacters)</em> で、それら自身にマッチしません。代わりに通常のマッチするものとは違うという合図を出したり、正規表現の一部に対して繰り返したり、意味を変えたりして影響を与えます。このドキュメントの中の多くは様々な特殊文字とそれが何をするかについて論じることになります。</p>
+<p class="translated">ここに特殊文字の完全な一覧があります; これらの意味はこの HOWTO の残りの部分で説明します。</p>
+<div class="untranslated highlight-none notranslate"><div class="highlight"><pre><span></span>. ^ $ * + ? { } [ ] \ | ( )
+</pre></div>
+</div>
+<p class="translated">最初に扱う特殊文字は <code class="docutils literal notranslate"><span class="pre">[</span></code> と <code class="docutils literal notranslate"><span class="pre">]</span></code> です。これらは文字クラスを指定します、文字クラスはマッチしたい文字の集合です。文字は個別にリストにしても構いませんし、二つの文字を <code class="docutils literal notranslate"><span class="pre">'-'</span></code> でつなげて文字を範囲で与えてもかまいません。たとえば <code class="docutils literal notranslate"><span class="pre">[abc]</span></code> は <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>, または <code class="docutils literal notranslate"><span class="pre">c</span></code> のどの文字列にもマッチします; これは <code class="docutils literal notranslate"><span class="pre">[a-c]</span></code> で同じ文字集合を範囲で表現しても全く同じです。小文字のアルファベットのみにマッチしたい場合、 <code class="docutils literal notranslate"><span class="pre">[a-z]</span></code> の正規表現をつかうことになるでしょう。</p>
+<p class="translated">(<code class="docutils literal notranslate"><span class="pre">\</span></code> を除く) 特殊文字は文字クラスの内部では有効になりません。例えば、 <code class="docutils literal notranslate"><span class="pre">[akm$]</span></code> は <code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'k'</span></code>, <code class="docutils literal notranslate"><span class="pre">'m'</span></code>, または <code class="docutils literal notranslate"><span class="pre">'{TX-PL-LABEL}#x27;</span></code> のいずれかにマッチします; <code class="docutils literal notranslate"><span class="pre">'{TX-PL-LABEL}#x27;</span></code> は通常は特殊文字ですが、文字クラス内部ではその特別な性質は取り除かれます。</p>
+<p class="translated"><em class="dfn">補集合を取る</em> ことで、文字クラス内のリストにない文字に対してマッチさせられます。
+補集合は、クラスの最初の文字として <code class="docutils literal notranslate"><span class="pre">'^'</span></code> を含めることで表せます。
+例えば、 <code class="docutils literal notranslate"><span class="pre">[^5]</span></code> は <code class="docutils literal notranslate"><span class="pre">'5'</span></code> 以外の文字にマッチします。
+キャレットが文字クラス以外の場所に現れた場合は、特別な意味は持ちません。
+例えば、 <code class="docutils literal notranslate"><span class="pre">[5^]</span></code> は <code class="docutils literal notranslate"><span class="pre">'5'</span></code> や <code class="docutils literal notranslate"><span class="pre">'^'</span></code> にマッチします。</p>
+<p class="translated">おそらく最も重要な特殊文字はバックスラッシュ <code class="docutils literal notranslate"><span class="pre">\</span></code> でしょう。 Python の文字列リテラルのようにバックスラッシュに続けていろいろな文字を入力することでいろいろな特殊シーケンスの合図を送ることができます。また、バックスラッシュはすべての特殊文字をエスケープするのにも利用されます、つまり、特殊文字をマッチさせることができます; 例えば、 <code class="docutils literal notranslate"><span class="pre">[</span></code> または <code class="docutils literal notranslate"><span class="pre">\</span></code> にマッチさせたい場合、それらをバックスラッシュに続けることで特殊な意味を除きます: <code class="docutils literal notranslate"><span class="pre">\[</span></code> または <code class="docutils literal notranslate"><span class="pre">\\</span></code> 。</p>
+<p class="translated"><code class="docutils literal notranslate"><span class="pre">'\'</span></code> で始まるいくつかの特殊シーケンスは、数字、アルファベット、空白文字以外など、よく使う文字集合を表しています。</p>
+<p class="translated">一つ例をお見せしましょう: <code class="docutils literal notranslate"><span class="pre">\w</span></code> は任意の英数字文字にマッチします。バイト列パターンに対しては、これは文字クラス <code class="docutils literal notranslate"><span class="pre">[a-zA-Z0-9_]</span></code> と等価です。ユニコードパターンに対しては、 <code class="docutils literal notranslate"><span class="pre">\w</span></code> は <a class="reference internal" href="../library/unicodedata.html#module-unicodedata" title="unicodedata: Access the Unicode Database."><code class="xref py py-mod docutils literal notranslate"><span class="pre">unicodedata</span></code></a> モジュールで提供されている Unicode データベースで letters としてマークされている全ての文字とマッチします。正規表現のコンパイル時に <a class="reference internal" href="../library/re.html#re.ASCII" title="re.ASCII"><code class="xref py py-const docutils literal notranslate"><span class="pre">re.ASCII</span></code></a> フラグを与えることにより、 <code class="docutils literal notranslate"><span class="pre">\w</span></code> を、より制限された定義で使うことが出来ます。</p>
+<p class="translated">以下に続く特別な文字列のリストは完全ではありません。特殊シーケンスと拡張クラスについてのユニコードパターンの定義についての完全なリストは、標準ライブラリリファレンスの <a class="reference internal" href="../library/re.html#re-syntax"><span class="std std-ref">正規表現の構文</span></a> の最後のパートを参照してください。一般的にユニコードバージョンは、ユニコードデータベース内で相応しいカテゴリに属すればマッチします。</p>
+<dl class="simple">
+<dt class="translated"><code class="docutils literal notranslate"><span class="pre">\d</span></code></dt><dd><p class="translated">任意の十進数とマッチします; これは集合 <code class="docutils literal notranslate"><span class="pre">[0-9]</span></code> と同じ意味です。</p>
+</dd>
+<dt class="translated"><code class="docutils literal notranslate"><span class="pre">\D</span></code></dt><dd><p class="translated">任意の非数字文字とマッチします; これは集合 <code class="docutils literal notranslate"><span class="pre">[^0-9]</span></code> と同じ意味です。</p>
+</dd>
+<dt class="translated"><code class="docutils literal notranslate"><span class="pre">\s</span></code></dt><dd><p class="translated">任意の空白文字とマッチします; これは集合 <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">\t\n\r\f\v]</span></code> と同じ意味です。</p>
+</dd>
+<dt class="translated"><code class="docutils literal notranslate"><span class="pre">\S</span></code></dt><dd><p class="translated">任意の非空白文字とマッチします; これは集合 <code class="docutils literal notranslate"><span class="pre">[^</span> <span class="pre">\t\n\r\f\v]</span></code> と同じ意味です。</p>
+</dd>
+<dt class="translated"><code class="docutils literal notranslate"><span class="pre">\w</span></code></dt><dd><p class="translated">任意の英数文字および下線とマッチします; これは、集合 <code class="docutils literal notranslate"><span class="pre">[a-zA-Z0-9_]</span></code> と同じ意味です。</p>
+</dd>
+<dt class="translated"><code class="docutils literal notranslate"><span class="pre">\W</span></code></dt><dd><p class="translated">任意の非英数文字とマッチします; これは集合 <code class="docutils literal notranslate"><span class="pre">[^a-zA-Z0-9_]</span></code> と同じ意味です。</p>
+</dd>
+</dl>
+<p class="translated">これらのシーケンスは文字クラス内に含めることができます。例えば、 <code class="docutils literal notranslate"><span class="pre">[\s,.]</span></code> は空白文字や <code class="docutils literal notranslate"><span class="pre">','</span></code> または <code class="docutils literal notranslate"><span class="pre">'.'</span></code> にマッチする文字クラスです。</p>
+<p class="translated">この節での最後の特殊文字は <code class="docutils literal notranslate"><span class="pre">.</span></code> です。
+これは改行文字を除く任意の文字にマッチし、さらに改行文字に対してもマッチさせる代替モード (<a class="reference internal" href="../library/re.html#re.DOTALL" title="re.DOTALL"><code class="xref py py-const docutils literal notranslate"><span class="pre">re.DOTALL</span></code></a>) があります。
+<code class="docutils literal notranslate"><span class="pre">.</span></code> は「任意の文字」にマッチさせたい場合に利用されます。</p>
+</section>
+<section id="repeating-things">
+<h3 class="untranslated">Repeating things<a class="headerlink" href="#repeating-things" title="Link to this heading">¶</a></h3>
+<p class="translated">さまざまな文字集合をマッチさせることは正規表現で最初にできるようになることで、これは文字列に対するメソッドですぐにできることではありません。しかし、正規表現がより力を発揮する場面がこれだけだとすると、正規表現はあまり先進的とはいえません。正規表現の力をもう一つの能力は、正規表現の一部が何度も繰り返されるようものを指定できることです。</p>
+<p class="translated">最初にとりあげる繰り返しのための最初の特殊文字は <code class="docutils literal notranslate"><span class="pre">*</span></code> です。
+<code class="docutils literal notranslate"><span class="pre">*</span></code> は文字リテラル <code class="docutils literal notranslate"><span class="pre">'*'</span></code> とはマッチしません; その代わりに、前の文字がぴったり1回ではなく0回以上繰り返されるパターンを指定します。</p>
+<p class="translated">例えば、 <code class="docutils literal notranslate"><span class="pre">ca*t</span></code> は <code class="docutils literal notranslate"><span class="pre">'ct'</span></code> (文字 <code class="docutils literal notranslate"><span class="pre">'a'</span></code> が 0 個)、 <code class="docutils literal notranslate"><span class="pre">'cat'</span></code> (<code class="docutils literal notranslate"><span class="pre">'a'</span></code> が 1 個)、 <code class="docutils literal notranslate"><span class="pre">'caaat'</span></code> (<code class="docutils literal notranslate"><span class="pre">'a'</span></code> が 3 個)、などにマッチします。</p>
+<p class="translated"><code class="docutils literal notranslate"><span class="pre">*</span></code> のような繰り返しは <em class="dfn">貪欲 (greedy)</em> です; 正規表現を繰り返したいとき、マッチングエンジンは可能な限り何度も繰り返そうと試みます。パターンの後ろの部分にマッチしない場合、マッチングエンジンは戻ってより少ない繰り返しを再び試みます。</p>
+<p class="translated">一歩ずつ例を進めていくとより明確にわかります。
+正規表現 <code class="docutils literal notranslate"><span class="pre">a[bcd]*b</span></code> を考えましょう。
+この正規表現は文字 <code class="docutils literal notranslate"><span class="pre">'a'</span></code> 、文字クラス <code class="docutils literal notranslate"><span class="pre">[bcd]</span></code> の 0 個以上の文字、最後に来る <code class="docutils literal notranslate"><span class="pre">'b'</span></code> にマッチします。
+この正規表現が文字列 <code class="docutils literal notranslate"><span class="pre">'abcbd'</span></code> に対してマッチする流れを想像してみましょう。</p>
+<div class="responsive-table__container"><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p class="translated">ステップ</p></th>
+<th class="head"><p class="translated">マッチした文字列</p></th>
+<th class="head"><p class="translated">説明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p class="translated">1</p></td>
+<td><p class="translated"><code class="docutils literal notranslate"><span class="pre">a</span></code></p></td>
+<td><p class="translated">正規表現の <code class="docutils literal notranslate"><span class="pre">a</span></code> がマッチ。</p></td>
+</tr>
+<tr class="row-odd"><td><p class="translated">2</p></td>
+<td><p class="translated"><code class="docutils literal notranslate"><span class="pre">abcbd</span></code></p></td>
+<td><p class="translated">正規表現エンジンが、文字列の終わりに向かってできるだけ遠くまで <code class="docutils literal notranslate"><span class="pre">[bcd]*</span></code> をマッチさせる。</p></td>
+</tr>
+<tr class="row-even"><td><p class="translated">3</p></td>
+<td><p class="translated"><em>失敗</em></p></td>
+<td><p class="translated">正規表現エンジンが <code class="docutils literal notranslate"><span class="pre">b</span></code> でマッチを試みるが、現在の位置が文字列の最後なので失敗。</p></td>
+</tr>
+<tr class="row-odd"><td><p class="translated">4</p></td>
+<td><p class="translated"><code class="docutils literal notranslate"><span class="pre">abcb</span></code></p></td>
+<td><p class="translated"><code class="docutils literal notranslate"><span class="pre">[bcd]*</span></code> が一文字少なくマッチするように戻る。</p></td>
+</tr>
+<tr class="row-even"><td><p class="translated">5</p></td>
+<td><p class="translated"><em>失敗</em></p></td>
+<td><p class="translated">再び <code class="docutils literal notranslate"><span class="pre">b</span></code> にマッチするか試みるが、現在の位置は最後の文字 <code class="docutils literal notranslate"><span class="pre">'d'</span></code> 。</p></td>
+</tr>
+<tr class="row-odd"><td><p class="translated">6</p></td>
+<td><p class="translated"><code class="docutils literal notranslate"><span class="pre">abc</span></code></p></td>
+<td><p class="translated"><code class="docutils literal notranslate"><span class="pre">[bcd]*</span></code> は <code class="docutils literal notranslate"><span class="pre">bc</span></code> のみにマッチするように再び戻る。</p></td>
+</tr>
+<tr class="row-even"><td><p class="translated">7</p></td>
+<td><p class="translated"><code class="docutils literal notranslate"><span class="pre">abcb</span></code></p></td>
+<td><p class="translated">再び <code class="docutils literal notranslate"><span class="pre">b</span></code> を試みる。今回の現在位置の文字は <code class="docutils literal notranslate"><span class="pre">'b'</span></code> なので成功。</p></td>
+</tr>
+</tbody>
+</table></div>
+<p class="translated">正規表現の終端に達して、 <code class="docutils literal notranslate"><span class="pre">'abcd'</span></code> にマッチしました。
+この説明は、マッチングエンジンが最初に到達できるところまで進みマッチしなかった場合、逐次戻って再度残りの正規表現とのマッチを次々と試みること様子を示しています。
+正規表現エンジンは <code class="docutils literal notranslate"><span class="pre">[bcd]*</span></code> の 0 回マッチを試すところまで戻り、その後続の正規表現とのマッチに失敗した場合には、エンジンは正規表現と文字列が完全にマッチしないと結論づけることになります。</p>
+<p class="translated">別の繰り返しのメタ文字には <code class="docutils literal notranslate"><span class="pre">+</span></code> があり、この特殊文字は 1 回以上の繰り返しにマッチします。
+<code class="docutils literal notranslate"><span class="pre">*</span></code> と <code class="docutils literal notranslate"><span class="pre">+</span></code> に違いに対しては十分注意して下さい; <code class="docutils literal notranslate"><span class="pre">*</span></code> は <em>0 回</em> 以上の繰り返しにマッチするので、繰り返す部分が全くなくても問題ありません。一方で <code class="docutils literal notranslate"><span class="pre">+</span></code> は少なくとも <em>1 回</em> は表われる必要があります。
+同様の例を使うと <code class="docutils literal notranslate"><span class="pre">ca+t</span></code> は <code class="docutils literal notranslate"><span class="pre">'cat'</span></code> (<code class="docutils literal notranslate"><span class="pre">'a'</span></code> 1 文字)、 <code class="docutils literal notranslate"><span class="pre">'caaat'</span></code> (<code class="docutils literal notranslate"><span class="pre">'a'</span></code> 3 文字)、とマッチし、<code class="docutils literal notranslate"><span class="pre">'ct'</span></code> とはマッチしません。</p>
+<p class="translated">繰り返しをあらわす演算子または数量子がさらに2つ存在します。クエスチョンマーク <code class="docutils literal notranslate"><span class="pre">?</span></code> は1回または0回の繰り返しにマッチします; これは、何らかの文字やパターンがオプションであることをあらわすと考えられます。例えば、 <code class="docutils literal notranslate"><span class="pre">home-?brew</span></code> は <code class="docutils literal notranslate"><span class="pre">'homebrew'</span></code> と <code class="docutils literal notranslate"><span class="pre">'home-brew'</span></code> のいずれかにマッチします。</p>
+<p class="translated">最も複雑な数量子は <code class="docutils literal notranslate"><span class="pre">{m,n}</span></code> でしょう。ここで <em>m</em> と <em>n</em> は10進数の整数です。この数量子は繰り返しの回数が最小で <em>m</em> 回、最大で <em>n</em> 回であることを意味します。例えば、 <code class="docutils literal notranslate"><span class="pre">a/{1,3}b</span></code> は <code class="docutils literal notranslate"><span class="pre">'a/b'</span></code>, <code class="docutils literal notranslate"><span class="pre">'a//b'</span></code>, および <code class="docutils literal notranslate"><span class="pre">'a///b'</span></code> にマッチします。一方でスラッシュのない <code class="docutils literal notranslate"><span class="pre">'ab'</span></code> やスラッシュが4つある <code class="docutils literal notranslate"><span class="pre">'a////b'</span></code> にはマッチしません。</p>
+<p class="translated"><em>m</em> か <em>n</em> のどちらかは省略することができます; その場合は、省略された値は合理的な値が仮定されます。
+<em>m</em> の省略は下限は 0 と解釈され、<em>n</em> の省略は上限は無限として解釈されます。</p>
+<p class="untranslated">The simplest case <code class="docutils literal notranslate"><span class="pre">{m}</span></code> matches the preceding item exactly <em>m</em> times.
+For example, <code class="docutils literal notranslate"><span class="pre">a/{2}b</span></code> will only match <code class="docutils literal notranslate"><span class="pre">'a//b'</span></code>.</p>
+<p class="translated">還元主義的傾向のある読者は、他の3つの数量子が全てこの表記を使って表現できることに気づくでしょう。 <code class="docutils literal notranslate"><span class="pre">{0,}</span></code> は <code class="docutils literal notranslate"><span class="pre">*</span></code> と同じであり、 <code class="docutils literal notranslate"><span class="pre">{1,}</span></code> は <code class="docutils literal notranslate"><span class="pre">+</span></code> と等価です。また <code class="docutils literal notranslate"><span class="pre">{0,1}</span></code> は <code class="docutils literal notranslate"><span class="pre">?</span></code> と同じです。とはいえ、簡潔さと読みやすさの観点から、可能であれば <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">?</span></code> を使う方が望ましいです。</p>
+</section>
+</section>

@@ -1,0 +1,122 @@
+<section id="modifying-strings">
+<h2 class="untranslated">Modifying strings<a class="headerlink" href="#modifying-strings" title="Link to this heading">¶</a></h2>
+<p class="translated">ここまででは単純に静的な文字列に対する検索を実行してきました。正規表現は文字列を様々な方法で変更するのにもよく使われます。変更には以下のパターンメソッドが利用されます:</p>
+<div class="responsive-table__container"><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p class="translated">メソッド/属性</p></th>
+<th class="head"><p class="translated">目的</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p class="translated"><code class="docutils literal notranslate"><span class="pre">split()</span></code></p></td>
+<td><p class="translated">文字列をリストに分割する、正規表現がマッチした全ての場所で分割を行う</p></td>
+</tr>
+<tr class="row-odd"><td><p class="translated"><code class="docutils literal notranslate"><span class="pre">sub()</span></code></p></td>
+<td><p class="translated">正規表現にマッチした全ての文字列を発見し、別の文字列に置き換えます</p></td>
+</tr>
+<tr class="row-even"><td><p class="translated"><code class="docutils literal notranslate"><span class="pre">subn()</span></code></p></td>
+<td><p class="translated"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sub()</span></code> と同じことをしますが、新しい文字列と置き換えの回数を返します</p></td>
+</tr>
+</tbody>
+</table></div>
+<section id="splitting-strings">
+<h3 class="untranslated">Splitting strings<a class="headerlink" href="#splitting-strings" title="Link to this heading">¶</a></h3>
+<p class="translated"><code class="xref py py-meth docutils literal notranslate"><span class="pre">split()</span></code> メソッドは文字列を正規表現にマッチした場所で分割し、リストで返却します。文字列の <a class="reference internal" href="../builtins/stdtypes.html#str.split" title="str.split"><code class="xref py py-meth docutils literal notranslate"><span class="pre">split()</span></code></a> メソッドに似てはいますが、もっとずっと一般化したデリミタで分割出来ます; 文字列の <code class="xref py py-meth docutils literal notranslate"><span class="pre">split()</span></code> メソッドは単に空白文字か固定文字列で分割出来るだけです。ご想像通り、モジュールレベルの <a class="reference internal" href="../library/re.html#re.split" title="re.split"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.split()</span></code></a> 関数もあります。</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">maxsplit=0</span></span></em><span class="optional">]</span><span class="sig-paren">)</span></dt>
+<dd><p class="translated"><em>string</em> を正規表現のマッチで分割します。正規表現内に取り込むための括弧が利用されている場合、その内容も結果のリストの一部として返されます。 <em>maxsplit</em> が非ゼロの場合、最大で <em>maxsplit</em> の分割が実行されます。</p>
+</dd></dl>
+
+<p class="translated"><em>maxsplit</em> に値を渡すことで、分割される回数を制限することができます。 <em>maxsplit</em> が非ゼロの場合、最大で <em>maxsplit</em> の分割が行なわれ、文字列の残りがリストの最終要素として返されます。以下の例では、デリミタは任意の英数文字のシーケンスです。</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">'\W+'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'This is a test, short and sweet, of split().'</span><span class="p">)</span>
+<span class="go">['This', 'is', 'a', 'test', 'short', 'and', 'sweet', 'of', 'split', '']</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'This is a test, short and sweet, of split().'</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">['This', 'is', 'a', 'test, short and sweet, of split().']</span>
+</pre></div>
+</div>
+<p class="translated">興味の対象がデリミタの間のテキストだけでなく、デリミタが何なのかということを知りたい場合はよくあります。取りこみ用の括弧を正規表現に使った場合、その値もリストの一部として返されます。以下の呼び出しを比較してみましょう:</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">'\W+'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">'(\W+)'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'This... is a test.'</span><span class="p">)</span>
+<span class="go">['This', 'is', 'a', 'test', '']</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'This... is a test.'</span><span class="p">)</span>
+<span class="go">['This', '... ', 'is', ' ', 'a', ' ', 'test', '.', '']</span>
+</pre></div>
+</div>
+<p class="translated">モジュールレベル関数 <a class="reference internal" href="../library/re.html#re.split" title="re.split"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.split()</span></code></a> は最初の引数に利用する正規表現を追加しますが、それ以外は同じです。</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">'[\W]+'</span><span class="p">,</span> <span class="s1">'Words, words, words.'</span><span class="p">)</span>
+<span class="go">['Words', 'words', 'words', '']</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">'([\W]+)'</span><span class="p">,</span> <span class="s1">'Words, words, words.'</span><span class="p">)</span>
+<span class="go">['Words', ', ', 'words', ', ', 'words', '.', '']</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">'[\W]+'</span><span class="p">,</span> <span class="s1">'Words, words, words.'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">['Words', 'words, words.']</span>
+</pre></div>
+</div>
+</section>
+<section id="search-and-replace">
+<h3 class="untranslated">Search and replace<a class="headerlink" href="#search-and-replace" title="Link to this heading">¶</a></h3>
+<p class="translated">もう一つのよくある作業は、パターンにマッチする全ての文字列を探し、異なる文字列に置換します。
+<a class="reference internal" href="../library/re.html#re.Pattern.sub" title="re.Pattern.sub"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sub()</span></code></a> メソッドは置換する値をとります、文字列と関数の両方をとることができ、文字列を処理します。</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">sub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">replacement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">count=0</span></span></em><span class="optional">]</span><span class="sig-paren">)</span></dt>
+<dd><p class="translated"><em>string</em> 内で最も長く、他の部分と重複するところがない正規表現を <em>replacement</em> に置換した文字列を返します。パターンが見つからなかった場合 <em>string</em> は変更されずに返されます。</p>
+<p class="translated">オプション引数 <em>count</em> はパターンの出現の最大置換回数です; <em>count</em> は非負の整数でなければいけません。デフォルト値 0 は全ての出現で置換することを意味します。</p>
+</dd></dl>
+
+<p class="translated">ここに <a class="reference internal" href="../library/re.html#re.Pattern.sub" title="re.Pattern.sub"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sub()</span></code></a> メソッドを使った単純な例があります。これは色の名前を <code class="docutils literal notranslate"><span class="pre">colour</span></code> に置換します:</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">'(blue|white|red)'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">'colour'</span><span class="p">,</span> <span class="s1">'blue socks and red shoes'</span><span class="p">)</span>
+<span class="go">'colour socks and colour shoes'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">'colour'</span><span class="p">,</span> <span class="s1">'blue socks and red shoes'</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">'colour socks and red shoes'</span>
+</pre></div>
+</div>
+<p class="translated"><a class="reference internal" href="../library/re.html#re.Pattern.subn" title="re.Pattern.subn"><code class="xref py py-meth docutils literal notranslate"><span class="pre">subn()</span></code></a> メソッドも同じ働きをしますが、新しい文字列と置換の実行回数を含む 2-タプルを返します:</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">'(blue|white|red)'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="s1">'colour'</span><span class="p">,</span> <span class="s1">'blue socks and red shoes'</span><span class="p">)</span>
+<span class="go">('colour socks and colour shoes', 2)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="s1">'colour'</span><span class="p">,</span> <span class="s1">'no colours at all'</span><span class="p">)</span>
+<span class="go">('no colours at all', 0)</span>
+</pre></div>
+</div>
+<p class="translated">空文字列とのマッチは、直前の空文字列とマッチした部分と隣接していない場合にのみ置換されます。</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">'x*'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">'-'</span><span class="p">,</span> <span class="s1">'abxd'</span><span class="p">)</span>
+<span class="go">'-a-b--d-'</span>
+</pre></div>
+</div>
+<p class="translated"><em>replacement</em> が文字列の場合、文字列内のバックスラッシュエスケープは処理されます。つまり、<code class="docutils literal notranslate"><span class="pre">\n</span></code> は改行文字に <code class="docutils literal notranslate"><span class="pre">\r</span></code> はキャリッジリターンに、等となります。<code class="docutils literal notranslate"><span class="pre">\&amp;</span></code> のような未知のエスケープシーケンスはそのまま残されます。<code class="docutils literal notranslate"><span class="pre">\6</span></code> のような後方参照は正規表現内の対応するグループにマッチする文字列に置換されます。これを使うことで元のテキストの一部を、置換後の文字列に組み込むことができます。</p>
+<p class="translated">この例は単語 <code class="docutils literal notranslate"><span class="pre">section</span></code> に続く <code class="docutils literal notranslate"><span class="pre">{</span></code> と <code class="docutils literal notranslate"><span class="pre">}</span></code> で閉じられた文字列にマッチし、 <code class="docutils literal notranslate"><span class="pre">section</span></code> を <code class="docutils literal notranslate"><span class="pre">subsection</span></code> に変更します:</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">'section{ ( [^}]* ) }'</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'subsection{\1}'</span><span class="p">,</span><span class="s1">'section</span><span class="si">{First}</span><span class="s1"> section</span><span class="si">{second}</span><span class="s1">'</span><span class="p">)</span>
+<span class="go">'subsection{First} subsection{second}'</span>
+</pre></div>
+</div>
+<p class="translated"><code class="docutils literal notranslate"><span class="pre">(?P&lt;name&gt;...)</span></code> 構文で定義された名前つきグループを参照するための構文もあります。 <code class="docutils literal notranslate"><span class="pre">\g&lt;name&gt;</span></code> は <code class="docutils literal notranslate"><span class="pre">name</span></code> で名前づけされたグループにマッチする文字列を利用し、 <code class="docutils literal notranslate"><span class="pre">\g&lt;number&gt;</span></code> は対応するグループ番号を利用します。つまり <code class="docutils literal notranslate"><span class="pre">\g&lt;2&gt;</span></code> は <code class="docutils literal notranslate"><span class="pre">\2</span></code> と等価ですが、 <code class="docutils literal notranslate"><span class="pre">\g&lt;2&gt;0</span></code> のような置換文字列に対しては明確に異なります。 (<code class="docutils literal notranslate"><span class="pre">\20</span></code> はグループ番号20への参照と解釈され、グループ2の後にリテラル文字 <code class="docutils literal notranslate"><span class="pre">'0'</span></code> が続くとは解釈されません。) 以下に示す置換は全て等価ですが、これらは文字列置換に全部で3種の変種を利用しています。</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">'section{ (?P&lt;name&gt; [^}]* ) }'</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'subsection{\1}'</span><span class="p">,</span><span class="s1">'section</span><span class="si">{First}</span><span class="s1">'</span><span class="p">)</span>
+<span class="go">'subsection{First}'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'subsection{\g&lt;1&gt;}'</span><span class="p">,</span><span class="s1">'section</span><span class="si">{First}</span><span class="s1">'</span><span class="p">)</span>
+<span class="go">'subsection{First}'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'subsection{\g&lt;name&gt;}'</span><span class="p">,</span><span class="s1">'section</span><span class="si">{First}</span><span class="s1">'</span><span class="p">)</span>
+<span class="go">'subsection{First}'</span>
+</pre></div>
+</div>
+<p class="translated">より細かな制御を手中にするために <em>replacement</em> として関数を使うことが出来ます。 <em>replacement</em> が関数であれば、その関数は重なり合わない <em>pattern</em> の発生のたびに呼び出されます。それぞれの呼び出しで、マッチした <a class="reference internal" href="../library/re.html#match-objects"><span class="std std-ref">Match オブジェクト</span></a> が引数として渡されるので、望みの置換と返却のためにこの情報を利用出来ます。</p>
+<p class="translated">続く例では、置換関数は十進数文字列を十六進数文字列に変換しています:</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">hexrepl</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="s2">"Return the hex string for a decimal number"</span>
+<span class="gp">... </span>    <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="nb">hex</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">'\d+'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">hexrepl</span><span class="p">,</span> <span class="s1">'Call 65490 for printing, 49152 for user code.'</span><span class="p">)</span>
+<span class="go">'Call 0xffd2 for printing, 0xc000 for user code.'</span>
+</pre></div>
+</div>
+<p class="translated">モジュールレベルの <a class="reference internal" href="../library/re.html#re.sub" title="re.sub"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.sub()</span></code></a> 関数を使うときには、パターンが最初の引数として渡されます。パターンはオブジェクトや文字列をとります; 正規表現フラグを指定する必要がある場合、パターンオブジェクトを最初の引数として使うか、修飾子を埋め込んだパターン文字列を使うかしなければいけません、例えば <code class="docutils literal notranslate"><span class="pre">sub("(?i)b+",</span> <span class="pre">"x",</span> <span class="pre">"bbbb</span> <span class="pre">BBBB")</span></code> は <code class="docutils literal notranslate"><span class="pre">'x</span> <span class="pre">x'</span></code> を返します。</p>
+</section>
+</section>

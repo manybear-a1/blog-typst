@@ -1,0 +1,80 @@
+<section id="common-problems">
+<h2 class="untranslated">Common problems<a class="headerlink" href="#common-problems" title="Link to this heading">¶</a></h2>
+<p class="translated">正規表現はいくつかの応用に対して強力なツールですが、いくつかの部分でそれらの振る舞いは直感的ではなく、期待通りに振る舞わないことがあります。この節では最もよくある落とし穴を指摘します。</p>
+<section id="use-string-methods">
+<h3 class="untranslated">Use string methods<a class="headerlink" href="#use-string-methods" title="Link to this heading">¶</a></h3>
+<p class="translated">いくつかの場合 <a class="reference internal" href="../library/re.html#module-re" title="re: Regular expression operations."><code class="xref py py-mod docutils literal notranslate"><span class="pre">re</span></code></a> モジュールを利用することは間違いである場合があります。固定文字列や単一の文字クラスにマッチさせる場合や、 <a class="reference internal" href="../library/re.html#re.IGNORECASE" title="re.IGNORECASE"><code class="xref py py-const docutils literal notranslate"><span class="pre">IGNORECASE</span></code></a> フラグのような <code class="xref py py-mod docutils literal notranslate"><span class="pre">re</span></code> の機能を利用しない場合、正規表現の全ての能力は必要とされていなでしょう。文字列は固定文字列に対する操作を実行するメソッドを持っていて、大きな汎用化された正規表現エンジンではなく、目的のために最適化された単一の小さな C loop で実装されているため、大抵の場合高速です.</p>
+<p class="translated">一つの例としては、単一の固定文字列を別の固定文字列に置き換える作業があるでしょう; 例えば <code class="docutils literal notranslate"><span class="pre">word</span></code> を <code class="docutils literal notranslate"><span class="pre">deed</span></code> で置換したい場合です。
+<a class="reference internal" href="../library/re.html#re.sub" title="re.sub"><code class="xref py py-func docutils literal notranslate"><span class="pre">re.sub()</span></code></a> はこの目的で使う関数のように思えますが、 <a class="reference internal" href="../builtins/stdtypes.html#str.replace" title="str.replace"><code class="xref py py-meth docutils literal notranslate"><span class="pre">replace()</span></code></a> メソッドを利用することを考えた方がいいでしょう。
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">replace()</span></code> は単語内の <code class="docutils literal notranslate"><span class="pre">word</span></code> も置換し、 <code class="docutils literal notranslate"><span class="pre">swordfish</span></code> を <code class="docutils literal notranslate"><span class="pre">sdeedfish</span></code> に変えますが、安直な正規表現 <code class="docutils literal notranslate"><span class="pre">word</span></code> も同様に動作することに注意して下さい。(単語の一部に対する置換の実行を避けるには、パターンを <code class="docutils literal notranslate"><span class="pre">\bword\b</span></code> として、 <code class="docutils literal notranslate"><span class="pre">word</span></code> の両側に単語の境界が要求されるようにします。これは <code class="xref py py-meth docutils literal notranslate"><span class="pre">replace()</span></code> の能力を越えた作業です。)</p>
+<p class="translated">別のよくある作業は、文字列の中に出現する文字を全て削除することと、別の文字で置換することです。この作業を <code class="docutils literal notranslate"><span class="pre">re.sub('\n',</span> <span class="pre">'</span> <span class="pre">',</span> <span class="pre">S)</span></code> のようにして行うかもしれませんが、 <a class="reference internal" href="../builtins/stdtypes.html#str.translate" title="str.translate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">translate()</span></code></a> は削除と置換の両方の作業をこなし、正規表現操作よりも高速に行うことができます。</p>
+<p class="translated">要は、 <a class="reference internal" href="../library/re.html#module-re" title="re: Regular expression operations."><code class="xref py py-mod docutils literal notranslate"><span class="pre">re</span></code></a> モジュールに向う前に問題が高速で単純な文字列メソッドで解決できるか考えましょうということです。</p>
+</section>
+<section id="prefixmatch-aka-match-versus-search">
+<span id="match-versus-search"></span><h3 class="untranslated">prefixmatch() (aka match) versus search()<a class="headerlink" href="#prefixmatch-aka-match-versus-search" title="Link to this heading">¶</a></h3>
+<p class="untranslated"><a class="reference internal" href="../library/re.html#re.prefixmatch" title="re.prefixmatch"><code class="xref py py-func docutils literal notranslate"><span class="pre">prefixmatch()</span></code></a> was added in Python 3.15 as the <a class="reference internal" href="../library/re.html#prefixmatch-vs-match"><span class="std std-ref">preferred name</span></a> for <a class="reference internal" href="../library/re.html#re.match" title="re.match"><code class="xref py py-func docutils literal notranslate"><span class="pre">match()</span></code></a>. Before this, it was only known
+as <code class="xref py py-func docutils literal notranslate"><span class="pre">match()</span></code> and the distinction with <a class="reference internal" href="../library/re.html#re.search" title="re.search"><code class="xref py py-func docutils literal notranslate"><span class="pre">search()</span></code></a> was often
+misunderstood.</p>
+<p class="untranslated"><code class="xref py py-func docutils literal notranslate"><span class="pre">prefixmatch()</span></code> aka <code class="xref py py-func docutils literal notranslate"><span class="pre">match()</span></code> only checks if the RE matches at the
+beginning of the string while <code class="xref py py-func docutils literal notranslate"><span class="pre">search()</span></code> scans forward through the
+string for a match.</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">prefixmatch</span><span class="p">(</span><span class="s1">'super'</span><span class="p">,</span> <span class="s1">'superstition'</span><span class="p">)</span><span class="o">.</span><span class="n">span</span><span class="p">())</span>
+<span class="go">(0, 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">prefixmatch</span><span class="p">(</span><span class="s1">'super'</span><span class="p">,</span> <span class="s1">'insuperable'</span><span class="p">))</span>
+<span class="go">None</span>
+</pre></div>
+</div>
+<p class="untranslated">On the other hand, <a class="reference internal" href="../library/re.html#re.search" title="re.search"><code class="xref py py-func docutils literal notranslate"><span class="pre">search()</span></code></a> scans forward through the string,
+reporting the first match it finds.</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">'super'</span><span class="p">,</span> <span class="s1">'superstition'</span><span class="p">)</span><span class="o">.</span><span class="n">span</span><span class="p">())</span>
+<span class="go">(0, 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">'super'</span><span class="p">,</span> <span class="s1">'insuperable'</span><span class="p">)</span><span class="o">.</span><span class="n">span</span><span class="p">())</span>
+<span class="go">(2, 7)</span>
+</pre></div>
+</div>
+<p class="untranslated">This distinction is important to remember when using the old <a class="reference internal" href="../library/re.html#re.match" title="re.match"><code class="xref py py-func docutils literal notranslate"><span class="pre">match()</span></code></a>
+name in code requiring compatibility with older Python versions.</p>
+</section>
+<section id="greedy-versus-non-greedy">
+<h3 class="untranslated">Greedy versus non-greedy<a class="headerlink" href="#greedy-versus-non-greedy" title="Link to this heading">¶</a></h3>
+<p class="translated">正規表現を繰り返す場合、たとえば <code class="docutils literal notranslate"><span class="pre">a*</span></code> のように、できるだけパターンの多くにマッチするように動作することになります。この動作は、例えば角括弧で囲まれた HTML タグのような左右対称のデリミタの対にマッチしようという場合に問題となります。単一の HTML タグにマッチする素朴な正規表現はうまく動作しません、なぜならば <code class="docutils literal notranslate"><span class="pre">.*</span></code> は貪欲に動作するからです。</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="s1">'&lt;html&gt;&lt;head&gt;&lt;title&gt;Title&lt;/title&gt;'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="go">32</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">prefixmatch</span><span class="p">(</span><span class="s1">'&lt;.*&gt;'</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">span</span><span class="p">())</span>
+<span class="go">(0, 32)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">prefixmatch</span><span class="p">(</span><span class="s1">'&lt;.*&gt;'</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+<span class="go">&lt;html&gt;&lt;head&gt;&lt;title&gt;Title&lt;/title&gt;</span>
+</pre></div>
+</div>
+<p class="translated">正規表現は <code class="docutils literal notranslate"><span class="pre">'&lt;html&gt;'</span></code> 内の <code class="docutils literal notranslate"><span class="pre">'&lt;'</span></code> にマッチし、 <code class="docutils literal notranslate"><span class="pre">.*</span></code> は残りの文字列の全てにマッチします。
+しかし、正規表現には依然として残っている部分があって、 <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> は文字列の終端にマッチしないので、正規表現エンジンは一文字ずつ <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> とマッチするまで引き返すことになります。
+最終的にマッチする領域は <code class="docutils literal notranslate"><span class="pre">'&lt;html&gt;'</span></code> の <code class="docutils literal notranslate"><span class="pre">'&lt;'</span></code> から <code class="docutils literal notranslate"><span class="pre">'&lt;/title&gt;'</span></code> の <code class="docutils literal notranslate"><span class="pre">'&gt;'</span></code> まで広がりますが、これは望んだ結果ではありません。</p>
+<p class="translated">この場合の解決策は、非貪欲 (non-greedy) な数量子 <code class="docutils literal notranslate"><span class="pre">*?</span></code>, <code class="docutils literal notranslate"><span class="pre">+?</span></code>, <code class="docutils literal notranslate"><span class="pre">??</span></code>, あるいは <code class="docutils literal notranslate"><span class="pre">{m,n}?</span></code> を使うことです。これらはできるだけ <em>少ない</em> テキストにマッチしようとします。上記の例では、 <code class="docutils literal notranslate"><span class="pre">'&gt;'</span></code> は <code class="docutils literal notranslate"><span class="pre">'&lt;'</span></code> がマッチした直後の文字からマッチするかどうかを調べられ、失敗すると同時にエンジンは文字を先に進めながら、各ステップで <code class="docutils literal notranslate"><span class="pre">'&gt;'</span></code> のマッチを試みます。この動作は正しい結果を生成します:</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">prefixmatch</span><span class="p">(</span><span class="s1">'&lt;.*?&gt;'</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+<span class="go">&lt;html&gt;</span>
+</pre></div>
+</div>
+<p class="translated">(HTML や XML を正規表現でパースすることは苦痛を伴うものであることは記憶に留めておいて下さい。素早く、汚いパターンは大抵の場合うまく動作しますが、HTML と XML は正規表現が破綻する特別な例です; 全ての可能な場合にうまく動作する正規表現を書き上げたときには、パターンは <em>非常に</em> 複雑なものになります。そのような作業をする場合には HTML や XML パーサを利用しましょう。)</p>
+</section>
+<section id="using-re-verbose">
+<h3 class="translated">re.VERBOSE の利用<a class="headerlink" href="#using-re-verbose" title="Link to this heading">¶</a></h3>
+<p class="translated">ここまでで、正規表現がとても簡潔な表記であることに気づいたでしょう、また、正規表現は読みやすいものでもないということにも気づいたことでしょう。そこそこに入り組んだ正規表現ははバックスラッシュ、括弧、特殊文字が長く続いて、読みにくく、理解しづらいものになります。</p>
+<p class="translated">そのような正規表現に対しては、正規表現をコンパイルする時に <a class="reference internal" href="../library/re.html#re.VERBOSE" title="re.VERBOSE"><code class="xref py py-const docutils literal notranslate"><span class="pre">re.VERBOSE</span></code></a> フラグを指定することが助けになります。なぜなら、より明確な書式で正規表現を書けるからです。</p>
+<p class="translated"><code class="docutils literal notranslate"><span class="pre">re.VERBOSE</span></code> の効果はいくつかあります。正規表現内の文字クラス内に <em>無い</em> 空白は無視されます。これは、 <code class="docutils literal notranslate"><span class="pre">dog</span> <span class="pre">|</span> <span class="pre">cat</span></code> のような表現が少々可読性の落ちる <code class="docutils literal notranslate"><span class="pre">dog|cat</span></code> と等価となるということです、しかし、 <code class="docutils literal notranslate"><span class="pre">[a</span> <span class="pre">b]</span></code> は依然として <code class="docutils literal notranslate"><span class="pre">'a'</span></code>, <code class="docutils literal notranslate"><span class="pre">'b'</span></code>, または空白にマッチします。加えて、正規表現にコメントを入れることもできるようになります; <code class="docutils literal notranslate"><span class="pre">#</span></code> 文字から次の改行までがコメントの範囲です。三重クォートを利用することで、正規表現をきちんとフォーマットすることができます:</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="n">pat</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"""</span>
+<span class="s2"> \s*                 # Skip leading whitespace</span>
+<span class="s2"> (?P&lt;header&gt;[^:]+)   # Header name</span>
+<span class="s2"> \s* :               # Whitespace, and a colon</span>
+<span class="s2"> (?P&lt;value&gt;.*?)      # The header's value -- *? used to</span>
+<span class="s2">                     # lose the following trailing whitespace</span>
+<span class="s2"> \s*$                # Trailing whitespace to end-of-line</span>
+<span class="s2">"""</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="translated">これは下よりはるかに読みやすいです:</p>
+<div class="untranslated highlight-python3 notranslate"><div class="highlight" style="position: relative;"><button class="copybutton" type="button" title="Copy to clipboard">Copy</button><pre><span></span><span class="n">pat</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s*(?P&lt;header&gt;[^:]+)\s*:(?P&lt;value&gt;.*?)\s*$"</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
