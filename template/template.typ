@@ -31,7 +31,7 @@
 
       #divider()
 
-      この記事はTypst 1.50の実験的なHTML出力機能を用いて生成されました。
+      この記事はTypst 1.50.1の実験的なHTML出力機能を用いて生成されました。
 
       ソースコードのリポジトリは#link("https://github.com/manybear-a1/blog-typst", "こちら")
 
