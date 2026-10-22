@@ -28,6 +28,7 @@
 #image("image/answer.png")
 とりあえず答える。
 #answer_box()[
+  ```
   Done. I split decks/regex/regex-ja.html into one HTML fragment per top-level <section>, preserving the markup and CRLF line endings exactly.
   Files created in decks/regex/:
   File	Section
@@ -44,7 +45,7 @@
   Each file is a standalone <section>…</section> fragment; index.html holds the preamble since the original's <h1> and overview <aside> sit outside any child section.
   I verified that re-joining the root open tag + index.html + the 7 files + root close tag reproduces the original file byte-for-byte, and each file has balanced <section>/</section> tags.
   The original regex-ja.html is untouched. Say the word if you'd like it archived/deleted, or the files moved into a subfolder.
-
+  ```
 ]
 さっき使ったモデルはBig Pickleというモデルだ。しかし今回使いたいのはそのモデルではなく、最近Free Planで使えるようになったDeep Seek 4.1 Flash FreeとGLM5.3 Flashだ。
 #prompt_box()[
@@ -249,3 +250,540 @@
 なんと元の資料のミスを指摘してくれた。すごい。
 
 ただ、"列挙や対比では、片方だけを空欄にせず、対になる項目も同じ cN でまとめて空欄にしてください。"があまり守られていない気がする。
+
+カードを修正しているうちに、訳文のミスに気づいた。カードの内容に
+```
+"`\w` は任意の英数文字および下線にマッチし、バイト列パターンでは `[a-zA-Z0-9_]` と等価です。Unicode パターンでは {{c1::Unicode データベースで letters とマークされた全文字::Unicodeでの対象}} にマッチします。`re.ASCII` を指定すると {{c2::より制限された定義になる::フラグの効果}}。`\W` は `\w` の補集合です。"
+```
+というのがあった。しかし、より制限された定義になると言われても、何がどう制限されるのかがわからない。そこで、元の資料を確認してみた。
+```
+"Let's take an example: ``\\w`` matches any alphanumeric character.  If the "
+"regex pattern is expressed in bytes, this is equivalent to the class ``[a-zA-"
+"Z0-9_]``.  If the regex pattern is a string, ``\\w`` will match all the "
+"characters marked as letters in the Unicode database provided by the :mod:"
+"`unicodedata` module.  You can use the more restricted definition of ``\\w`` "
+"in a string pattern by supplying the :const:`re.ASCII` flag when compiling "
+"the regular expression."
+msgstr ""
+"一つ例をお見せしましょう: ``\\w`` は任意の英数字文字にマッチします。バイト列"
+"パターンに対しては、これは文字クラス ``[a-zA-Z0-9_]`` と等価です。ユニコード"
+"パターンに対しては、 ``\\w`` は :mod:`unicodedata` モジュールで提供されてい"
+"る Unicode データベースで letters としてマークされている全ての文字とマッチし"
+"ます。正規表現のコンパイル時に :const:`re.ASCII` フラグを与えることにより、 "
+"``\\w`` を、より制限された定義で使うことが出来ます。"
+```
+原文は
+
+``` You can use the more restricted definition of ``\\w`` in a string pattern by supplying the :const:`re.ASCII` flag when compiling the regular expression.```
+
+となっていて、その訳は
+
+``` 正規表現のコンパイル時に :const:`re.ASCII` フラグを与えることにより、 ``\\w`` を、より制限された定義で使うことが出来ます。```
+と訳されている。
+しかし、今回の文は
+
+```
+You can use the more restricted definition
+```
+
+であって、
+
+```
+You can use more restricted definition
+```
+ではない。`the`がついているので、この文は読者とすでに共有されている「より制限された定義」を指している。これは、手前の`[a-zA-Z0-9_]`を指していると取るしかないだろう。実際#link("https://docs.python.org/ja/3.15/library/re.html")[Pythonの`\w`のドキュメント]を見てもそう書いてある。
+
+英文が分かりにくいことも否定できないが、誤訳は誤訳である。訳文をなるべく変えずに正しく訳すと
+
+```
+正規表現のコンパイル時に :const:`re.ASCII` フラグを与えることにより、 ``\\w`` を、より制限された方の定義で使うことが出来ます。
+```
+
+などになるだろう。ただこれでも分かりにくいので、
+
+```
+正規表現のコンパイル時に :const:`re.ASCII` フラグを与えることにより、 ``\\w`` を、より制限された方の定義(``[a-zA-Z0-9_]``)で使うことが出来ます。
+```
+
+#prompt_box()[
+  ```
+  @decks/regex/simple-patterns_revised.csv に今回のカードを調整したバージョンを用意しました。このデッキのカードと以前のカードを比較して、このようなカードを他の章でも作成できるように @decks/regex/introduction.prompt.md にあるプロンプトを調整してください。
+  ```
+]
+
+#answer_box()[
+  ```
+  decks/regex/simple-patterns_revised.csv と以前の simple-patterns.csv を比較し、改訂版の意図を一般則として decks/regex/introduction.prompt.md に反映しました。
+  比較から読み取った主な変化
+  改訂版の例	一般則として追加したこと
+  文字クラス と マッチしたい文字の集合 を同じ c1 に	定義を構成する複数の要素は同じ cN にまとめる
+  「\ を除く特殊文字は特別な意味を失います」という規則自体を空欄に	用語だけでなく、中心となる規則・定義そのものも空欄にする
+  ^ の補集合と「先頭以外では特別な意味を持たない」を同じ c1 に	規則と例外・注意点は同じ cN で対比して復習する
+  \[ や \\ という具体構文も c2 に追加	具体例・構文も規則と同じ cN で空欄にしてよい
+  \d と \s を同じ c1 に	並列する定義は同じ cN にまとめる
+  \w の一般形・バイト列・Unicode を同じ c1 に	同じ記号・概念の複数の定義やバリエーションは同じ cN にまとめる
+  re.ASCII の効果を「バイト列パターン時のマッチと同等」と具体的に	曖昧な言い換えを避け、原文の最も具体的な説明に合わせる
+  \d〜\W の一覧ノートを追加	並列項目が3つ以上なら、一覧形式のまとめノートを作る
+  数量子の「記号」と「回数」を別 cN に	まとめノートでは順方向・逆方向の2枚のカードを作る
+  「試す」→「試します」	文体をです・ます調で統一する
+  プロンプトの主な変更点
+  - 汎用化: introduction.html 固定から「対象の章の HTML ファイル」に変更し、出力も <元のstem>.csv に。
+  - 「まとめカードと逆方向カード」節を新設: 一覧形式のまとめノートと、記号↔意味・回数↔記号の両方向カードを明示。
+  - 空欄の作り方を強化: 規則・定義そのもの、具体例・構文、規則＋例外を同じ cN で空欄にするルールを追加。
+  - 重複禁止を調整: 同じ方向の重複は禁止しつつ、一覧として復習するまとめカードは例外に。
+  - 原文の扱いに追記: 文字化けや明らかな誤記は文脈から補い、判断内容を作業メモに残す。
+  - 作成手順を追加: 論点の列挙 → 規則・例外・例をまとめる → 一覧・逆方向カード → 最終確認。
+  なお、改訂版の1行目は「特殊文字（メタ文字）」という用語だけを空欄にしたカードとして残っているため、「用語だけを空欄にするな」と一律にはせず、用語自体が主眼のカードでは用語だけでもよいと条件付きにしています。
+  これで using-regular-expressions.html や more-pattern-power.html なども、同じ方針でカード化できます。
+  ```
+
+]
+放っておいたらContext Limitに引っ掛かったらしいが、自動的にCompactionが働いてContextを圧縮してくれたようだ。正直ログをたどるまでCompactionに気が付かなかった。
+#prompt_box()[
+  ```
+  では、そのプロンプトに従って次は @decks/regex/using-regular-expressions.html からカードを作ってください
+  ```
+]
+
+ここで、分割したファイルが結構長いことに気づく。もう自分も読めない。この場での評価は諦めて、まずはカードをとりあえず作ってAnkiに取り込むことに専念する。
+
+と思ったけど、せっかくだし別のセッションのやつにチェックさせたろ。
+
+#prompt_box()[
+  ```
+  @decks/regex/introduction.prompt.md の内容に、 @decks/regex/using-regular-expressions_revised.csv が従っているか確認して、違反している点があったら修正して
+  ```
+]
+
+#answer_box()[
+  ```
+    decks/regex/using-regular-expressions_revised.csv をプロンプトと照合し、違反していた点を修正しました。現在は 19ノート・28カード・71空欄 で、記述式のカードが約75%です。
+  主な修正
+  - 用語だけの空欄を減らした  
+  re の役割、フラグの効果、IGNORECASE の条件・例外、ASCII の適用範囲など、規則・定義そのものも空欄にしました。
+  - 規則と例外の片側だけを空欄にしていた箇所を統合  
+  LOCALE の非推奨、ASCII の byte パターンでの扱い、VERBOSE の文字クラス内・エスケープ時、DOTALL の指定なしの場合などを同じ cN にまとめました。
+  - 対比・並列を同じ cN に統合  
+  findall()/finditer()、group()/start()/end()/span()、通常時と MULTILINE の ^/$ など。
+  - コードのバッククォート漏れを修正  
+  search() などのメソッド名、SyntaxWarning/SyntaxError、フラグ名、start/end など。
+  - 不自然な日本語・文体を修正  
+  「を…ために」「衝突する。」「引数に…加えたもの」などを自然なです・ます調に直しました。
+  - 曖昧な答えを具体化  
+  「整形して読みやすく」→「よりきれいで理解しやすくまとめる」、「以外」→「改行を除くすべての文字」、「4文字」→実際の4文字、など。
+  - 不要なヒントを削除  
+  ::役割 のような、文脈から明らかなヒントを外しました。
+  - まとめカードを整備  
+  メソッド一覧・Match メソッド一覧・フラグ一覧に、順方向と逆方向の2枚のカードを作りました。
+  - 重複を削除  
+  モジュールレベル関数の戻り値について、search()/prefixmatch() のカードと重複する記述を外しました。
+  判断メモ
+  - prefixmatch() は、原文 HTML が Python 3.15 の名称（以前は match()）を使っているため維持しました。Python 3.14 以前を対象にする場合は match() への置換が必要です。
+  - 原文のフラグ表では ASCII の対象が \w・\b・\s・\d、詳細説明では \w・\W・\b・\B・\s・\S と異なるため、両方を合わせた \w・\W・\b・\B・\s・\S・\d に統一しました。
+  - 原文の「これらの関数は None または Match オブジェクトを返す」は re.sub() には当てはまらないため、モジュールレベル関数のノートでは包括的な戻り値の記述を外し、search()/prefixmatch() のノートで扱いました。
+  - 原文の「意味を意味を」「短かい」などの誤記は CSV には持ち込まず、文字化けもありませんでした。
+  補足として、decks/regex/using-regular-expressions.csv は修正前の _revised.csv と同一内容のまま残しています（編集したのは _revised.csv のみです）。必要なら同じ内容に同期できます。
+  ```
+]
+そうか、今度は評価が上手くいっているかを評価しないといけないのか。
+
+VSCodeでdiffってどうやって見るんだっけ？
+
+一つ目のファイルで右クリックして「比較対象を選択」、二つ目のファイルで右クリックして「選択項目を比較」を選ぶと、二つのファイルの差分が表示されるっぽい。初めて使った。
+
+めっちゃクオリティがあがった！やっぱり人間と同じで、雑に作るー＞細部を詰めるの手順が大事なんだねぇ。
+
+この手順を自動化したいので、
+
+#prompt_box()[
+  こんな感じで、カード作成、別のAIにreviseさせるステップをopencodeで自動化するにはどうしたらいい？
+]
+AIに丸投げする。
+#answer_box()[
+  ```
+    おすすめは、「生成」と「レビュー」を別エージェント・別モデルに分け、機械チェックを間に入れる構成です。1つのプロンプトで全部やらせると、生成AIが自分の出力を甘く評価しやすいので、役割を分けた方が安定します。
+  /anki <html> <prompt>
+    └─ anki-orchestrator（進行役）
+         ├─ anki-generator（モデルA）→ <stem>.csv
+         ├─ validate_anki_csv.py → 機械チェック
+         ├─ anki-reviewer（モデルB）→ <stem>_review.md + <stem>_revised.csv
+         └─ 必要なら再レビュー（最大2回）
+  1. エージェントを3つ作る
+  .opencode/agents/anki-generator.md
+  ---
+  description: HTML 教材から Anki 穴埋め CSV を生成する
+  mode: all
+  model: opencode/deepseek-v4.1-flash-free#high
+  steps: 24
+  permissions:
+    - action: edit
+      resource: "*"
+      effect: deny
+    - action: edit
+      resource: "decks/**/*.csv"
+      effect: allow
+    - action: shell
+      resource: "*"
+      effect: deny
+    - action: subagent
+      resource: "*"
+      effect: deny
+  ---
+
+  あなたは Anki 穴埋め CSV の生成者です。
+
+  - 指定されたプロンプトファイルを最後まで読み、そのルールに従う。
+  - 指定された HTML の内容だけを根拠にする。原文にない事実を追加しない。
+  - 出力は指定された `<stem>.csv` のみ。HTML、プロンプト、既存の `_revised.csv` は変更しない。
+  - 1レコード1ノート、RFC 4180 に従って引用する。
+  - 生成後、自分で CSV をパースして構文エラーがないか確認する。
+  - 判断した点は最終メッセージに書く。不要なファイルは作らない。
+  .opencode/agents/anki-reviewer.md
+  ---
+  description: Anki CSV を別モデルで独立レビューし、修正版を作る
+  mode: all
+  model: opencode/glm-5.3-flash-free#high
+  steps: 24
+  permissions:
+    - action: edit
+      resource: "*"
+      effect: deny
+    - action: edit
+      resource: "decks/**/*_revised.csv"
+      effect: allow
+    - action: edit
+      resource: "decks/**/*_review.md"
+      effect: allow
+    - action: shell
+      resource: "*"
+      effect: deny
+    - action: subagent
+      resource: "*"
+      effect: deny
+  ---
+
+  あなたは Anki CSV の独立レビュアーです。生成には参加していません。
+
+  - プロンプトファイル、元 HTML、レビュー対象 CSV を読む。
+  - プロンプトの全ルールに照らして監査する。
+  - 指摘は `blocking`（ルール違反）と `warning`（改善提案）に分ける。
+  - 各指摘に、プロンプトの該当ルール、ノート番号、具体的な修正案を付ける。
+  - `blocking` をすべて直した `_revised.csv` を書く。元の CSV は上書きしない。
+  - `_review.md` にレビュー結果と修正の要点を書く。
+  - プロンプトにない好みを追加しない。原文にない事実を要求しない。
+  .opencode/agents/anki-orchestrator.md
+  ---
+  description: Anki CSV の生成→別モデルレビュー→検証を進行する
+  mode: primary
+  model: opencode/deepseek-v4.1-flash-free#high
+  steps: 40
+  permissions:
+    - action: subagent
+      resource: "*"
+      effect: deny
+    - action: subagent
+      resource: "anki-generator"
+      effect: allow
+    - action: subagent
+      resource: "anki-reviewer"
+      effect: allow
+    - action: shell
+      resource: "*"
+      effect: deny
+    - action: shell
+      resource: "python *validate_anki_csv.py*"
+      effect: allow
+  ---
+
+  あなたは Anki カード作成パイプラインの進行役です。
+
+  1. 対象 HTML とプロンプトを読み、出力 stem を決める。
+  2. `anki-generator` に HTML・プロンプト・出力先を渡し、`<stem>.csv` を生成させる。
+  3. `python scripts/validate_anki_csv.py <stem>.csv` を実行する。
+  4. `anki-reviewer` に HTML・プロンプト・生成 CSV を渡し、`_review.md` と `_revised.csv` を作らせる。
+  5. `python scripts/validate_anki_csv.py <stem>_revised.csv` を実行する。
+  6. `blocking` が残っていれば、`_revised.csv` をもう一度レビューさせる。最大2回で打ち切る。
+  7. 使用モデル、ノート数・カード数・空欄数、残った warning、差分の要点を報告する。
+
+  禁止:
+  - 元の `<stem>.csv` を上書きしない。
+  - HTML やプロンプトを変更しない。
+  - レビュアーにプロンプトにない好みを追加させない。
+  2. /anki コマンドを作る
+  .opencode/commands/anki.md
+  ---
+  description: HTML から Anki CSV を生成し、別モデルでレビュー・修正する
+  agent: anki-orchestrator
+  ---
+
+  対象 HTML: $1
+  カード作成プロンプト: $2
+  （$2 が空なら `decks/regex/introduction.prompt.md` を使う）
+
+  `anki-orchestrator` の手順に従って、生成→検証→独立レビュー→修正→再検証を実行してください。
+  TUI からはこう呼びます。
+  /anki decks/regex/simple-patterns.html decks/regex/introduction.prompt.md
+  3. 機械チェック用スクリプトを置く
+  scripts/validate_anki_csv.py
+  import csv
+  import json
+  import re
+  import sys
+  from pathlib import Path
+
+  CLOZE = re.compile(r"\{\{c(\d+)::(.*?)\}\}", re.S)
+
+
+  def validate(path: str) -> dict:
+      errors, warnings = [], []
+      with Path(path).open(encoding="utf-8", newline="") as f:
+          rows = list(csv.reader(f))
+
+      stats = {"notes": len(rows), "cards": 0, "blanks": 0}
+
+      for i, row in enumerate(rows, 1):
+          if len(row) != 1:
+              errors.append(f"note {i}: expected 1 field, got {len(row)}")
+              continue
+
+          text = row[0]
+          if not text.strip():
+              errors.append(f"note {i}: empty note")
+              continue
+
+          if text.count("{{") != text.count("}}"):
+              errors.append(f"note {i}: unbalanced cloze braces")
+
+          matches = CLOZE.findall(text)
+          if not matches:
+              errors.append(f"note {i}: no cloze")
+              continue
+
+          ids = sorted({int(cid) for cid, _ in matches})
+          if ids != list(range(1, max(ids) + 1)):
+              errors.append(f"note {i}: non-contiguous cloze ids {ids}")
+
+          for cid, answer in matches:
+              if not answer.strip():
+                  errors.append(f"note {i}: c{cid} has empty answer")
+              if "{{" in answer or "}}" in answer:
+                  errors.append(f"note {i}: c{cid} contains nested cloze")
+              if "::" in answer:
+                  warnings.append(f"note {i}: c{cid} contains a hint")
+
+          stats["cards"] += len(ids)
+          stats["blanks"] += len(matches)
+
+      return {
+          "ok": not errors,
+          "errors": errors,
+          "warnings": warnings,
+          "stats": stats,
+      }
+
+
+  if __name__ == "__main__":
+      if len(sys.argv) != 2:
+          print("usage: validate_anki_csv.py <file.csv>", file=sys.stderr)
+          sys.exit(2)
+
+      result = validate(sys.argv[1])
+      print(json.dumps(result, ensure_ascii=False, indent=2))
+      sys.exit(0 if result["ok"] else 1)
+  これで、CSV の構文・cN の連番・空欄の抜けなどは機械的に弾けます。  
+  「規則と例外が同じ cN か」「記述式が6〜7割あるか」といった意味的な判定は、レビュアーに任せます。
+  4. レビュアーにはルール番号を引用させる
+  レビュー結果を安定させるには、プロンプトの見出しに番号を振っておくと便利です。
+  ID	ルール
+  R1	出力形式・CSV 引用
+  R2	カードのまとまり・cN の粒度
+  R3	まとめカード・逆方向カード
+  R4	空欄の作り方（規則・例外・対比）
+  R5	問題の種類と難易度
+  R6	重複の禁止
+  R7	原文の扱い
+  R8	ヒント
+  レビュー結果の例:
+  # Review: simple-patterns.csv
+
+  ## Blocking
+  - [R4] note 7: `findall()` と `finditer()` が別 cN。対比なので同じ cN にまとめる。
+  - [R2] note 14: `LOCALE` の非推奨が地の文に残っている。同じ cN で空欄にする。
+
+  ## Warnings
+  - [R8] note 3: ヒント `::役割` は文脈から明らかなので省略可。
+
+  ## Stats
+  - notes: 19, cards: 28, blanks: 71
+  5. 実行方法
+  TUI:
+  /anki decks/regex/simple-patterns.html decks/regex/introduction.prompt.md
+  CLI（バッチ・CI）:
+  opencode run --standalone --agent anki-orchestrator @"
+  対象 HTML: decks/regex/simple-patterns.html
+  プロンプト: decks/regex/introduction.prompt.md
+  "@
+  CI では --standalone を使い、利用プロバイダの API キーを secret で渡します。
+  - run: opencode run --standalone --agent anki-orchestrator "対象 HTML: ... プロンプト: ..."
+    env:
+      OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+  6. 品質を上げるコツ
+  - レビュアーは生成者と別モデルにする  
+  エージェントに model を明示しないと親のモデルを継承するので、必ず指定します。例では生成を DeepSeek、レビューを GLM にしています。可能ならレビューには一番強いモデルを使ってください。
+  - レビュアーに CSV を直接直させない選択肢も持つ  
+  最初は「レビュアーが _revised.csv を書く」2段階で十分です。厳密にやるなら、レビュアーは _review.md だけ書き、anki-fixer が _revised.csv を作り、別のレビュアーが再確認する3段階にします。
+  - 元ファイルを上書きしない  
+  生成は <stem>.csv、修正は <stem>_revised.csv。最後に git diff --no-index で差分を見て、人間が採用を決めます。
+  - ループは最大2回で打ち切る  
+  blocking が0になるか、2回修正したら終了。warning ではループしません。
+  - 修正者は指摘された点だけ直す  
+  「勝手に全文を書き直す」と、レビューのたびに内容がドリフトします。システムプロンプトで「指摘外の文章は変更しない」と明記します。
+  - プロンプトは1箇所に置く  
+  decks/regex/introduction.prompt.md を生成者・レビュアーの両方が読む形にすれば、ルール変更時に二重管理になりません。
+  7. さらに自動化するなら
+  - 個別コマンドも作る  
+  /anki-generate、/anki-review、/anki-fix に分けておくと、途中だけやり直せます。
+  - スキル化する  
+  .opencode/skills/anki-card-authoring/SKILL.md に「プロンプトを読む→生成→validator→独立レビュー」の手順とチェックリストを置くと、別の章でも同じ流れを再利用できます。
+  - プラグイン/SDK で完全自動化  
+  何十冊も一括処理するなら、Plugin か SDK でセッションを作成し、生成→検証→レビューをプログラムから回す方法もあります。ただし通常は、今回の「コマンド＋サブエージェント＋validator」で十分です。
+  この構成でよければ、このリポジトリに .opencode/agents/、.opencode/commands/、scripts/validate_anki_csv.py の雛形を実際に作成できます。生成モデルとレビューモデルだけ指定してください。
+  ```
+]
+ほへー。
+#prompt_box()[
+  生成モデルはDeepSeek V4.1 Flash Freeで、レビューモデルはGLM 5.3 Flash Freeでお願いします。
+]
+
+#answer_box()[
+  ```
+    自動化を組みました。生成は DeepSeek V4.1 Flash Free、レビューは GLM 5.3 Flash Free を別エージェント・別モデルで実行します。どちらも #high バリアントを指定しています。
+  作成したファイル
+  ファイル	役割
+  .opencode/agents/anki-generator.md	下書き CSV を生成（DeepSeek）
+  .opencode/agents/anki-reviewer.md	元資料とプロンプトを読み直して独立レビュー（GLM）
+  .opencode/agents/anki-orchestrator.md	生成 → 検証 → レビュー → 検証を統括
+  .opencode/commands/anki.md	/anki コマンド
+  .opencode/README.md	使い方と出力規約
+  scripts/validate_anki_csv.py	構造検証スクリプト
+  scripts/README.md	検証スクリプトの説明
+  使い方
+  TUI で次のように実行します。
+  /anki decks/regex/simple-patterns.html
+  decks/regex/ 配下なら decks/regex/introduction.prompt.md を自動で使います。別のプロンプトを使う場合:
+  /anki decks/regex/simple-patterns.html decks/regex/introduction.prompt.md
+  出力は次の3つです。
+  - <stem>_draft.csv — 生成担当の下書き
+  - <stem>_review.md — 独立レビュー結果
+  - <stem>_revised.csv — レビューを反映した修正版
+  既存の <stem>.csv は上書きしません。既存の <stem>_revised.csv がある場合は確認し、必要なら <stem>_ai_revised.csv / <stem>_ai_review.md に退避できます。
+  構造検証は単体でも実行できます。
+  python scripts/validate_anki_csv.py decks/regex/simple-patterns_revised.csv
+  スモークテスト結果
+  decks/regex/common-problems.html で実際に通しました。
+   	notes	cards	blanks	構造検証
+  下書き	10	17	32	ok: true
+  修正版	11	19	38	ok: true
+  レビュー結果は must-fix 0件 / should-fix 2件 で、どちらも修正版に反映されました。
+  - 非貪欲数量子のまとめノートを1つ追加（順方向・逆方向の2枚のカード）
+  - translate() の中心的な規則部分を空欄化
+  残課題として、レビュアー推定の記述式比率が 約55〜60% で、目安の「6〜7割以上」の下限にわずかに届いていません。再発防止のため、レビュアーには「6割未満なら記述式の空欄を追加する」指示を追記済みです。
+  既存ファイルへの影響
+  前回修正した decks/regex/using-regular-expressions_revised.csv は変更していません（19 notes / 28 cards / 71 blanks のまま）。
+  テスト用に次のファイルが残っています。不要なら削除します。
+  - decks/regex/common-problems_draft.csv
+  - decks/regex/common-problems_review.md
+  - decks/regex/common-problems_revised.csv
+  なお、オーケストレーターはモデル未指定でセッションのモデルを継承します。今回の CLI スモークテストでは既定の big-pickle が使われ、最終報告の日本語に軽微な乱れがありました。生成・レビュー本体は指定モデルで正常に動作しています。日本語の最終報告を安定させたい場合は、DeepSeek のセッションから /anki を実行してください。
+  ```
+]
+
+出来たカードを眺める。
+
+```
+"HTML や XML を正規表現でパースするのは苦痛を伴います。素早く汚いパターンは大抵うまく動作しますが、HTML と XML は{{c1::正規表現が破綻する特別な例}}であり、全ての可能な場合にうまく動作する正規表現を書き上げると{{c1::パターンは非常に複雑なものになります}}。そのような作業には{{c1::HTML や XML のパーサ}}を利用しましょう。"
+```
+
+素早く、汚いパターン......？
+
+こういう時は原文を確認するに限る。
+
+```
+msgid ""
+"(Note that parsing HTML or XML with regular expressions is painful. Quick-"
+"and-dirty patterns will handle common cases, but HTML and XML have special "
+"cases that will break the obvious regular expression; by the time you've "
+"written a regular expression that handles all of the possible cases, the "
+"patterns will be *very* complicated.  Use an HTML or XML parser module for "
+"such tasks.)"
+msgstr ""
+"(HTML や XML を正規表現でパースすることは苦痛を伴うものであることは記憶に留め"
+"ておいて下さい。素早く、汚いパターンは大抵の場合うまく動作しますが、HTML と "
+"XML は正規表現が破綻する特別な例です; 全ての可能な場合にうまく動作する正規表"
+"現を書き上げたときには、パターンは *非常に* 複雑なものになります。そのような"
+"作業をする場合には HTML や XML パーサを利用しましょう。)"
+```
+common casesとspecial casesの訳が根本的に間違っていた。
+
+とりあえず、Google翻訳にかけてあげると、
+```
+（HTMLやXMLを正規表現で解析するのは非常に面倒です。手っ取り早いパターンで一般的なケースは処理できますが、HTMLやXMLには、通常の正規表現では対応できない特殊なケースが存在します。あらゆるケースに対応できる正規表現を作成しようとすると、パターンは非常に複雑になります。このような処理には、HTMLまたはXMLパーサーモジュールを使用してください。）
+```
+と出力された。これはおおよそ正しいだろう。
+
+quick-and-dirty:手っ取り早い
+
+こうして見ると、こんなに長い文章の翻訳を一瞬でしてくれるGoogle翻訳はすごいといまさらながら感心した。
+
+Python.jp内の翻訳チャンネルを見ようとしたが、Python.jpのDiscordがリンク切れしていて入れなかった。
+
+それじゃあ最後にこのファイルをまとめて一つにしてもらおう。
+
+ん？質問？え？カードがない？
+
+あ、まってもう一個カード化するファイルがあったわ。
+まさに負うたAIに教えられて浅瀬を渡る。
+
+もうオーケストレーションを起動するだけでOK。らくちん。
+
+またなんか誤訳してる......
+
+```
+msgid ""
+"Returns the string obtained by replacing the leftmost non-overlapping "
+"occurrences of the RE in *string* by the replacement *replacement*.  If the "
+"pattern isn't found, *string* is returned unchanged."
+msgstr ""
+"*string* 内で最も長く、他の部分と重複するところがない正規表現を "
+"*replacement* に置換した文字列を返します。パターンが見つからなかった場合 "
+"*string* は変更されずに返されます。"
+```
+leftmost = 最も長く？？？
+
+
+#prompt_box()[
+  ````
+  regex内にある全体のカード群(regex/**_revised.csv)をPythonで一つのデッキにまとめて。
+  - 各行はカードの内容、カード作成元のhtml、deck column, guid columnとして
+  - csvの先頭には
+  ```
+  "#separator:Comma",
+  "#html:true",
+  "#notetype:穴埋め左寄せ",
+  "#columns:テキスト,裏面追記",
+  "#deck column: 3"
+  "#guid column: 4"
+  ```
+    というヘッダーファイルを付けて。
+  - 各デックのデッキ名は拡張子を除いた相対ファイルパスの/を::で置き換え、先頭に番号（何番目のファイルか）をつけ足したものにして
+  - ファイルの順番は introduction_revised,simple-patterns_revised,using-regular-expressions_revised,more-pattern-power_revised,modifying_strings,common_problemsとしてください。
+  - 詳細な仕様は @anki-manual/importing/text-files.md を見てください 
+  ````
+]
+
+上手く結合してくれたので、Ankiで読み込んで使ってみる。
+
+ぱっと見だと、穴埋め内で文章が終わるときに文体が敬体から常体に代わっているところがあったり、
+ヒントが答えになってしまっている問題があったりするが、まだ初期のカードなので、後になればなくなるかもしれない。
+
+あと正規表現を書く問題がなかった。指示し忘れた......
