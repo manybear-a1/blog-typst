@@ -1,25 +1,48 @@
 #import "/template/template.typ": *
-#show link: set text(fill: blue)
+#show: show_blog_with_typst
 
-#let prompt_box(prompt) = {
-  block(breakable: true, stroke: black, inset: 1em)[
-    プロンプト:
+#let prompt_box(prompt) = context {
+  if (target() == "html") {
+    html.elem("div", attrs: (style: "padding: 1em; border: 1px solid #111;"))[
+      プロンプト:
 
-    #prompt
-  ]
+      #prompt
+    ]
+  } else {
+    block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
+      プロンプト:
+
+      #prompt
+    ]
+  }
 }
-#let answer_box(answer) = {
-  block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
-    回答:
+#let answer_box(answer) = context {
+  if (target() == "html") {
+    html.div(style: "background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;")[
+      #block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
+        回答:
 
-    #answer
-  ]
+        #answer
+      ]
+    ]
+  } else {
+    block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
+      回答:
+
+      #answer
+    ]
+  }
 }
 
 = （私の）理想のAnkiの穴埋め問題を作らせる
+== Anki?
 私は普段の学習でAnkiを使っている。Ankiはフラッシュカード#footnote("実際にはHTMLなので、その気になれば色々なことができる")を使った学習ツールで、ただ単に暗記するだけでなく、自由記述や計算問題も作れる。また、Ankiにはいくつかのノートタイプ（問題の種類）があるが、私は主に「Cloze」というノートタイプを使っている。Clozeは文章の一部を隠して穴埋め問題にすることができるノートタイプで、私は読んだ文章をそのままコピーして、その文章を穴埋め問題にしてAnkiに取り込むことが多い。文章をそのままコピーするので自分で文章を書く時間を節約でき、また自分が間違ったまとめ方をしてしまうこともない。#footnote("なんなら何度も解くうちに原文の間違いに気づくこともある。")
+
+最近、AIのLunaちゃんにコードに書かせてみたところ、自分より早く、正確に、そして大量に書けることが分かった。だったら、Ankiの穴埋め問題もAIに作らせてみようと思った。Ankiの穴埋め問題は、文章をそのままコピーして穴埋めにするだけなので、そんなに難しくないはず！（フラグ）
 == 使ったもの
 - 使用したAI:GPT-5.6-Luna(Github Copilot Chat)
+
+AIの使い方はだいぶ初心者なので、Ankiのカード作成にこのモデル選択があっているかはさっぱり分からない。調べようにもニッチすぎて何も参考に出来そうにないし......
 
 == まずはテスト
 とりあえず、穴埋め問題を作らせるテストをしてみる。
@@ -28,6 +51,7 @@
 #prompt_box("getting_started.mdをankiの穴埋め問題にして")
 
 で、できたのがこれ。
+/v1/getting_started_cloze.md
 #answer_box()[
   ````
   # MathML を始めよう: Anki Cloze カード
@@ -53,6 +77,7 @@
 どうやって取り込めと？　あと、せっかく資料を渡したのに一から書き直さないでくれ。それだったら資料を渡さずに直接「mathmlの穴埋め問題を作れ」と言うよ！　後簡単すぎない？
 
 まぁ、なにはともあれ、穴埋め問題のフォーマットは知っていることは確認できたが、どうもあまりAnkiの穴埋め問題の作り方の知識と穴埋め問題作成自体のセンスがなさそう。なので、公式ドキュメントの#link("https://github.com/ankitects/anki-manual/blob/00c7a9b31c0cf967ec44be74b6a56e188db5c311/src/importing/text-files.md")[importのページ]を読ませてまずは知識を補充して再挑戦。（プロンプトは同じ）
+//v1/getting_started_cloze.txt
 #answer_box()[
   ````
   #notetype:Cloze
@@ -72,6 +97,7 @@
 - エスケープ処理はpythonを使って機械的に行うこと
 - 出力ファイルはcsv形式にすること",
 )
+//v1/getting_started_cloze.csv
 #answer_box()[
   （筆者による抜粋）変換単位は、原文全体を 1 件の Cloze ノートにする形にします。本文の説明文・コード例・見出しは残し、MathML の主要要素名と display / CSS プロパティ名を原文の該当箇所だけ Cloze 化します。次に Python の re と csv.writer で CSV を生成し、読み戻して列数・Cloze 数・改行保持を検査します。
   ```shell
@@ -93,7 +119,7 @@
   122 個の Cloze マーカーが生成され、CSV は 2 行・各 2 列として読み戻せています。
 
   ````
-    Text,Extra
+  Text,Extra
   "---
   title: MathML を始めよう
   short-title: 始めよう
@@ -182,7 +208,7 @@
   - エスケープ処理はpythonを使って機械的に行うこと
   - 出力ファイルはcsv形式にすること
 ]
-
+//v2/getting_started_cloze.csv
 #answer_box()[
   ````csv
   MathML は HTML と同じ {{c1::構文}} を用いて要素と属性のツリーを表します。,MathML は HTML と同じ構文を用いて要素と属性のツリーを表します。
@@ -198,7 +224,7 @@
 #prompt_box()[
   該当部分をつけるのは、後でこの穴埋めカードを見た時に復習できるようにつけているから、本当に該当部分を抜き出すのじゃなくて、そこに関連する部分をまとめて抜き出して欲しい。あと、この穴埋め問題作成はルーチンワークになるから、今後も使いそうなファイルやコードはそのまま残しておいて。
 ]
-
+//v3/getting_started_cloze.csv
 #answer_box()[
   ````
    MathML は HTML と同じ {{c1::構文}} を用いて要素と属性のツリーを表します。,"この記事では、単純な HTML 文書を使い、そこに MathML 数式を追加する方法を、いくつかの要素を紹介しながら見ていきます。
@@ -247,7 +273,7 @@
   - Ankiの穴埋めのフォーマットがmarkdownではなくて、HTMLなので、変換するライブラリを使って変換してください
   - 各ノート（csvの行）が独立していない。（例えば二行目は一行目からつなげて読まないと意味が分からない）この場合は、文章が独立になるように書くか、あるいは問題をまとめて{{c1::}},{{c2::}}...としてください。
 ]
-
+//v4/getting_started_cloze.csv
 #answer_box()[
   ````
   <p>MathML は HTML と同じ {{c1::構文}} を用いて要素と属性のツリーを表します。</p>,"<p>この記事では、単純な HTML 文書を使い、そこに MathML 数式を追加する方法を、いくつかの要素を紹介しながら見ていきます。</p>
@@ -307,10 +333,11 @@
 あと、欲を言えば、コード例のMathMLレンダリングもしてほしいなぁ。
 
 #prompt_box()[
-  - どうやらまだMDNの独自記法があってその部分が上手くいってないみたい。というのも、 htmlタグのエスケープ方法が`<math>`と\<math>の二種類あって、後者がエスケープできていない
-  - \[\]とそのまま書くとankiに内蔵されているMathJaxが反応して勝手にれんだりんぐされてしまう
+  - どうやらまだMDNの独自記法があってその部分が上手くいってないみたい。というのも、 htmlタグのエスケープ方法が`<math>`と\\<math>の二種類あって、後者がエスケープできていない
+  - \\\[\\\]とそのまま書くとankiに内蔵されているMathJaxが反応して勝手にれんだりんぐされてしまう
   - このスクリプトは他の穴埋め問題作成にも使うから、MDN独自仕様の対応は別のファイルに分離して欲しい
 ]
+//v5/getting_started_cloze.csv
 #answer_box()[
   修正しました。
 
@@ -326,7 +353,7 @@
 ]
 
 とりあえず、MDNの独自処理を分離させることに成功した。latexの自動レンダリングはこの策では回避できなかった。少し自分で調べてみると、#link("https://forums.ankiweb.net/t/how-to-enter-or-backslash-parenthesis-literally/42853")[Ankiのフォーラム]で、#"\&#x200D;"のようにゼロ幅スペースを入れると回避できることがわかった。
-
+//v6/getting_started_cloze.csv
 #answer_box()[
   修正しました。
 
@@ -350,6 +377,7 @@
   - 出力するcsvの冒頭にankiの取り込み時に使用するファイルヘッダーを追加してください。separatorはComma,htmlはtrue,notetypeは"穴埋め左寄せ",columnsは"テキスト","裏面追記"として、tagsはとりあえず入力したファイルへの相対パスを付けてください。
   - 今後の開発に使用するために、テストコードも保存してください
 ]
+//v7/getting_started_cloze.csv
 #answer_box()[
   対応しました。
 
@@ -378,6 +406,7 @@
   ノートの表示についてはもう改善点はないから、次は穴埋め問題の難易度調整に移ろう。
   今の問題だと、簡単な問題しかないから、もう少し難しい問題も追加して。
 ]
+//v8/getting_started_cloze.csv
 #answer_box()[
   高難度の穴埋め問題を7問追加し、合計19問にしました。
 
@@ -403,6 +432,7 @@
 #prompt_box()[
   まだ難易度が低いから、難易度が低すぎる問題を削除して、さらに難しい問題を追加して
 ]
+//v9/getting_started_cloze.csv
 #answer_box()[
   難易度を調整しました。
 
@@ -426,6 +456,7 @@
 #prompt_box()[
   /create-skill 今回作成したカードと同じようなカードを別の資料から作れるようにskillとしてまとめてください。
 ]
+
 #answer_box()[
   個人用スキルとして作成しました。
 
@@ -455,6 +486,7 @@
 #prompt_box()[
   今回使ったコードを今後改変して使えるようにコードも保存して置いて#footnote("この誤字はプロンプトを書いたタイミングでの誤字です")
 ]
+
 #answer_box()[
   今回使用したコードをスキル内に保存しました。
 
@@ -532,7 +564,7 @@ Do not put MDN rules into the generic Markdown-to-HTML function. Add a new prepr
 #prompt_box()[
   このワークスペースは穴埋め問題作成のためのワークスペースだから、保存先はこのワークスペース内にしてほしいな
 ]
-
+//anki-cloze-author/v1
 #answer_box()[
   保存先をワークスペース内へ移しました。
 
@@ -550,6 +582,7 @@ Do not put MDN rules into the generic Markdown-to-HTML function. Add a new prepr
 #prompt_box()[
   /anki-cloze-author
 ]
+//text_containers/v1
 #answer_box()[
   `index.md` 用の Anki cloze 生成を追加しました。
 
@@ -572,6 +605,7 @@ Do not put MDN rules into the generic Markdown-to-HTML function. Add a new prepr
   - skill内のスクリプトを見つけられず、作成元のmathmlフォルダ内のスクリプトを使ってしまった
 ]
 （テストのページ固有処理は自分で消した方が早いので自分で消した）
+//anki-cloze-author/v2
 #answer_box()[
   別セッションでの問題点を修正しました。
 
@@ -612,6 +646,7 @@ Do not put MDN rules into the generic Markdown-to-HTML function. Add a new prepr
   /anki-cloze-author index.mdからankiの穴埋め問題を作って
   ```
 ]
+//text_containers/v2
 #answer_box()[
   `index.md` からAnki用の穴埋めカードを作成しました。
 
@@ -628,9 +663,58 @@ Do not put MDN rules into the generic Markdown-to-HTML function. Add a new prepr
 
 大幅に方針を転換して、skillの中にあるコードを映してから少し書き換えて使うのではなく、入力用のcsvファイルを作らせて、そのパスを
 skillの中にあるコードに渡して実行したら、出力ファイルが出来て、さらに自動的にskillの中にあるテストコードを使って検証する、という形に変える。これなら、skillの中にあるコードをいじる必要がなくなるので、skillの中のコードに気を取られて穴埋め問題がよわよわになることが防げるかもしれない。
+//anki-cloze-author/v3
+#answer_box()[
+  ````
 
-スキルは変えれたが、中身を見ると既存の文章をすべて残したうえで加筆していて、矛盾する部分や無意味な部分が大量に存在した。
 
-もう諦めてガイド自体を直接与えてみたりもしたが、ほんのちょっとだけ改善した程度で、やはり穴埋め問題の質は低いままだった。
+  スキルの構成を大幅に変更しました。
 
-というわけで本日はここまで。今後のAIの進化に期待することにする。
+  ## 新しい使い方
+
+  新しい資料ごとに作成するのは、カード仕様CSVだけです。
+
+  各行:
+
+  ```text
+  穴埋め問題,extra開始文字列,extra終了文字列
+  ```
+
+  実行:
+
+  ```powershell
+  python .agents\skills\anki-cloze-author\scripts\generate_cloze_csv.py `
+    カード仕様.csv 原文.md [出力.csv]
+  ```
+
+  生成器が自動的に以下を行います。
+
+  1. カード仕様CSVを読み込む
+  2. 原文からextraを抽出する
+  3. HTMLへ変換する
+  4. Anki CSVを生成する
+  5. `test_generate_cloze_csv.py` を自動実行する
+  6. 検証に成功した場合だけ `validation: passed` を表示する
+
+  ## 更新ファイル
+
+  - `SKILL.md`
+  - `README.md`
+  - `generate_cloze_csv.py`
+  - `test_generate_cloze_csv.py`
+  - `getting_started_cards.csv`
+
+  `_generate_cloze_csv.py` は旧資料専用として残していますが、新しい資料では使用しません。
+
+  新方式で13問を生成し、バリデータも成功しています。
+
+  変更を行いました。
+  ````
+]
+
+スキルは変えれたが、SKILL.md中身を見ると既存の文章をすべて残したうえで加筆していて、矛盾する部分や無意味な部分が大量に存在していて絶望した。
+
+もう諦めてCherryさんのガイド自体を直接与えてみたりもしたが、ほんのちょっとだけ改善した程度で、やはり穴埋め問題の質は低いままだった。
+//anki-cloze-author/v4
+
+というわけで（？）本日はここまで。今後のAIの進化に期待することにする。
