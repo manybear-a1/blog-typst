@@ -1,31 +1,47 @@
-#import "@preview/codly:1.3.0": *
-#import "@preview/codly-languages:0.1.1": *
 #import "/template/template.typ": *
 #show: show_blog_with_typst
-#show: codly-init.with()
-#show link: set text(fill: blue)
-#codly(languages: codly-languages)
-#let prompt_box(prompt) = {
-  block(breakable: true, stroke: black, inset: 1em)[
-    プロンプト:
+// #import "@preview/codly:2.0.0" as codly
+// #import "@preview/codly-languages:0.1.8": codly-languages
+// #show: codly.lang-set_(languages: codly-languages)
+// #show raw.where(block: true): codly.new
+#let prompt_box(prompt) = context {
+  if (target() == "html") {
+    html.elem("div", attrs: (style: "padding: 1em; border: 1px solid #111;"))[
+      プロンプト:
 
-    #prompt
-  ]
+      #prompt
+    ]
+  } else {
+    block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
+      プロンプト:
+
+      #prompt
+    ]
+  }
 }
-#let answer_box(answer) = {
-  block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
-    回答:
+#let answer_box(answer) = context {
+  if (target() == "html") {
+    html.div(style: "background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;")[
+      #block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
+        回答:
 
-    #answer
-  ]
+        #answer
+      ]
+    ]
+  } else {
+    block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
+      回答:
+
+      #answer
+    ]
+  }
 }
 
 
 というわけで一日が経った。今日は、AIに手順書ではなく例を与えることで制御してみることにした。
 
-例を与えるために最初の一ページ目を自分で穴埋め問題にしようとした。しかし
-GithubのmarkdownそのままだとAnkiがMarkdownに対応していなかった。
-MDNでレンダリングされたページを使っても今度は余計なクラス名や独自要素が含まれていて使えなかった。
+まずは例を与えるために最初の一ページ目を自分で穴埋め問題にしようとした。しかしMDNのmarkdownそのままだとAnkiがMDN の独自記法のMarkdownに対応していなかった。
+かといって、MDNでレンダリングされたページを使っても今度は余計なクラス名や独自要素が含まれていて使えなかった。
 Markdownを適当な変換ツールでHTMLに変換したものも、MDN 特有のMarkdownの構造が邪魔をして上手くいかなかった。
 GithubのMarkdownプレビューをHTMLとしてコピーするとアイコンのSVGがたくさん含まれてしまい上手くいかなかった。
 
@@ -33,18 +49,44 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
 
 しかし！　私には前日にLunaが作ったMDNのMarkdownをHTMLに変換するツールがある。これを使えば、MDNのMarkdownをAnkiに取り込むことができる！
 
+というわけでいったん変換した。
+
 #prompt_box()[
   index.mdを穴埋め問題にしてください。穴埋めの仕方はindex.csv内にある既存の穴埋め問題を参照してください。
 ]
+//2/v1
 一度やってみると、何と既存の問題をすべて消し、自分が作った低クオリティバージョンに置き換えるという暴挙に出てしまった。これはまずい。既存の問題を消さずに新しい問題を追加するように指示しなければならない。
 
 #prompt_box()[
   index.mdから穴埋め問題を作る作業の続きをしてください。穴埋めの仕方はindex.csv内にある既存の穴埋め問題を参照してください。
 ]
+//2/v2
+````
+"MathML で「2 分の 1」足す「3 分の 2」を表すには、次のコードの {{c1::<mfrac>
+    <mn>1</mn>
+    <mn>2</mn>
+  </mfrac>
+  <mo>+</mo>
+  <mfrac>
+    <mn>2</mn>
+    <mn>3</mn>
+  </mfrac>::2つの分数を足す部分}} を `<math>` の子要素として置きます。
 
-#codly-range(70, end: 92)
-#raw(read("generated/2/v2/index_generated.csv"), lang: "csv", block: true)
-カスの問題が出来た。そもそも、index.mdの文章を丸写ししてもいない。（まあそこはどっちでもいいのだが）
+```html
+<math>
+  {{c2::<mfrac>
+    <mn>1</mn>
+    <mn>2</mn>
+  </mfrac>
+  <mo>+</mo>
+  <mfrac>
+    <mn>2</mn>
+    <mn>3</mn>
+  </mfrac>::完全な MathML 表現}}
+</math>
+```"
+````
+答えが丸見えなカスの問題が出来た。そもそも、index.mdの文章を丸写ししてもいない。（まあそこはどっちでもいいのだが）
 ただ一方で最後の問題は適切な難易度になっていて、とてもよい。
 ```
 "この章の MathML の要点は、数式全体を {{c1::<math> 要素で表し::数式全体の要素}}、分数を {{c1::<mfrac> で表し::分数の要素}}、複数の要素のグループ化を {{c1::<mrow> で行う::グループ化の要素}}ことです。また、数式を独立した行に表示するには `<math>` に {{c1::display=block を指定する::表示モード}}。"
@@ -53,13 +95,16 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
 
 とりあえずできた問題を手直しして、その問題を参照させて次のページの穴埋め問題を作るように指示してみる。
 
-その前に、ちょっと別のAIを使ってみたらどうなるのか知りたくなったのでOpenRouterのFree Model Routerを使ってみることにした。OpenRouterは、複数のAIモデルを統合して使えるサービスである。Free Model Routerはその中でも無料で使えるモデルである。
+と、その前に、あまりに迷走しすぎて使用制限に達しそうだったのと、ちょっと別のAIを使ってみたらどうなるのか知りたくなったのでOpenRouterのFree Model Routerを試しに使ってみることにした。
+
+OpenRouterは、複数のAIモデルを統合して使えるサービスである。Free Model Routerはその中でも無料で使えるモデルを集めたものである。
 
 今回はNemotron 3.5 Lightning にルーティングされたらしい.
 #prompt_box()[
   （一つ前からの続き）
 
   text_container/index.mdを穴埋め問題にしてcsvファイルにまとめてください。作り方、難易度等はgetting_started/index.md,getting_started/index.csvを参照してください]
+//v2/longlongreasoning.tex
 #answer_box()[
   ```
   （1800行の推論）
@@ -67,6 +112,7 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
   （出力無し）
 ]
 ちょっとどうしてそうなったかがよくわからないのでもう一度やってみる。
+//2/v3
 #answer_box()[
   （二つ前からの続き）
 
@@ -88,7 +134,7 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
 "数式には多くの特殊文字が含まれます。例えば、{{c1::ギリシャ文字}}（例: Δ）、{{c2::フラクター文字}}（例: 𝔄）、{{c3::二重打文字}}（例: ℂ）、{{c4::二項演算子}}（例: ≠）、{{c5::矢印}}（例: ⇒）、{{c6::積分記号}}（例: ∮）、{{c7::和記号}} (例: ∑), {{c8::論理記号}} (例: ∀), {{c9::柵}} (例: ⋏) など。"
 ```
 
-例を与えたが、問題のクオリティとしてはとても低くなった。無料モデルには限界があるということだろう。（モデルはどうやら途中途中で切り替わるらしい）
+例を与えたが、問題のクオリティとしてはとても低くなった。やっぱり無料モデルには限界があるということだろう。（モデルはどうやら途中途中で切り替わるらしい）
 
 本筋に戻って、最初のAIに作らせた問題を手直ししたものを参照させて次のページの穴埋め問題を作るように指示してみる。
 
@@ -97,6 +143,7 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
 
   単純な単語一つを聞いていたり、二つの穴埋め箇所がほぼ同一で答えが簡単に分かってしまう問題をこちらで修正したので、改めてgetting_started/index.mdとgetting_started/index.csvを参考にしながら、今度はtext_container/index.mdから穴埋め問題を作ってください。
 ]
+//2/v4
 #answer_box()[
   `text_container/index.md` をもとに、意味づけ・`<mi>`/`<mo>` の挙動・伸縮演算子を中心とした8枚の穴埋め問題を作成しました。
 
@@ -110,7 +157,7 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
 "`<mi>`、`<mn>`、`<mo>`、`<mtext>` の使い分けを考えるとき、数値リテラルを表す要素は {{c1::<mn>}}、演算子として表示する要素は {{c2::<mo>}}、任意の短いテキストを表す要素は {{c3::<mtext>}}、識別子を表す要素は {{c4::<mi>}} です。"
 "単一文字の変数を通常の数学組版でイタリック体にするには、`<mi>` にその1文字を入れる。例えば、次のコードでは {{c1::<mi>x</mi> が自動的にイタリック表示される::単一文字の識別子}} 一方、`<mi>sin</mi>` のように複数文字を入れた場合は、単一文字の場合と同じ自動イタリック化にはならない。"
 ```
-例を増やしたにも関わらず、まごうことなきカスの問題が増えてしまった。しかも、MathMLを書かせる問題が一問も存在せず、難易度が低すぎる。。
+例を増やしたにも関わらず、まごうことなきカスの問題が増えてしまった。しかも、MathMLを書かせる問題が一問も存在せず、難易度が低すぎる。
 ```
 この章の要点をまとめると、MathML のテキストは意味に応じて {{c1::<mi>（識別子）}}、{{c2::<mn>（数値）}}、{{c3::<mo>（演算子）}}、{{c4::<mtext>（汎用テキスト）}}に分類し、`<mi>` は単一文字を自動的にイタリック化し、`<mo>` は演算子の位置に応じて既定の空間や伸縮を決める。伸縮演算子を正しく描画するには一般に {{c5::特別な数学フォント::必要になるフォント}}も必要です。
 ```
@@ -124,6 +171,7 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
 
   問題が理想的になるようにこちらで修正したので、差分を確認しながら改めてgetting_started/index.mdとgetting_started/index.csvを参考にしながら、今度はtext_container/index.mdから穴埋め問題を作ってください。
 ]
+//2/v5
 #answer_box()[
   `text_container/index.md` を参考に、12枚の穴埋め問題を作成しました。
 
@@ -185,7 +233,7 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
     </math>::1/3のMathML表現}}
     ```
 ]
-
+//該当なし？
 #answer_box()[
   `text_container/index.md` から12枚の穴埋め問題を作成しました。
 
@@ -258,7 +306,7 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
 
   検証結果: **14枚、全行2フィールド、cloze検証 passed**。原文の hidden JavaScript 内の `&lt;mi&gt;` による既知の二重エスケープ誤検知は、コードブロック外を対象に除外確認済みです。
 ]
-//2-v6
+//2/v6
 ````
 "MathML 数式内のテキストは、原則としてトークン要素の中に記載します。{{c1::<mi>::識別子}} は変数・関数名・記号定数、{{c2::<mn>::数値}} は数値リテラル、{{c3::<mo>::演算子やフェンス}} は演算子、{{c4::<mtext>::任意の短いテキスト}} は数式中の単語を表します。"
 "次の対応を、MathML のトークン要素を選ぶ問題として説明してください。変数 x には {{c1::<mi>x</mi>::変数の要素}}、整数 2 には {{c2::<mn>2</mn>::数値リテラルの要素}}、足し算には {{c3::<mo>+</mo>::演算子の要素}}、数式中の単語 iff には {{c4::<mtext>iff</mtext>::任意の短いテキストの要素}} を使います。"
@@ -319,7 +367,7 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
   検証結果: **14枚・2フィールド・cloze構文すべて正常**。
 ]
 //2-v7
-ぎりぎり、本当にギリギリ許容範囲内の問題が出来た。
+ぎりぎり、本当にギリギリ許容範囲内の問題がようやく出来た。
 ````
 "単一文字のラテン文字・ギリシャ文字を含む `<mi>` は、数学の組版規則により自動的に {{c1::イタリック体::既定の書体}} で表示されます。"
 "`<mi>` の自動的なイタリック化を取り消してガンマ Γ を直立体で表示するには、次のように {{c1::<mi mathvariant=normal>Γ</mi>::通常体を指定するコード}} と書きます。
@@ -414,6 +462,7 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
   - 難易度は単に単語を聞くような簡単な問題ではなく、自由記述やMathMLのコード全体を穴埋めする問題を中心に設定してください。同じような答えになる穴埋め箇所を一つの問題セットに二か所以上作ってはなりません。
   ````
 ]
+//2/v9
 #answer_box()[
   I'll create a comprehensive cloze deck for the MathML scripts/index.md content. Based on the examples from getting_started/index.md and getting_started/index.csv, I'll create questions that focus on understanding the concepts rather than simple word recall.
 
@@ -512,8 +561,13 @@ GithubのMarkdownプレビューをHTMLとしてコピーするとアイコン�
   - 難易度は単に単語を聞くような簡単な問題ではなく、自由記述やMathMLのコード全体を穴埋めする問題を中心に設定してください。同じような答えになる穴埋め箇所を一つの問題セットに二か所以上作ってはなりません。
   ````
 ]
-なんか急にクオリティが激下がりしたので、セッションをリセットする。
+//2/v10
+このタイミングで、なぜか急にクオリティが激下がりしたので、セッションをリセットする。
 
-今度は穴埋め問題がc4から始まったりした。
+しかし今度は穴埋め問題の番号がc4から始まったりした。
 
 あ、自分の出した例がc2からになってる。もしかしてカスなのは俺だったのか？
+
+よく見ると、何故か元の資料が編集されており、元の資料の内容が変わってしまったために、穴埋め問題の生成がうまくいかなくなっていた。しかも、元に戻すと今度は資料のmarkdownからHTMLへの変換が大失敗しており、MathMLのコードが消えたり、改行がすべて削除されたりしていた。しかもさらに、変換コードに、なんと改行を一つだけ変えると挙動が大幅に変わるという罠の仕様が入っていた。変換コードがそもそもバグだらけで、変換コードの修正を行うと、今度は別の箇所が壊れるという負のスパイラルに陥っていた。
+
+結論。OpenRouterのフリーモデルやGPT-5.6 Luna では、穴埋め問題の生成は完全にガチャであり、手動の方がよほど効率的である。

@@ -1,0 +1,5 @@
+# はてなブログ API キー（リポジトリにコミットしない）
+.hatena-api-key
+.env
+
+__pycache__/

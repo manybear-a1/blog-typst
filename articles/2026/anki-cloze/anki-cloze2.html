@@ -1,0 +1,218 @@
+<!DOCTYPE html><html lang="jp"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><h1>警告:このTypstで書き出したHTMLはdiv#takehereの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があります。脚注がある場合は、<code>&lt;section role="doc-endnotes"></code>内の内容も取り出して、ブログに貼り付ける必要があります。</h1><div id="takehere"><p>というわけで一日が経った。今日は、AIに手順書ではなく例を与えることで制御してみることにした。</p><p>まずは例を与えるために最初の一ページ目を自分で穴埋め問題にしようとした。しかしMDNのmarkdownそのままだとAnkiがMDN の独自記法のMarkdownに対応していなかった。 かといって、MDNでレンダリングされたページを使っても今度は余計なクラス名や独自要素が含まれていて使えなかった。 Markdownを適当な変換ツールでHTMLに変換したものも、MDN 特有のMarkdownの構造が邪魔をして上手くいかなかった。 GithubのMarkdownプレビューをHTMLとしてコピーするとアイコンのSVGがたくさん含まれてしまい上手くいかなかった。</p><p>どうやらMDNをAnkiに上手に取り込むこと自体が非常に難しいタスクであることが分かった。</p><p>しかし！　私には前日にLunaが作ったMDNのMarkdownをHTMLに変換するツールがある。これを使えば、MDNのMarkdownをAnkiに取り込むことができる！</p><p>というわけでいったん変換した。</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><p>index.mdを穴埋め問題にしてください。穴埋めの仕方はindex.csv内にある既存の穴埋め問題を参照してください。</p></div><p>一度やってみると、何と既存の問題をすべて消し、自分が作った低クオリティバージョンに置き換えるという暴挙に出てしまった。これはまずい。既存の問題を消さずに新しい問題を追加するように指示しなければならない。</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><p>index.mdから穴埋め問題を作る作業の続きをしてください。穴埋めの仕方はindex.csv内にある既存の穴埋め問題を参照してください。</p></div><pre><code>"MathML で「2 分の 1」足す「3 分の 2」を表すには、次のコードの {{c1::&lt;mfrac>
+    &lt;mn>1&lt;/mn>
+    &lt;mn>2&lt;/mn>
+  &lt;/mfrac>
+  &lt;mo>+&lt;/mo>
+  &lt;mfrac>
+    &lt;mn>2&lt;/mn>
+    &lt;mn>3&lt;/mn>
+  &lt;/mfrac>::2つの分数を足す部分}} を `&lt;math>` の子要素として置きます。
+
+```html
+&lt;math>
+  {{c2::&lt;mfrac>
+    &lt;mn>1&lt;/mn>
+    &lt;mn>2&lt;/mn>
+  &lt;/mfrac>
+  &lt;mo>+&lt;/mo>
+  &lt;mfrac>
+    &lt;mn>2&lt;/mn>
+    &lt;mn>3&lt;/mn>
+  &lt;/mfrac>::完全な MathML 表現}}
+&lt;/math>
+```"</code></pre><p>答えが丸見えなカスの問題が出来た。そもそも、index.mdの文章を丸写ししてもいない。（まあそこはどっちでもいいのだが） ただ一方で最後の問題は適切な難易度になっていて、とてもよい。</p><pre><code>"この章の MathML の要点は、数式全体を {{c1::&lt;math> 要素で表し::数式全体の要素}}、分数を {{c1::&lt;mfrac> で表し::分数の要素}}、複数の要素のグループ化を {{c1::&lt;mrow> で行う::グループ化の要素}}ことです。また、数式を独立した行に表示するには `&lt;math>` に {{c1::display=block を指定する::表示モード}}。"</code></pre><p>全体的に最初の一例目に引っ張られすぎている気がする。特にAIが最初に作った問題に顕著に表れている。</p><p>とりあえずできた問題を手直しして、その問題を参照させて次のページの穴埋め問題を作るように指示してみる。</p><p>と、その前に、あまりに迷走しすぎて使用制限に達しそうだったのと、ちょっと別のAIを使ってみたらどうなるのか知りたくなったのでOpenRouterのFree Model Routerを試しに使ってみることにした。</p><p>OpenRouterは、複数のAIモデルを統合して使えるサービスである。Free Model Routerはその中でも無料で使えるモデルを集めたものである。</p><p>今回はNemotron 3.5 Lightning にルーティングされたらしい.</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><p>（一つ前からの続き）</p><p>text_container/index.mdを穴埋め問題にしてcsvファイルにまとめてください。作り方、難易度等はgetting_started/index.md,getting_started/index.csvを参照してください</p></div><div style="background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;"><div><p>回答:</p><pre><code>（1800行の推論）</code></pre><p>（出力無し）</p></div></div><p>ちょっとどうしてそうなったかがよくわからないのでもう一度やってみる。</p><div style="background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;"><div><p>回答:</p><p>（二つ前からの続き）</p><p><code>text_container/index.csv</code> を作成しました。<code>getting_started/index.csv</code> と同じクローズ形式（<code>{{c1::答え}}</code>）で、以下の内容を穴埋め問題としてまとめています：</p><ol><li value="1"><strong></strong>数式の特殊文字<strong></strong> - ギリシャ文字、フラクター文字、二重打文字、二項演算子、矢印、積分記号、和記号、論理記号、柵</li><li value="2"><strong></strong>ウェブフォントの指定<strong></strong> - UTF-8エンコーディングとLatin Modern MathフォントのCSS設定</li><li value="3"><strong></strong>トークン要素<strong></strong> - すべてのテキストはトークン要素の中に記載</li><li value="4"><strong></strong>4つのトークン要素の役割<strong></strong> - <code>&lt;mi></code>（識別子）、<code>&lt;mn></code>（数値リテラル）、<code>&lt;mo></code>（演算子）、<code>&lt;mtext></code>（任意のテキスト）</li><li value="5"><strong></strong><code>&lt;mi></code>の自動イタリック化<strong></strong> - 単一文字の変数は自動的にイタリック体</li><li value="6"><strong></strong>イタリック化の取り消し<strong></strong> - <code>mathvariant="normal"</code> 属性</li><li value="7"><strong></strong>演算子辞書<strong></strong> - <code>&lt;mo></code>要素の位置に応じたデフォルトプロパティ</li><li value="8"><strong></strong>伸縮演算子<strong></strong> - 縦方向に伸縮し、兄弟要素の高さに合わせる</li><li value="9"><strong></strong>まとめ<strong></strong> - 4つのトークン要素のおさらい</li></ol><p>各行が1枚のAnkiカードになり、複数の穴がある場合は <code>{{c1::}}</code>, <code>{{c2::}}</code> のように番号で管理されています。</p></div></div><pre><code>"数式には多くの特殊文字が含まれます。例えば、{{c1::ギリシャ文字}}（例: Δ）、{{c2::フラクター文字}}（例: 𝔄）、{{c3::二重打文字}}（例: ℂ）、{{c4::二項演算子}}（例: ≠）、{{c5::矢印}}（例: ⇒）、{{c6::積分記号}}（例: ∮）、{{c7::和記号}} (例: ∑), {{c8::論理記号}} (例: ∀), {{c9::柵}} (例: ⋏) など。"</code></pre><p>例を与えたが、問題のクオリティとしてはとても低くなった。やっぱり無料モデルには限界があるということだろう。（モデルはどうやら途中途中で切り替わるらしい）</p><p>本筋に戻って、最初のAIに作らせた問題を手直ししたものを参照させて次のページの穴埋め問題を作るように指示してみる。</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><p>（三つ前からの続き）</p><p>単純な単語一つを聞いていたり、二つの穴埋め箇所がほぼ同一で答えが簡単に分かってしまう問題をこちらで修正したので、改めてgetting_started/index.mdとgetting_started/index.csvを参考にしながら、今度はtext_container/index.mdから穴埋め問題を作ってください。</p></div><div style="background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;"><div><p>回答:</p><p><code>text_container/index.md</code> をもとに、意味づけ・<code>&lt;mi></code>/<code>&lt;mo></code> の挙動・伸縮演算子を中心とした8枚の穴埋め問題を作成しました。</p><ul><li><code>index.csv</code></li><li><code>index_cloze.csv</code></li></ul><p>生成CSVは8枚・全行2フィールドで、コードブロック外のcloze検証も通過しています。付属バリデータは、原文のJavaScript例に含まれる <code>&amp;lt;mi&amp;gt;</code> の二重エスケープ判定で停止しますが、カード生成自体は完了しています。</p></div></div><pre><code>"次の内容を MathML のトークン要素に対応付けると、変数 `x` と関数名 `cos` と記号定数 `π` は {{c1::&lt;mi>}}、整数 `2` と 10 進数 `0.123` と 16 進数値 `0xFFEF` は {{c2::&lt;mn>}}、`+` や `≤` や `∑` やフェンス `[` は {{c3::&lt;mo>}}、数式中の短い単語 `if` や `maps to` は {{c4::&lt;mtext>}} で表す。"
+"`&lt;mi>`、`&lt;mn>`、`&lt;mo>`、`&lt;mtext>` の使い分けを考えるとき、数値リテラルを表す要素は {{c1::&lt;mn>}}、演算子として表示する要素は {{c2::&lt;mo>}}、任意の短いテキストを表す要素は {{c3::&lt;mtext>}}、識別子を表す要素は {{c4::&lt;mi>}} です。"
+"単一文字の変数を通常の数学組版でイタリック体にするには、`&lt;mi>` にその1文字を入れる。例えば、次のコードでは {{c1::&lt;mi>x&lt;/mi> が自動的にイタリック表示される::単一文字の識別子}} 一方、`&lt;mi>sin&lt;/mi>` のように複数文字を入れた場合は、単一文字の場合と同じ自動イタリック化にはならない。"</code></pre><p>例を増やしたにも関わらず、まごうことなきカスの問題が増えてしまった。しかも、MathMLを書かせる問題が一問も存在せず、難易度が低すぎる。</p><pre><code>この章の要点をまとめると、MathML のテキストは意味に応じて {{c1::&lt;mi>（識別子）}}、{{c2::&lt;mn>（数値）}}、{{c3::&lt;mo>（演算子）}}、{{c4::&lt;mtext>（汎用テキスト）}}に分類し、`&lt;mi>` は単一文字を自動的にイタリック化し、`&lt;mo>` は演算子の位置に応じて既定の空間や伸縮を決める。伸縮演算子を正しく描画するには一般に {{c5::特別な数学フォント::必要になるフォント}}も必要です。</code></pre><p>末尾の問題も全てを別々の穴埋め問題にしてしまったため、全体の難易度が豆腐のように柔らかくなってしまった。</p><p>思考ステップを見ると、そもそも参照するはずのgetting_started/index.mdの内容を一切読んでいないように見える。</p><p>プロンプトを工夫してみる。</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><p>（四つ前からの続き）</p><p>問題が理想的になるようにこちらで修正したので、差分を確認しながら改めてgetting_started/index.mdとgetting_started/index.csvを参考にしながら、今度はtext_container/index.mdから穴埋め問題を作ってください。</p></div><div style="background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;"><div><p>回答:</p><p><code>text_container/index.md</code> を参考に、12枚の穴埋め問題を作成しました。</p><ul><li>Unicode 文字とフォント</li><li><code>&lt;mi></code>, <code>&lt;mn></code>, <code>&lt;mo></code>, <code>&lt;mtext></code></li><li>トークン要素の判別</li><li><code>&lt;mi></code> の自動イタリック化と解除</li><li><code>&lt;mo></code> の演算子プロパティと間隔</li><li>伸縮演算子</li><li>MathML の意味づけと冗長性</li></ul><p>作成ファイル:</p><ul><li><code>index.csv</code></li><li><code>index_cloze.csv</code></li></ul><p>12枚・2列・cloze 構文を確認済みです。なお、付属バリデータは原文コード内の <code>&amp;lt;</code> を二重エスケープとして誤検出しますが、コードブロック外を対象にした検証は通過しています。</p></div></div><pre><code>"次の式で、絶対値記号、等号、以上記号は {{c1::&lt;mo>}}、変数 `x` は {{c1::&lt;mi>}}、数値 `0` は {{c1::&lt;mn>}}、`iff` のような短い単語は {{c1::&lt;mtext>}} で表します。\n\n```xml\n&lt;math display=block>\n  &lt;mrow>\n    &lt;mrow>\n      &lt;mo>|&lt;/mo>\n      &lt;mi>x&lt;/mi>\n      &lt;mo>|&lt;/mo>\n    &lt;/mrow>\n    &lt;mo>=&lt;/mo>\n    &lt;mi>x&lt;/mi>\n  &lt;/mrow>\n  &lt;mtext>&amp;nbsp;iff&amp;nbsp;&lt;/mtext>\n  &lt;mrow>\n    &lt;mi>x&lt;/mi>\n    &lt;mo>≥&lt;/mo>\n    &lt;mn>0&lt;/mn>\n  &lt;/mrow>\n&lt;/math>\n```"</code></pre><p>何故か改行を\nに勝手に変えてしまった。問題の難易度はましになったが、mathMLを書く問題が一問もないのは改善しなかった。</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><p>（五つ前からの続き）</p><p>次のルールに従ってtext_container/index.mdから穴埋め問題を作成してください。例はgetting_started/index.mdとgetting_started/index.csvにあります。</p><ul><li><p>穴埋め箇所は{{c1::答え::ヒント}}、{{c2::答え::ヒント}}のように番号を付けてください。この際、各{{cN::}}から問題が一つ生成されます。</p><p>例:{{c1::&lt;math>要素}}は{{c2::MathML::言語名}}の{{c2::数式全体::表すもの}}を表す要素です。 と記述すると</p><ul><li>……はMathMLの数式全体を表す要素です。</li><li>&lt;math>要素は…言語名…の…数式全体…を表す要素です</li></ul><p>の二問が生成されます。</p></li></ul><p>問題の種類は例えば以下の三つですが、それ以外の形式の問題も（{{cN::}}で表せれば）用いて構いません。</p><ul><li>普通の穴埋め問題</li><li><p>一問一答形式</p><p>例:MathMLで数式を中央ぞろえにする方法を述べてください。</p><p>{{c1::&lt;math display=block>を使う::数式を中央ぞろえにする方法}}</p></li><li><p>MathMLのコードを穴埋めする問題</p><p>MathMLのコードを穴埋めする問題は、コードブロック内に{{cN::}}を入れてください。</p><p>例:</p><pre><code>{{c2::&lt;math>
+  &lt;mfrac>
+    &lt;mn>1&lt;/mn>
+    &lt;mn>3&lt;/mn>
+  &lt;/mfrac>
+&lt;/math>::1/3のMathML表現}}</code></pre></li></ul></div><div style="background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;"><div><p>回答:</p><p><code>text_container/index.md</code> から12枚の穴埋め問題を作成しました。</p><ul><li><code>index.csv</code>: カード仕様</li><li><code>index_cloze.csv</code>: Anki インポート用CSV</li></ul><p><code>&lt;mi></code>, <code>&lt;mn></code>, <code>&lt;mo></code>, <code>&lt;mtext></code>、Unicode、イタリック化、演算子の空白、伸縮演算子を含みます。補助検証は <strong></strong>12枚・2フィールド・cloze構文OK<strong></strong> で通過しました。</p></div></div><pre><code>"数学用の特殊な Unicode 文字を HTML 文書で正しく扱うため、文書の文字エンコーディングには {{c1::UTF-8::推奨される文字エンコーディング}} を指定します。
+
+```html
+&lt;!doctype html>
+&lt;html lang=""ja"">
+  &lt;head>
+    {{c2::&lt;meta charset=""utf-8"" />::文字コードを指定する要素}}
+  &lt;/head>
+&lt;/html>
+```"</code></pre><p>またカスの問題が出来てしまった。</p><p>全体的に難易度が低すぎる。特に最後の問題は、文章を丸写しして穴埋め箇所を作っただけで、MathMLのコードを穴埋めする問題も実質的に一問しかない。 （いくつか簡単なものはあるが）</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><p>（六つ前からの続き）</p><pre><code> 次のルールに従ってtext_container/index.mdから穴埋め問題を作成してください。例はgetting_started/index.mdとgetting_started/index.csvにあるので一度確認してください。
+
+- 穴埋め箇所は{{c1::答え::ヒント}}、{{c2::答え::ヒント}}のように番号を付けてください。この際、各{{cN::}}から問題が一つ生成されます。
+
+  例:{{c1::&lt;math>要素}}は{{c2::MathML::言語名}}の{{c2::数式全体::表すもの}}を表す要素です。
+  と記述すると
+  - ......はMathMLの数式全体を表す要素です。
+  - &lt;math>要素は...言語名...の...数式全体...を表す要素です
+  の二問が生成されます。
+
+- 問題の種類は例えば以下の三つですが、それ以外の形式の問題も（{{cN::}}で表せれば）用いて構いません。
+
+  - 普通の穴埋め問題
+  - 一問一答形式
+
+    例:MathMLで数式を中央ぞろえにする方法を述べてください。
+
+    {{c1::&lt;math display=block>を使う::数式を中央ぞろえにする方法}}
+  - MathMLのコードを穴埋めする問題
+
+    MathMLのコードを穴埋めする問題は、コードブロック内に{{cN::}}を入れてください。
+
+    例:
+
+    ```
+    {{c2::&lt;math>
+      &lt;mfrac>
+        &lt;mn>1&lt;/mn>
+        &lt;mn>3&lt;/mn>
+      &lt;/mfrac>
+    &lt;/math>::1/3のMathML表現}}
+    ```
+- 難易度は単に単語を聞くような簡単な問題ではなく、自由記述やMathMLのコードを穴埋めする問題を中心に設定してください。</code></pre></div><div style="background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;"><div><p>回答:</p><p><code>text_container/index.md</code> から14枚の穴埋めカードを作成しました。</p><ul><li>カード仕様</li><li>生成済みAnki CSV</li></ul><p>Unicode、<code>&lt;mi></code>・<code>&lt;mn></code>・<code>&lt;mo></code>・<code>&lt;mtext></code>、自動イタリック化、演算子辞書、<code>&lt;mrow></code>、伸縮演算子を、自由記述とコード穴埋めで構成しています。</p><p>検証結果: <strong></strong>14枚、全行2フィールド、cloze検証 passed<strong></strong>。原文の hidden JavaScript 内の <code>&amp;lt;mi&amp;gt;</code> による既知の二重エスケープ誤検知は、コードブロック外を対象に除外確認済みです。</p></div></div><pre><code>"MathML 数式内のテキストは、原則としてトークン要素の中に記載します。{{c1::&lt;mi>::識別子}} は変数・関数名・記号定数、{{c2::&lt;mn>::数値}} は数値リテラル、{{c3::&lt;mo>::演算子やフェンス}} は演算子、{{c4::&lt;mtext>::任意の短いテキスト}} は数式中の単語を表します。"
+"次の対応を、MathML のトークン要素を選ぶ問題として説明してください。変数 x には {{c1::&lt;mi>x&lt;/mi>::変数の要素}}、整数 2 には {{c2::&lt;mn>2&lt;/mn>::数値リテラルの要素}}、足し算には {{c3::&lt;mo>+&lt;/mo>::演算子の要素}}、数式中の単語 iff には {{c4::&lt;mtext>iff&lt;/mtext>::任意の短いテキストの要素}} を使います。"
+"実数 x の絶対値が x に等しいのは x が 0 以上の場合だという式を、MathML のコードで表してください。絶対値の縦線と等号・不等号には {{c1::&lt;mo>}}、変数には {{c2::&lt;mi>}}、数値 0 には {{c3::&lt;mn>}}、条件を表す単語 iff には {{c4::&lt;mtext>}} を使います。</code></pre><p>同じような、しかも簡単な問題を三回も繰り返している。カスの極みである。</p><p>この時点で既に作らせ始めてから実に四日も経過しており、未だに進捗がなくむなしく思い始めている。</p><p>本当はもっと図の制作やら、補足説明も書かせるのが目標だったが、そんなことはもはや夢のまた夢だろう。シンギュラリティはいずこへ。</p><p>仕方ないので、いい問題を定義して、それに従って作らせる。</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><p>（七つ前からの続き）</p><pre><code> 次のルールに従ってtext_container/index.mdから穴埋め問題を作成してください。例はgetting_started/index.mdとgetting_started/index.csvにあるので一度確認してください。
+
+- 穴埋め箇所は{{c1::答え::ヒント}}、{{c2::答え::ヒント}}のように番号を付けてください。この際、各{{cN::}}から問題が一つ生成されます。
+
+  例:{{c1::&lt;math>要素}}は{{c2::MathML::言語名}}の{{c2::数式全体::表すもの}}を表す要素です。
+  と記述すると
+  - ......はMathMLの数式全体を表す要素です。
+  - &lt;math>要素は...言語名...の...数式全体...を表す要素です
+  の二問が生成されます。
+
+- 問題の種類は例えば以下の三つですが、それ以外の形式の問題も（{{cN::}}で表せれば）用いて構いません。
+
+  - 普通の穴埋め問題
+  - 一問一答形式
+
+    例:MathMLで数式を中央ぞろえにする方法を述べてください。
+
+    {{c1::&lt;math display=block>を使う::数式を中央ぞろえにする方法}}
+  - MathMLのコードを穴埋めする問題
+
+    MathMLのコードを穴埋めする問題は、コードブロック内に{{cN::}}を入れてください。
+
+    例:
+
+    ```
+    {{c2::&lt;math>
+      &lt;mfrac>
+        &lt;mn>1&lt;/mn>
+        &lt;mn>3&lt;/mn>
+      &lt;/mfrac>
+    &lt;/math>::1/3のMathML表現}}
+    ```
+- 難易度は単に単語を聞くような簡単な問題ではなく、自由記述やMathMLのコード全体を穴埋めする問題を中心に設定してください。同じようなことをさせる穴埋め箇所を二か所以上作ってはなりません。</code></pre></div><div style="background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;"><div><p>回答:</p><p><code>text_container/index.csv</code> を新規作成し、原文から14枚の穴埋め問題を作成しました。</p><p>内容には、トークン要素の使い分け、絶対値式のMathMLコード、<code>&lt;mi></code> の斜体化、<code>&lt;mo></code> の空白規則、伸縮演算子と数学フォントを含めています。</p><p>生成済み: <code>index_cloze.csv</code></p><p>検証結果: <strong></strong>14枚・2フィールド・cloze構文すべて正常<strong></strong>。</p></div></div><p>ぎりぎり、本当にギリギリ許容範囲内の問題がようやく出来た。</p><pre><code>"単一文字のラテン文字・ギリシャ文字を含む `&lt;mi>` は、数学の組版規則により自動的に {{c1::イタリック体::既定の書体}} で表示されます。"
+"`&lt;mi>` の自動的なイタリック化を取り消してガンマ Γ を直立体で表示するには、次のように {{c1::&lt;mi mathvariant=normal>Γ&lt;/mi>::通常体を指定するコード}} と書きます。
+
+```html
+&lt;math>
+  &lt;mi>Γ&lt;/mi>
+  {{c2::&lt;mi mathvariant=normal>Γ&lt;/mi>::直立体の Γ}}
+&lt;/math>
+```"</code></pre><p>でも、カスの問題はやっぱりあるし、MathMLのコードを穴埋めする問題も一問しかない。同じ答えが出る問題は二つ以上作ってはならないと言ったし、MathMLのコードを穴埋めする問題は例にも入れたし指示にも入れたのにどうして？</p><p>カスの問題を検知するツールを作ってみるか？（同じノートで答えがほぼ同じになる穴埋め箇所が二か所以上ある場合はカスの問題と判定する）とりあえずはいいか。</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><p>（一つ前からの続き）</p><pre><code> 次のルールに従ってfractionandroots/index.mdから穴埋め問題を作成してください。例はgetting_started/index.mdとgetting_started/index.csvにあるので一度確認してください。
+
+- 穴埋め箇所は{{c1::答え::ヒント}}、{{c2::答え::ヒント}}のように番号を付けてください。この際、各{{cN::}}から問題が一つ生成されます。
+
+  例:{{c1::&lt;math>要素}}は{{c2::MathML::言語名}}の{{c2::数式全体::表すもの}}を表す要素です。
+  と記述すると
+  - ......はMathMLの数式全体を表す要素です。
+  - &lt;math>要素は...言語名...の...数式全体...を表す要素です
+  の二問が生成されます。
+
+- 問題は以下の二種類バランスよく出してください。
+
+  - 普通の穴埋め問題
+  - MathMLのコードを穴埋めする問題
+
+    MathMLのコードを穴埋めする問題は、コードブロック内に{{cN::}}を入れてください。
+
+    例:
+
+    ```
+    {{c2::&lt;math>
+      &lt;mfrac>
+        &lt;mn>1&lt;/mn>
+        &lt;mn>3&lt;/mn>
+      &lt;/mfrac>
+    &lt;/math>::1/3のMathML表現}}
+    ```
+- 難易度は単に単語を聞くような簡単な問題ではなく、自由記述やMathMLのコード全体を穴埋めする問題を中心に設定してください。同じような答えになる穴埋め箇所を一つの問題セットに二か所以上作ってはなりません。</code></pre></div><div style="background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;"><div><p>回答:</p><p><code>fractionandroots/index.csv</code> を作成し、分数・平方根・n乗根・入れ子構造・伸縮・<code>linethickness</code> を扱うカードを追加しました。</p><p>通常問題とMathMLコード穴埋めをバランスよく含めています。<code>c1</code> と <code>c2</code> の複数clozeにより、生成カード数は13枚です。</p><p>生成済み: <code>index_cloze.csv</code></p><p>検証結果: <strong></strong>13枚、validation passed<strong></strong></p></div></div><p>ここまでは続けて同じセッションで作業をしてきたが、ここで一旦区切って別のセッションで同じプロンプトを使って続きを作らせてみることにした。</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><pre><code> 次のルールに従ってscripts/index.mdから穴埋め問題を作成してください。例はgetting_started/index.mdとgetting_started/index.csvにあるので一度確認してください。
+
+- 穴埋め箇所は{{c1::答え::ヒント}}、{{c2::答え::ヒント}}のように番号を付けてください。この際、各{{cN::}}から問題が一つ生成されます。
+
+  例:{{c1::&lt;math>要素}}は{{c2::MathML::言語名}}の{{c2::数式全体::表すもの}}を表す要素です。
+  と記述すると
+  - ......はMathMLの数式全体を表す要素です。
+  - &lt;math>要素は...言語名...の...数式全体...を表す要素です
+  の二問が生成されます。
+
+- 問題は以下の二種類バランスよく出してください。
+
+  - 普通の穴埋め問題
+  - MathMLのコードを穴埋めする問題
+
+    MathMLのコードを穴埋めする問題は、コードブロック内に{{cN::}}を入れてください。
+
+    例:
+
+    ```
+    {{c2::&lt;math>
+      &lt;mfrac>
+        &lt;mn>1&lt;/mn>
+        &lt;mn>3&lt;/mn>
+      &lt;/mfrac>
+    &lt;/math>::1/3のMathML表現}}
+    ```
+- 難易度は単に単語を聞くような簡単な問題ではなく、自由記述やMathMLのコード全体を穴埋めする問題を中心に設定してください。同じような答えになる穴埋め箇所を一つの問題セットに二か所以上作ってはなりません。</code></pre></div><div style="background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;"><div><p>回答:</p><p>I’ll create a comprehensive cloze deck for the MathML scripts/index.md content. Based on the examples from getting_started/index.md and getting_started/index.csv, I’ll create questions that focus on understanding the concepts rather than simple word recall.</p><p>Here’s the cloze deck for MathML scripts/index.md:</p><pre><code data-lang="csv"><span style="color: #198810">"</span><span style="color: #198810">MathML 添字要素の基本的な要素は {{c1::&lt;msub>、&lt;msup>、&lt;msubsup>、&lt;munder>、&lt;mover>、&lt;munderover>::6つの添字要素}} です。これらの要素は、添字（下付き文字、上付き文字、真下付き文字、真上付き文字）を表現するために使用されます。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;msub>` 要素はちょうど {{c1::2 つ::子要素の数}} の子要素を持ち、2 つ目の子が 1 つ目の子の下付き文字として添付されます。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;msup>` 要素はちょうど {{c1::2 つ::子要素の数}} の子要素を持ち、2 つ目の子が 1 つ目の子の上付き文字として添付されます。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;msubsup>` 要素はちょうど {{c1::3 つ::子要素の数}} の子要素を持ち、2 つ目が下付き、3 つ目が上付き文字となります。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML 要素 `&lt;msub>` と `&lt;msup>` は HTML の `&lt;sub>` や `&lt;sup>` 要素とは異なり、テキストに限らず {{c1::任意の MathML サブツリー::添字として提供できるもの}} を添字として提供できます。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">真上付き文字（ベースラインの真上）を表す MathML 要素は {{c1::&lt;mover>::真上付き文字要素}} です。この要素はちょうど 2 つの子要素を持ちます。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">真下付き文字（ベースラインの真下）を表す MathML 要素は {{c1::&lt;munder>::真下付き文字要素}} です。この要素はちょうど 2 つの子要素を持ちます。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">真下付き文字と真上付き文字の両方を同時に表す MathML 要素は {{c1::&lt;munderover>::真下・真上付き文字要素}} です。この要素はちょうど {{c2::3 つ::子要素の数}} の子要素を持ちます。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">以下の MathML コードで、β に下カッコを真下に付け、3 乗根を取る式を表している部分は {{c1::`&lt;mroot>` の子要素として `&lt;munder>` を配置する::入れ子の構造}} です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">以下の MathML コードで、α に右向き矢印を真上に付け、絶対値を取り、s^3 で割る式を表している部分は {{c1::`&lt;mfrac>` の分子に `&lt;mover>` を配置する::分数の分子での真上付き文字}} です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">以下の MathML コードで、Σ の下に i=1、上に n を付け、√(a_i - K_0^i) を掛ける式を表している部分は {{c1::`&lt;munderover>` で Σ に上下の添字を付ける::和記号への添字付け}} です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">水平方向に伸縮する演算子（下カッコ ⎵ や右向き矢印 → など）は、`&lt;munder>`、`&lt;mover>`、`&lt;munderover>` 要素内で、伸縮しない {{c1::兄弟要素の幅::伸縮の基準}} に応じて伸縮します。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">`&lt;math>` 要素に `display=\</span><span style="color: #198810">"</span><span style="color: #4b69c6">block\</span><span style="color: #198810">"</span><span style="color: #198810">` 属性がある場合、大きな演算子（∑ など）は {{c1::より大きな字形::大型字形}} で描画されます。また、真下付き・真上付き文字はそれぞれ {{c2::下付き・上付き文字の位置::制限の位置}} に表示されます（移動制限特性）。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">`&lt;math>` 要素に `display=\</span><span style="color: #198810">"</span><span style="color: #4b69c6">block\</span><span style="color: #198810">"</span><span style="color: #198810">` 属性がない場合（インライン表示）、大きな演算子は {{c1::小さな字形::小型字形}} で描画され、真下付き・真上付き文字はそれぞれ {{c2::下付き・上付き文字の位置::制限の位置}} に移動して表示されます。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">「大きな演算子」特性を持つ演算子は一般的に {{c1::添字が付く::添字の有無}} ものですが、この特性自体は添字とは無関係です。一方、「移動制限」特性は `&lt;munder>` と `&lt;mover>` 要素にも適用されます。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">伸縮演算子の水平方向の伸縮は、`&lt;munder>`、`&lt;mover>`、`&lt;munderover>` 要素の {{c1::どの子要素に対しても::対象の子要素}} 行うことができます。真下付き文字や真上付き文字に限定されません。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;msub>` 要素は {{c1::下付き文字::下付き文字を表す要素}} を表す要素です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;msup>` 要素は {{c1::上付き文字::上付き文字を表す要素}} を表す要素です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;msubsup>` 要素は {{c1::下付き文字と上付き文字の両方::下付き・上付き文字を表す要素}} を表す要素です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;munder>` 要素は {{c1::真下付き文字::真下付き文字を表す要素}} を表す要素です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;mover>` 要素は {{c1::真上付き文字::真上付き文字を表す要素}} を表す要素です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;munderover>` 要素は {{c1::真下付き文字と真上付き文字の両方::真下・真上付き文字を表す要素}} を表す要素です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;mroot>` 要素は {{c1::根号::根号を表す要素}} を表す要素です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;mfrac>` 要素は {{c1::分数::分数を表す要素}} を表す要素です。</span><span style="color: #198810">"</span>
+<span style="color: #198810">"</span><span style="color: #198810">MathML では、`&lt;mrow>` 要素は {{c1::グループ化::グループ化を表す要素}} を表す要素です。</span><span style="color: #198810">"</span></code></pre><p>This cloze deck includes:</p><ol><li value="1"><p><strong></strong>Regular cloze questions<strong></strong> covering key concepts like:</p><ul><li>Basic MathML elements and their purposes</li><li>Number of child elements each element accepts</li><li>Properties and characteristics of each element</li><li>The difference between regular and true under/over scripts</li><li>Large operator properties and limitations</li><li>Horizontal stretching behavior</li></ul></li><li value="2"><p><strong></strong>MathML code cloze questions<strong></strong> where students need to identify:</p><ul><li>Which element is used for specific purposes</li><li>How elements are nested in complex expressions</li><li>Where specific elements are placed in the structure</li></ul></li><li value="3"><p><strong></strong>Diverse difficulty levels<strong></strong>:</p><ul><li>Simple identification questions (e.g., “What does <code>&lt;msub></code> represent?”)</li><li>More complex understanding questions (e.g., “What does <code>&lt;munder></code> do?”)</li><li>Application questions (e.g., “Where would you place <code>&lt;mover></code> in this structure?”)</li></ul></li><li value="4"><p><strong></strong>Balanced coverage<strong></strong> of all 6 main elements and their properties</p></li></ol><p>Each question follows the format <code>{{cN::answer::hint}}</code> where:</p><ul><li><code>cN</code> is the question number</li><li><code>answer</code> is the expected answer</li><li><code>hint</code> provides a helpful clue</li></ul><p>The questions progress from basic identification to more complex understanding, ensuring students develop a deep comprehension of MathML subscript elements.</p></div></div><p>間違ってopenrouter/free モデルを使ってしまったが、結果としては十分に良い問題が出来た。</p><p>返答に含まれている問題とは別に、csvファイルも生成されていて、そちらには別の問題が入っている。たぶん途中でモデルが切り替わって記憶喪失になったのだろう。</p><div style="padding: 1em; border: 1px solid #111;"><p>プロンプト:</p><p>（一つ前からの続き）</p><pre><code> 次のルールに従ってtables/index.mdから穴埋め問題を作成してください。例はgetting_started/index.mdとgetting_started/index.csvにあるので一度確認してください。
+
+- 穴埋め箇所は{{c1::答え::ヒント}}、{{c2::答え::ヒント}}のように番号を付けてください。この際、各{{cN::}}から問題が一つ生成されます。
+
+  例:{{c1::&lt;math>要素}}は{{c2::MathML::言語名}}の{{c2::数式全体::表すもの}}を表す要素です。
+  と記述すると
+  - ......はMathMLの数式全体を表す要素です。
+  - &lt;math>要素は...言語名...の...数式全体...を表す要素です
+  の二問が生成されます。
+
+- 問題は以下の二種類バランスよく出してください。
+
+  - 普通の穴埋め問題
+  - MathMLのコードを穴埋めする問題
+
+    MathMLのコードを穴埋めする問題は、コードブロック内に{{cN::}}を入れてください。
+
+    例:
+
+    ```
+    {{c1::&lt;math>
+      &lt;mfrac>
+        &lt;mn>1&lt;/mn>
+        &lt;mn>3&lt;/mn>
+      &lt;/mfrac>
+    &lt;/math>::1/3のMathML表現}}
+    ```
+- 難易度は単に単語を聞くような簡単な問題ではなく、自由記述やMathMLのコード全体を穴埋めする問題を中心に設定してください。同じような答えになる穴埋め箇所を一つの問題セットに二か所以上作ってはなりません。</code></pre></div><p>このタイミングで、なぜか急にクオリティが激下がりしたので、セッションをリセットする。</p><p>しかし今度は穴埋め問題の番号がc4から始まったりした。</p><p>あ、自分の出した例がc2からになってる。もしかしてカスなのは俺だったのか？</p><p>よく見ると、何故か元の資料が編集されており、元の資料の内容が変わってしまったために、穴埋め問題の生成がうまくいかなくなっていた。しかも、元に戻すと今度は資料のmarkdownからHTMLへの変換が大失敗しており、MathMLのコードが消えたり、改行がすべて削除されたりしていた。しかもさらに、変換コードに、なんと改行を一つだけ変えると挙動が大幅に変わるという罠の仕様が入っていた。変換コードがそもそもバグだらけで、変換コードの修正を行うと、今度は別の箇所が壊れるという負のスパイラルに陥っていた。</p><p>結論。OpenRouterのフリーモデルやGPT-5.6 Luna では、穴埋め問題の生成は完全にガチャであり、手動の方がよほど効率的である。</p><hr><p>この記事はTypst 1.50.1の実験的なHTML出力機能を用いて生成されました。</p><p>ソースコードのリポジトリは<a href="https://github.com/manybear-a1/blog-typst">こちら</a></p></div></body></html>

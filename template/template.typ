@@ -20,12 +20,12 @@
       it
     }
   }
-  // TODO:html,headやbodyタグを消したいが、Typst 1.50では不可能そうなので応急処置として、そのまま張り付けると背景が真っ赤になって、警告されるようにしておく。背景が赤いと、ブログのHTML構造が崩れていることが一目でわかるので、Typstで書き出したHTMLの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があることを思い出せるはず。
+  // TODO:html,headやbodyタグを消したいが、Typst 1.50では不可能そうなので応急処置として、警告されるようにしておく。ブログのHTML構造が崩れていることが一目でわかるので、Typstで書き出したHTMLの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があることを思い出せるはず。
   if target() == "html" {
     html.elem(
       "h1",
     )[警告:このTypstで書き出したHTMLはdiv\#takehereの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があります。脚注がある場合は、`<section role="doc-endnotes">`内の内容も取り出して、ブログに貼り付ける必要があります。]
-    html.elem("div", attrs: (id: "takehere", style: "background: red"))[
+    html.elem("div", attrs: (id: "takehere"))[
 
       #body
 
