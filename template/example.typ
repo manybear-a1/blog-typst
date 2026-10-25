@@ -3,8 +3,7 @@
 
 //コード表示
 // raw(block:true)を指定しないとレンダリングされないことに注意すること。
-// また、トリプルクオートの後に言語指定をしないこと（```htmlのように）。そうすると、Typstのシンタックスハイライト機能がHatenaBlogのコード表示機能と干渉して、コードが正しく表示されなくなる。
-// codlyはHTML出力に対応していなかった。
+// 現時点(2026/10/25,codly:2.0.0)では、codlyはHTML出力に対応していなかった。
 // #import "@preview/codly:2.0.0" as codly
 // #import "@preview/codly-languages:0.1.8": codly-languages
 // #show: codly.lang-set_(languages: codly-languages)
