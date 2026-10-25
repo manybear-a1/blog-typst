@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="jp"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Example Document</title></head><body><h1>警告:このTypstで書き出したHTMLはdiv#takehereの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があります。脚注がある場合は、<code>&lt;section role="doc-endnotes"></code>内の内容も取り出して、ブログに貼り付ける必要があります。</h1><div id="takehere"><h2>章</h2><p>文章</p><pre><code data-lang="typst"><span style="color: #d73948">#</span><span style="color: #d73948">let</span> <span style="color: #4b69c6">show_blog_with_typst</span>(body) <span style="color: #d73948">=</span> <span style="color: #d73948">context</span> {
+  <span style="color: #d73948">set</span> <span style="color: #4b69c6">text</span>(lang: <span style="color: #198810">"jp"</span>)
+  <span style="color: #d73948">show</span> <span style="color: #4b69c6">link</span>: <span style="color: #d73948">set</span> <span style="color: #4b69c6">text</span>(fill: blue)
+  <span style="color: #74747c">// ここにcontextを二重につけてはいけない。</span>
+  <span style="color: #d73948">show</span> <span style="color: #4b69c6">image</span>: it <span style="color: #d73948">=></span> {
+    <span style="color: #d73948">if</span> <span style="color: #4b69c6">target</span>() <span style="color: #d73948">==</span> <span style="color: #198810">"html"</span> {
+      <span style="color: #74747c">// TODO:Typst 1.50では、デフォルト動作では画像データ自体をHTMLのimgタグのsrc属性に埋め込む仕様になっている。</span>
+      <span style="color: #74747c">// これを回避しているのだが、渡されたsourceをそのままimgタグに埋め込む以外の方法がないため、フォルダー内に別のtypstファイルがあって、それをincludeしている場合などに、相対パスの位置が変わり時々壊れる。</span>
+      <span style="color: #74747c">// https://typst.app/docs/reference/foundations/path/ pathをstringに戻せれば、imgタグにstr(path(it.source))のようにして渡すことで相対パスの位置を正しく計算できるの可能性があるが、現状ではそれも不可能なので、仕方なくsourceをそのままimgタグに埋め込む仕様にしている。]</span>
+      <span style="color: #d73948">if</span> (it.source.<span style="color: #4b69c6">ends-with</span>(<span style="color: #198810">".pdf"</span>)) {
+        <span style="color: #74747c">//imgタグでパスを指定しても、PDFを埋め込むことはできないので、代わりにembedタグを使ってpdfを埋め込む。</span>
+        html.<span style="color: #4b69c6">elem</span>(<span style="color: #198810">"embed"</span>, attrs: (
+          src: it.source,
+          style: <span style="color: #198810">"max-width: 100%; height: auto;"</span>,
+        ))
+      } <span style="color: #d73948">else</span> {
+        html.<span style="color: #4b69c6">elem</span>(<span style="color: #198810">"img"</span>, attrs: (src: it.source, style: <span style="color: #198810">"max-width: 100%; height: auto;"</span>))
+      }
+    } <span style="color: #d73948">else</span> {
+      it
+    }
+  }
+  <span style="color: #74747c">// TODO:html,headやbodyタグを消したいが、Typst 1.50では不可能そうなので応急処置として、警告されるようにしておく。ブログのHTML構造が崩れていることが一目でわかるので、Typstで書き出したHTMLの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があることを思い出せるはず。</span>
+  <span style="color: #d73948">if</span> <span style="color: #4b69c6">target</span>() <span style="color: #d73948">==</span> <span style="color: #198810">"html"</span> {
+    html.<span style="color: #4b69c6">elem</span>(
+      <span style="color: #198810">"h1"</span>,
+    )[警告:このTypstで書き出したHTMLはdiv<span style="color: #1d6c76">\#</span>takehereの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があります。脚注がある場合は、<span style="color: #6b6b6f">`</span><span style="color: #6b6b6f">&lt;section role="doc-endnotes"></span><span style="color: #6b6b6f">`</span>内の内容も取り出して、ブログに貼り付ける必要があります。]
+    html.<span style="color: #4b69c6">elem</span>(<span style="color: #198810">"div"</span>, attrs: (id: <span style="color: #198810">"takehere"</span>))[
+
+      <span style="color: #8b41b1">#</span><span style="color: #8b41b1">body</span>
+
+      <span style="color: #4b69c6">#</span><span style="color: #4b69c6">divider</span>()
+
+      この記事はTypst 1.50.1の実験的なHTML出力機能を用いて生成されました。
+
+      ソースコードのリポジトリは<span style="color: #4b69c6">#</span><span style="color: #4b69c6">link</span>(<span style="color: #198810">"https://github.com/manybear-a1/blog-typst"</span>, <span style="color: #198810">"こちら"</span>)
+
+      <span style="color: #74747c">// 現時点では生成元のTypstファイル名の自動取得は不可能(https://github.com/typst/typst/discussions/2295)</span>
+      <span style="color: #74747c">// 生成元のTypstファイル名は</span>
+
+    ]
+  } <span style="color: #d73948">else</span> {
+    body
+  }
+}</code></pre><hr><p>この記事はTypst 1.50.1の実験的なHTML出力機能を用いて生成されました。</p><p>ソースコードのリポジトリは<a href="https://github.com/manybear-a1/blog-typst">こちら</a></p></div></body></html>

@@ -3,6 +3,7 @@
 
 //コード表示
 // raw(block:true)を指定しないとレンダリングされないことに注意すること。
+// また、トリプルクオートの後に言語指定をしないこと（```htmlのように）。そうすると、Typstのシンタックスハイライト機能がHatenaBlogのコード表示機能と干渉して、コードが正しく表示されなくなる。
 // codlyはHTML出力に対応していなかった。
 // #import "@preview/codly:2.0.0" as codly
 // #import "@preview/codly-languages:0.1.8": codly-languages
@@ -12,3 +13,54 @@
 //ブログ用テンプレートの読み込み
 #import "/template/template.typ": *
 #show: show_blog_with_typst
+
+= 章
+文章
+
+```typst
+#let show_blog_with_typst(body) = context {
+  set text(lang: "jp")
+  show link: set text(fill: blue)
+  // ここにcontextを二重につけてはいけない。
+  show image: it => {
+    if target() == "html" {
+      // TODO:Typst 1.50では、デフォルト動作では画像データ自体をHTMLのimgタグのsrc属性に埋め込む仕様になっている。
+      // これを回避しているのだが、渡されたsourceをそのままimgタグに埋め込む以外の方法がないため、フォルダー内に別のtypstファイルがあって、それをincludeしている場合などに、相対パスの位置が変わり時々壊れる。
+      // https://typst.app/docs/reference/foundations/path/ pathをstringに戻せれば、imgタグにstr(path(it.source))のようにして渡すことで相対パスの位置を正しく計算できるの可能性があるが、現状ではそれも不可能なので、仕方なくsourceをそのままimgタグに埋め込む仕様にしている。]
+      if (it.source.ends-with(".pdf")) {
+        //imgタグでパスを指定しても、PDFを埋め込むことはできないので、代わりにembedタグを使ってpdfを埋め込む。
+        html.elem("embed", attrs: (
+          src: it.source,
+          style: "max-width: 100%; height: auto;",
+        ))
+      } else {
+        html.elem("img", attrs: (src: it.source, style: "max-width: 100%; height: auto;"))
+      }
+    } else {
+      it
+    }
+  }
+  // TODO:html,headやbodyタグを消したいが、Typst 1.50では不可能そうなので応急処置として、警告されるようにしておく。ブログのHTML構造が崩れていることが一目でわかるので、Typstで書き出したHTMLの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があることを思い出せるはず。
+  if target() == "html" {
+    html.elem(
+      "h1",
+    )[警告:このTypstで書き出したHTMLはdiv\#takehereの中身とstyleタグだけを取り出して、ブログに貼り付ける必要があります。脚注がある場合は、`<section role="doc-endnotes">`内の内容も取り出して、ブログに貼り付ける必要があります。]
+    html.elem("div", attrs: (id: "takehere"))[
+
+      #body
+
+      #divider()
+
+      この記事はTypst 1.50.1の実験的なHTML出力機能を用いて生成されました。
+
+      ソースコードのリポジトリは#link("https://github.com/manybear-a1/blog-typst", "こちら")
+
+      // 現時点では生成元のTypstファイル名の自動取得は不可能(https://github.com/typst/typst/discussions/2295)
+      // 生成元のTypstファイル名は
+
+    ]
+  } else {
+    body
+  }
+}
+```

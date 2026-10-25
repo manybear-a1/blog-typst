@@ -4,11 +4,16 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote
 
 from .errors import HatenaPostError
+
+_TITLE_RE = re.compile(
+    r"<title\b[^>]*>(?P<title>.*?)</title>", re.IGNORECASE | re.DOTALL
+)
 
 VOID_ELEMENTS = {
     "area",
@@ -28,7 +33,7 @@ VOID_ELEMENTS = {
 }
 
 _IMG_SRC_RE = re.compile(
-    r'(?P<prefix><img\b[^>]*?\bsrc\s*=\s*)(?P<quote>["\'])(?P<src>[^"\']*)(?P=quote)',
+    r'(?P<prefix><img\b[^>]*?\s+src\s*=\s*)(?P<quote>["\'])(?P<src>[^"\']*)(?P=quote)',
     re.IGNORECASE,
 )
 _REMOTE_SRC_RE = re.compile(r"^(?:(?:https?|data|ftp):|//)", re.IGNORECASE)
@@ -148,6 +153,14 @@ def extract_article(html_text: str) -> ExtractedArticle:
         styles=extractor.styles,
         endnotes=extractor.endnotes,
     )
+
+
+def extract_title(html_text: str) -> str:
+    """``<title>`` の中身を返す（無ければ空文字）。"""
+    match = _TITLE_RE.search(html_text)
+    if match is None:
+        return ""
+    return unescape(match.group("title")).strip()
 
 
 # --- 画像 ---------------------------------------------------------------

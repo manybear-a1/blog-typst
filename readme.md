@@ -22,6 +22,12 @@ python scripts/post_to_hatena.py articles/2026/anki-cloze/anki-cloze2.typ --titl
 
 このスクリプトは投稿後のレスポンスの `<content type>` から実際の記法を判定し、Markdown モードなら `<pre>` を（中身のバッククォートより長い）フェンス付きコードブロックに変換して自動で再送信します。判定した記法は状態ファイルに保存するので、次回以降は最初から適切な形式で送ります。
 
+### タイトルとソースへのリンク
+
+生成された HTML に `<title>` があれば、その中身を記事タイトルとして使います（`--title` より優先）。無い場合は `--title` → 前回のタイトル → ファイル名の順で決めます。
+
+記事末尾の「ソースコードのリポジトリはこちら」のリンクは、テンプレートではリポジトリのトップを指しています。投稿時に、生成元の `.typ` の GitHub URL（`https://github.com/.../blob/<現在のブランチ>/<リポジトリからのパス>`）へ置き換えます。`.html` を渡した場合も、隣に同名の `.typ` があればそちらへリンクします。
+
 - `--dry-run`: 投稿せず、送信する XML を一時ファイルに書き出して確認する
 - `--publish`: 下書きではなく公開記事として投稿する
 - `--list`: 最近のエントリ（最大 7 件）とメンバURIを表示する
@@ -60,6 +66,7 @@ python scripts/post_to_hatena.py articles/2026/anki-cloze/anki-cloze2.typ --titl
 - `markdown_compat.py`: Markdown モード向けの `<pre>` → コードフェンス変換
 - `html_extract.py`: Typst の HTML からの抽出と画像パスの解決
 - `state.py`: 記事ごとの状態ファイル（旧形式からの移行を含む）
+- `repository.py`: リポジトリへのリンクを生成元ファイルの URL に置き換える
 - `auth.py` / `http_client.py`: WSSE 認証と HTTP
 - `typst.py`: `typst compile` の実行
 

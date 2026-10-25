@@ -27,9 +27,15 @@ from .config import (
     STATE_SUFFIX,
 )
 from .errors import HatenaPostError
-from .html_extract import ExtractedArticle, extract_article, replace_image_sources
+from .html_extract import (
+    ExtractedArticle,
+    extract_article,
+    extract_title,
+    replace_image_sources,
+)
 from .images import ImageResult, process_images
 from .markdown_compat import to_markdown_safe
+from .repository import replace_repository_links
 from .state import load_state, save_state, state_path_for, take_legacy_entry
 from .typst import compile_typ, default_typst_root, warn_if_html_is_stale
 
@@ -65,7 +71,10 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument(
         "--title",
         default=None,
-        help="記事タイトル（省略時は前回のタイトル、それも無ければファイル名）",
+        help=(
+            "記事タイトル（HTML の <title> があればそちらを優先。"
+            "無ければ前回のタイトル → ファイル名）"
+        ),
     )
     parser.add_argument(
         "--endpoint",
@@ -172,8 +181,10 @@ def _render(
     article: ExtractedArticle,
     fmt: str,
     image_mapping: dict[str, str],
+    source: Path,
 ) -> str:
     html = replace_image_sources(article.to_html(), image_mapping)
+    html = replace_repository_links(html, source)
     if fmt == "markdown":
         html = to_markdown_safe(html)
     return html
@@ -262,8 +273,10 @@ def _post(source: Path, args: argparse.Namespace) -> int:
                     f"{state_file}"
                 )
 
-    article = extract_article(html_path.read_text(encoding="utf-8-sig"))
-    title = args.title or state.get("title") or source.stem
+    html_text = html_path.read_text(encoding="utf-8-sig")
+    article = extract_article(html_text)
+    html_title = extract_title(html_text)
+    title = html_title or args.title or state.get("title") or source.stem
     target = None if args.new else (args.entry_url or state.get("entry_url"))
     fmt = state.get("content_format") or "html"
 
@@ -289,13 +302,18 @@ def _post(source: Path, args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
 
-    content = _render(article, fmt, image_result.mapping)
+    content = _render(article, fmt, image_result.mapping, source)
     method = "PUT" if target else "POST"
     send_url = target or collection_url(args.endpoint)
 
     print(f"入力: {source}")
     print(f"タイトル: {title}")
-    if args.title is None and state.get("title"):
+    if html_title:
+        if args.title and args.title != html_title:
+            print("  （--title より HTML の <title> を優先しました）")
+        else:
+            print("  （HTML の <title> から取得）")
+    elif args.title is None and state.get("title"):
         print("  （前回の投稿からタイトルを引き継いでいます）")
     elif args.title is None:
         print("  （--title が未指定なのでファイル名を使用しています）")
@@ -342,7 +360,7 @@ def _post(source: Path, args: argparse.Namespace) -> int:
         if image_result.uploaded:
             save_state(state_file, state)
 
-    content = _render(article, fmt, image_result.mapping)
+    content = _render(article, fmt, image_result.mapping, source)
     payload = build_entry_xml(
         title, content, draft=not args.publish, author=args.hatena_id
     )
@@ -357,7 +375,7 @@ def _post(source: Path, args: argparse.Namespace) -> int:
             f"{actual} 向けに変換して再送信します。"
         )
         fmt = actual
-        content = _render(article, fmt, image_result.mapping)
+        content = _render(article, fmt, image_result.mapping, source)
         payload = build_entry_xml(
             title, content, draft=not args.publish, author=args.hatena_id
         )

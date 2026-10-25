@@ -7,6 +7,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_ENDPOINT = "https://blog.hatena.ne.jp/manybear/manybear.hatenablog.com/atom"
 DEFAULT_HATENA_ID = "manybear"
 DEFAULT_FOTOLIFE_ENDPOINT = "https://f.hatena.ne.jp/atom/post"
+DEFAULT_REPOSITORY_URL = "https://github.com/manybear-a1/blog-typst"
+DEFAULT_REPOSITORY_BRANCH = "main"
 
 KEY_FILE_NAME = ".hatena-api-key"
 LEGACY_STATE_FILE_NAME = ".hatena-entries.json"
