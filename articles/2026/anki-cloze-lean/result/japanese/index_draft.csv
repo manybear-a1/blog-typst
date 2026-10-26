@@ -1,0 +1,2 @@
+"『Functional Programming in Lean』は、{{c1::Lean をプログラミング言語として使うための無料の書籍}}です。収録されているすべてのコード例は{{c1::`Lean 4.33.0`}}でテストされています。"
+"本書の著者は{{c1::David Thrane Christiansen}}で、著作権は{{c1::Microsoft Corporation（2023年）と Lean FRO, LLC（2023〜2026年）}}に帰属します。本書は{{c1::`CC BY 4.0`}}ライセンスで公開されています。"

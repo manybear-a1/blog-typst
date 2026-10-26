@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Introduction — Functional Programming in Lean</title>
+<meta name="book-title" content="Functional Programming in Lean">
+<meta name="page-title" content="Introduction">
+<meta name="page-kind" content="chapter">
+<meta name="source-file" content="FPLean/Intro.lean">
+<meta name="verso-tags" content="getting-lean typographical-conventions unicode release-history about-the-author license">
+<style>
+:root {
+  color-scheme: light;
+  --text: #1f2328;
+  --muted: #59636e;
+  --border: #d1d9e0;
+  --code-bg: #f6f8fa;
+  --accent: #0969da;
+  --error: #d1242f;
+  --warning: #9a6700;
+  --info: #0969da;
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body {
+  margin: 0;
+  color: var(--text);
+  background: #fff;
+  font-family: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  line-height: 1.6;
+}
+article {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+header.page-context {
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+header.page-context .book { font-weight: 600; }
+header.page-context .sep { padding: 0 0.35rem; }
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  line-height: 1.25;
+  margin: 2rem 0 0.75rem;
+}
+h1 { font-size: 2rem; margin-top: 0; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1.05rem; }
+.section-number {
+  color: var(--muted);
+  font-weight: 500;
+  margin-right: 0.35rem;
+}
+p { margin: 0.9rem 0; }
+a { color: var(--accent); }
+code, pre {
+  font-family: "Source Code Pro", "Cascadia Code", Consolas, "Liberation Mono", monospace;
+  font-size: 0.88em;
+}
+code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  padding: 0.08em 0.28em;
+}
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.75rem 0.9rem;
+  overflow-x: auto;
+  line-height: 1.45;
+  tab-size: 2;
+}
+pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  white-space: pre;
+}
+code.kw { font-weight: 700; }
+code.module { color: #6639ba; }
+code.tactic { color: #0550ae; }
+code.lit { color: #0a3069; }
+code.id { color: #1f2328; }
+code.output { color: #116329; }
+code.step { color: #0550ae; }
+.output {
+  border-left: 0.3rem solid var(--info);
+  padding-left: 0.75rem;
+}
+.output.error { border-left-color: var(--error); color: var(--error); }
+.output.warning { border-left-color: var(--warning); color: var(--warning); }
+.output.info { border-left-color: var(--info); }
+div.paragraph > :first-child { margin-top: 0; }
+div.paragraph > :last-child { margin-bottom: 0; }
+ul, ol { margin: 0.9rem 0; padding-left: 1.75rem; }
+li { margin: 0.25rem 0; }
+table.tabular {
+  border-collapse: collapse;
+  margin: 1.25rem auto;
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.95rem;
+}
+table.tabular th, table.tabular td {
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.65rem;
+  text-align: left;
+  vertical-align: top;
+}
+table.tabular th { background: var(--code-bg); }
+.eval-steps .step-arrow {
+  text-align: left;
+  font-size: 1.5rem;
+  line-height: 1;
+  margin: 0.15rem 0 0.15rem 1rem;
+  color: var(--muted);
+}
+.eq-steps .step-code { margin: 0.3rem 0; }
+.eq-steps .reason {
+  margin: 0.3rem 0 0.3rem 2rem;
+  padding-left: 0.75rem;
+  border-left: 0.2rem solid var(--border);
+  color: var(--muted);
+  font-style: italic;
+}
+.eq-steps .reason pre { font-style: normal; }
+.file-block { margin: 1rem 0; }
+.file-name {
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+.shell-command.block, .shell-commands {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.65rem 0.85rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-family: "Source Code Pro", "Cascadia Code", Consolas, monospace;
+  font-size: 0.88rem;
+  white-space: pre;
+}
+.shell-command .prompt { color: var(--muted); font-weight: 700; }
+.shell-commands .command::before { content: "$ "; font-weight: 700; color: var(--muted); }
+.shell-commands .output { display: block; border: 0; padding: 0; color: var(--text); }
+.interaction pre { white-space: pre-wrap; }
+.proof-state {
+  background: #f0f6ff;
+  border: 1px solid #c8dcf5;
+  border-left: 0.3rem solid var(--accent);
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.85rem;
+  margin: 1rem 0;
+  font-family: "Source Code Pro", "Cascadia Code", Consolas, monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+.proof-state pre {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  white-space: pre-wrap;
+}
+pre.signature {
+  border-left: 0.3rem solid var(--border);
+}
+kbd {
+  font-family: "Source Code Pro", "Cascadia Code", Consolas, monospace;
+  font-size: 0.82em;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 0.25rem;
+  padding: 0.05em 0.3em;
+}
+.math { font-family: "Latin Modern Math", "Cambria Math", serif; }
+.math.display { display: block; text-align: center; margin: 1rem 0; }
+.deftech, .tech {
+  font-style: italic;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.18em;
+}
+.license {
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0.75rem;
+  margin: 1.25rem 0;
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.9rem;
+}
+.license p { margin: 0.5rem 0 0; }
+nav.toc { margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+nav.toc h2 { margin-top: 0; }
+nav.toc ol { padding-left: 1.35rem; }
+nav.toc li { margin: 0.35rem 0; }
+footer.page-footer {
+  margin-top: 3rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+  color: var(--muted);
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  font-size: 0.8rem;
+}
+footer.page-footer code { font-size: 0.95em; }
+@media (max-width: 40rem) {
+  article { padding: 1.25rem 0.9rem 3rem; }
+  h1 { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+<article class="verso-page" data-page-kind="chapter" data-source="FPLean/Intro.lean">
+<header class="page-context"><span class="book">Functional Programming in Lean</span></header>
+<h1 id="introduction">Introduction</h1>
+<p>Lean is an interactive theorem prover based on dependent type theory. Originally developed at Microsoft Research, development now takes place at the <a href="https://lean-fro.org">Lean FRO</a>. Dependent type theory unites the worlds of programs and proofs; thus, Lean is also a programming language. Lean takes its dual nature seriously, and it is designed to be suitable for use as a general-purpose programming language—Lean is even implemented in itself. This book is about writing programs in Lean.</p>
+<p>When viewed as a programming language, Lean is a strict pure functional language with dependent types. A large part of learning to program with Lean consists of learning how each of these attributes affects the way programs are written, and how to think like a functional programmer. <em>Strictness</em> means that function calls in Lean work similarly to the way they do in most languages: the arguments are fully computed before the function&#x27;s body begins running. <em>Purity</em> means that Lean programs cannot have side effects such as modifying locations in memory, sending emails, or deleting files without the program&#x27;s type saying so. Lean is a <em>functional</em> language in the sense that functions are first-class values like any other and that the execution model is inspired by the evaluation of mathematical expressions. <em>Dependent types</em>, which are the most unusual feature of Lean, make types into a first-class part of the language, allowing types to contain programs and programs to compute types.</p>
+<p>This book is intended for programmers who want to learn Lean, but who have not necessarily used a functional programming language before. Familiarity with functional languages such as Haskell, OCaml, or F# is not required. On the other hand, this book does assume knowledge of concepts like loops, functions, and data structures that are common to most programming languages. While this book is intended to be a good first book on functional programming, it is not a good first book on programming in general.</p>
+<p>Mathematicians who are using Lean as a proof assistant will likely need to write custom proof automation tools at some point. This book is also for them. As these tools become more sophisticated, they begin to resemble programs in functional languages, but most working mathematicians are trained in languages like Python and Mathematica. This book can help bridge the gap, empowering more mathematicians to write maintainable and understandable proof automation tools.</p>
+<p>This book is intended to be read linearly, from the beginning to the end. Concepts are introduced one at a time, and later sections assume familiarity with earlier sections. Sometimes, later chapters will go into depth on a topic that was only briefly addressed earlier on. Some sections of the book contain exercises. These are worth doing, in order to cement your understanding of the section. It is also useful to explore Lean as you read the book, finding creative new ways to use what you have learned.</p>
+<h2 id="getting-lean">Getting Lean</h2>
+<p>Before writing and running programs written in Lean, you&#x27;ll need to set up Lean on your own computer. The Lean tooling consists of the following:</p>
+<ul><li><code class="lit">elan</code> manages the Lean compiler toolchains, similarly to <code class="lit">rustup</code> or <code class="lit">ghcup</code>.</li><li><code class="lit">lake</code> builds Lean packages and their dependencies, similarly to <code class="lit">cargo</code>, <code class="lit">make</code>, or Gradle.</li><li><code class="lit">lean</code> type checks and compiles individual Lean files as well as providing information to programmer tools about files that are currently being written. Normally, <code class="lit">lean</code> is invoked by other tools rather than directly by users.</li><li>Plugins for editors, such as Visual Studio Code or Emacs, that communicate with <code class="lit">lean</code> and present its information conveniently.</li></ul>
+<p>Please refer to the <a href="https://lean-lang.org/lean4/doc/quickstart.html">Lean manual</a> for up-to-date instructions for installing Lean.</p>
+<h2 id="typographical-conventions">Typographical Conventions</h2>
+<p>Code examples that are provided to Lean as <em>input</em> are formatted like this:</p>
+<pre class="code" id="anchor-add1"><code>def add1 (n : Nat) : Nat := n + 1</code></pre>
+<pre class="code" id="anchor-add1_7"><code>#eval add1 7</code></pre>
+<p>The last line above (beginning with <code class="kw">#eval</code>) is a command that instructs Lean to calculate an answer. Lean&#x27;s replies are formatted like this:</p>
+<pre class="output info"><code>8</code></pre>
+<p>Error messages returned by Lean are formatted like this:</p>
+<pre class="output error"><code>Application type mismatch: The argument
+  &quot;seven&quot;
+has type
+  String
+but is expected to have type
+  Nat
+in the application
+  add1 &quot;seven&quot;</code></pre>
+<p>Warnings are formatted like this:</p>
+<pre class="output warning"><code>declaration uses `sorry`</code></pre>
+<h2 id="unicode">Unicode</h2>
+<p>Idiomatic Lean code makes use of a variety of Unicode characters that are not part of ASCII. For instance, Greek letters like <code class="lit">α</code> and <code class="lit">β</code> and the arrow <code class="lit">→</code> both occur in the first chapter of this book. This allows Lean code to more closely resemble ordinary mathematical notation.</p>
+<p>With the default Lean settings, both Visual Studio Code and Emacs allow these characters to be typed with a backslash (<code class="lit">\</code>) followed by a name. For example, to enter <code class="lit">α</code>, type <code class="lit">\alpha</code>. To find out how to type a character in Visual Studio Code, point the mouse at it and look at the tooltip. In Emacs, use <code class="lit">C-c C-k</code> with point on the character in question.</p>
+<h2 id="release-history">Release history</h2>
+<h3 id="october-2025">October, 2025</h3>
+<p>The book has been updated to the latest stable Lean release (version 4.23.0), and now describes functional induction and the <code class="tactic">grind</code> tactic.</p>
+<h3 id="august-2025">August, 2025</h3>
+<p>This is a maintenance release to resolve an issue with copy-pasting code from the book.</p>
+<h3 id="july-2025">July, 2025</h3>
+<p>The book has been updated for version 4.21 of Lean.</p>
+<h3 id="june-2025">June, 2025</h3>
+<p>The book has been reformatted with Verso.</p>
+<h3 id="april-2025">April, 2025</h3>
+<p>The book has been extensively updated and now describes Lean version 4.18.</p>
+<h3 id="january-2024">January, 2024</h3>
+<p>This is a minor bugfix release that fixes a regression in an example program.</p>
+<h3 id="october-2023">October, 2023</h3>
+<p>In this first maintenance release, a number of smaller issues were fixed and the text was brought up to date with the latest release of Lean.</p>
+<h3 id="may-2023">May, 2023</h3>
+<p>The book is now complete! Compared to the April pre-release, many small details have been improved and minor mistakes have been fixed.</p>
+<h3 id="april-2023">April, 2023</h3>
+<p>This release adds an interlude on writing proofs with tactics as well as a final chapter that combines discussion of performance and cost models with proofs of termination and program equivalence. This is the last release prior to the final release.</p>
+<h3 id="march-2023">March, 2023</h3>
+<p>This release adds a chapter on programming with dependent types and indexed families.</p>
+<h3 id="january-2023">January, 2023</h3>
+<p>This release adds a chapter on monad transformers that includes a description of the imperative features that are available in <code class="kw">do</code>-notation.</p>
+<h3 id="december-2022">December, 2022</h3>
+<p>This release adds a chapter on applicative functors that additionally describes structures and type classes in more detail. This is accompanied with improvements to the description of monads. The December 2022 release was delayed until January 2023 due to winter holidays.</p>
+<h3 id="november-2022">November, 2022</h3>
+<p>This release adds a chapter on programming with monads. Additionally, the example of using JSON in the coercions section has been updated to include the complete code.</p>
+<h3 id="october-2022">October, 2022</h3>
+<p>This release completes the chapter on type classes. In addition, a short interlude introducing propositions, proofs, and tactics has been added just before the chapter on type classes, because a small amount of familiarity with the concepts helps to understand some of the standard library type classes.</p>
+<h3 id="september-2022">September, 2022</h3>
+<p>This release adds the first half of a chapter on type classes, which are Lean&#x27;s mechanism for overloading operators and an important means of organizing code and structuring libraries. Additionally, the second chapter has been updated to account for changes in Lean&#x27;s stream API.</p>
+<h3 id="august-2022">August, 2022</h3>
+<p>This third public release adds a second chapter, which describes compiling and running programs along with Lean&#x27;s model for side effects.</p>
+<h3 id="july-2022">July, 2022</h3>
+<p>The second public release completes the first chapter.</p>
+<h3 id="june-2022">June, 2022</h3>
+<p>This was the first public release, consisting of an introduction and part of the first chapter.</p>
+<h2 id="about-the-author">About the Author</h2>
+<p>David Thrane Christiansen has been using functional languages for twenty years, and dependent types for ten. Together with Daniel P. Friedman, he wrote <a href="https://thelittletyper.com/"><em>The Little Typer</em></a>, an introduction to the key ideas of dependent type theory. He has a Ph.D. from the IT University of Copenhagen. During his studies, he was a major contributor to the first version of the Idris language. Since leaving academia, he has worked as a software developer at Galois in Portland, Oregon and Deon Digital in Copenhagen, Denmark, and he was the Executive Director of the Haskell Foundation. At the time of writing, he is employed at the <a href="https://lean-fro.org">Lean Focused Research Organization</a> working full-time on Lean.</p>
+<h2 id="license">License</h2>
+<div class="license">
+  <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+    <img alt="Creative Commons License" src="https://i.creativecommons.org/l/by/4.0/88x31.png">
+  </a>
+  <p>This work is licensed under a
+    <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+  </p>
+</div>
+<p>The original version of the book was written by David Thrane Christiansen on contract to Microsoft Corporation, who generously released it under a Creative Commons Attribution 4.0 International License. The current version has been modified by the author from the original version to account for changes in newer versions of Lean. A detailed account of the changes can be found in the book&#x27;s <a href="https://github.com/leanprover/fp-lean/">source code repository</a>.</p>
+<footer class="page-footer">Source: <code>FPLean/Intro.lean</code> · <a href="https://lean-lang.org/functional_programming_in_lean/">Functional Programming in Lean</a> · CC BY 4.0</footer>
+</article>
+</body>
+</html>
