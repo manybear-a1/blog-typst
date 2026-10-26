@@ -1,18 +1,35 @@
-#let prompt_box(prompt) = {
-  block(breakable: true, stroke: black, inset: 1em)[
-    プロンプト:
+#let prompt_box(prompt) = context {
+  if (target() == "html") {
+    html.elem("div", attrs: (style: "padding: 1em; border: 1px solid #111;"))[
+      プロンプト:
 
-    #prompt
-  ]
+      #prompt
+    ]
+  } else {
+    block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
+      プロンプト:
+
+      #prompt
+    ]
+  }
 }
-#let answer_box(answer) = {
-  block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
-    回答:
+#let answer_box(answer) = context {
+  if (target() == "html") {
+    html.div(style: "background-color: #f0f0f0; padding: 1em; border: 1px solid #ccc;")[
+      #block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
+        回答:
 
-    #answer
-  ]
+        #answer
+      ]
+    ]
+  } else {
+    block(breakable: true, fill: white.darken(2.5%), inset: 1em)[
+      回答:
+
+      #answer
+    ]
+  }
 }
-
 
 
 今回はOpenRouterではなく#link("https://opencode.ai/docs/ja/ide/")[OpenCode]を使ってみる。
@@ -304,7 +321,7 @@ You can use more restricted definition
 ```
 正規表現のコンパイル時に :const:`re.ASCII` フラグを与えることにより、 ``\\w`` を、より制限された方の定義(``[a-zA-Z0-9_]``)で使うことが出来ます。
 ```
-
+くらいまで書き足すと、読者が混乱しないだろう。
 #prompt_box()[
   ```
   @decks/regex/simple-patterns_revised.csv に今回のカードを調整したバージョンを用意しました。このデッキのカードと以前のカードを比較して、このようなカードを他の章でも作成できるように @decks/regex/introduction.prompt.md にあるプロンプトを調整してください。
@@ -338,7 +355,7 @@ You can use more restricted definition
   ```
 
 ]
-放っておいたらContext Limitに引っ掛かったらしいが、自動的にCompactionが働いてContextを圧縮してくれたようだ。正直ログをたどるまでCompactionに気が付かなかった。
+実は放っておいたらContext Limitに引っ掛かったらしいが、自動的にCompactionが働いてContextを圧縮してくれたようだ。正直ログをたどるまでCompactionに気が付かなかった。
 #prompt_box()[
   ```
   では、そのプロンプトに従って次は @decks/regex/using-regular-expressions.html からカードを作ってください
@@ -735,14 +752,15 @@ quick-and-dirty:手っ取り早い
 
 こうして見ると、こんなに長い文章の翻訳を一瞬でしてくれるGoogle翻訳はすごいといまさらながら感心した。
 
-Python.jp内の翻訳チャンネルを見ようとしたが、Python.jpのDiscordがリンク切れしていて入れなかった。
+誤訳を修正するためにPython.jp内の翻訳チャンネルを見ようとしたが、Python.jpのDiscordがリンク切れしていて入れなかった。入れてくれよ。
 
-それじゃあ最後にこのファイルをまとめて一つにしてもらおう。
+誤訳の修正はいったん置いておいて、それじゃあ最後にこのファイルをまとめて一つにしてもらおう。
 
 ん？質問？え？カードがない？
 
 あ、まってもう一個カード化するファイルがあったわ。
-まさに負うたAIに教えられて浅瀬を渡る。
+
+まさに負うたAIに教えられて浅瀬を渡る。だ。
 
 もうオーケストレーションを起動するだけでOK。らくちん。
 
@@ -799,3 +817,17 @@ Pythonの誤訳はどうしたものかと思っていたが、普通にPython T
 
 リロードしてもフリーズしては入れませんでした。ほんとうになんでや！
 
+仕方ないのでissueとして立てたらちゃんと修正されました。
+
+#link(
+  "https://github.com/python-doc-ja/python-doc-ja/issues/1026",
+)[Issue \#1026 Regular expression HOWTOの翻訳ミスの修正]
+
+後はのんびりとAnkiで学習していこう。
+
+といいつつ別のデッキ(Lean)も作り始めた。
+== 学習中に見つけたこと
+
+カードの独立性がまだ甘い。（前に比べたらまし）
+
+markdownが変換されていない。（指示したら直してくれた）
