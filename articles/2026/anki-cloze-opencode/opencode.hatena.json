@@ -1,0 +1,18 @@
+{
+  "content_format": "html",
+  "entry_url": "https://blog.hatena.ne.jp/manybear/manybear.hatenablog.com/atom/entry/14729835035334727262",
+  "images": {
+    "image/answer.png": {
+      "sha1": "ee16e1d9bc02f11b150fbeffb7ff6fc9b87a8c87",
+      "uploaded": "2026-11-06T08:58:13Z",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/m/manybear/20261106/20261106175808.png"
+    },
+    "image/question.png": {
+      "sha1": "7604d0ec5f78ea91c4dac91b57b66b0933feb407",
+      "uploaded": "2026-11-06T08:58:07Z",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/m/manybear/20261106/20261106175802.png"
+    }
+  },
+  "title": "OpenCodeでAnkiの穴埋め問題を作る",
+  "updated": "2026-11-06T09:12:22Z"
+}

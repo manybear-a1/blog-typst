@@ -1,5 +1,3 @@
-//タイトル
-#set document(title: "Example Document")
 
 //コード表示
 // raw(block:true)を指定しないとレンダリングされないことに注意すること。
@@ -11,7 +9,8 @@
 
 //ブログ用テンプレートの読み込み
 #import "/template/template.typ": *
-#show: show_blog_with_typst
+//タイトル
+#show: it => show_blog_with_typst(it, title: "Example Document")
 
 = 章
 文章
