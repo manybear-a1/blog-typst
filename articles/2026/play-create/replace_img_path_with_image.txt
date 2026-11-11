@@ -1,0 +1,7 @@
+articles/2026/play-create/day\d+/(img/.+?\s)
+#image("$1")\n
+
+VSCode用
+
+画像一覧をまとめてコピー（SHIFT+LEFT CLICKとかCTRL+LEFT CLICKとかで）して、張り付けたいTypstファイルでパースト。最後にスペースを手動で一つ入れる。
+ファイル上でCTRL+Fを押して一行目をVSCodeの検索枠、二行目を置換枠に入れる。後はすべて置換すれば問題なし。
